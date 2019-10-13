@@ -1,6 +1,7 @@
 .idea/
 .vscode/
 .hg/
+.hgignore
 
 /vendor/
 /storage/
