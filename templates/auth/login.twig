@@ -1,0 +1,29 @@
+{% extends 'blank.twig' %}
+{% block title %}Личный кабинет - Авторизация{% endblock %}
+
+{% block body %}
+    <div class="info-block">
+        Тестовая версия!!!<br>
+        Для входа используйте в качестве пароля номер договора.
+    </div>
+    <div class="columns full-height">
+        <div class="column col-12 col-mx-auto flex-centered">
+            <form method="post" action="/login" class="login-form">
+                <h4 class="">Вход в личный кабинет</h4>
+                <div class="form-group">
+                    <label class="form-label">Номер договора</label>
+                    <input class="form-input" name="nom">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Пароль</label>
+                    <input class="form-input" name="password">
+                </div>
+                <button class="btn btn-primary full-width login-btn">Войти</button>
+                <div class="divider"></div>
+                <button class="btn btn-link">напомнить пароль</button>
+                <button class="btn btn-link">зарегистрироваться</button>
+            </form>
+
+        </div>
+    </div>
+{% endblock %}

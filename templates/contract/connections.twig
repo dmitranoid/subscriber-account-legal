@@ -1,0 +1,38 @@
+{% extends 'layout_main.twig' %}
+
+{% block title %}Точки учета{% endblock %}
+
+{% block content %}
+<div class="contract">
+    <h5>Договор  №{{ contract.kp }}, {{ contract.npp1 }} {{ contract.npp2 }}</h5>
+</div>
+
+    <table class="table abonents">
+    <thead>
+    <tr>
+        <th>№</th>
+        <th>наименование</th>
+        <th>адрес</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for ab in abonentsList %}
+    <tr class="abonent">
+        <td>{{ ab.nab }}</td>
+        <td>{{ ab.naim }}</td>
+        <td colspan=2>{{ ab.tip_np }} {{ ab.name_np }} {{ ab.tip_ul }} {{ ab.name_ul }} {{ ab.dom }} {{ ab.korpus }}</td>
+    </tr>
+    {% for conn in ab.connections %}
+    <tr class="connection">
+        <td>т/у</td>
+        <td>{{ conn.naim }}</td>
+        <td>зав.№: {{ conn.nst }} | дата установки: {{ conn.datu|date("d.m.Y") }} | показания: {{ conn.ppok }}</td>
+        <td><a class="readhistory" href="#"><i class="icon icon-time"></i>&nbspИстория показаний</a></td>
+    </tr>
+    {% endfor %}
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

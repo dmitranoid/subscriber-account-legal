@@ -1,0 +1,164 @@
+
+.color-list {
+  /* https://coolors.co/007fe9-de466f-414656-aeafb2-e8ebe4 */
+  color: #007fe9;
+  color: #55acee;
+  color: #414656;
+  color: #e8ebe4;
+  color: #d1d1d3;
+  color: #aeafb2; /* google*/
+  color: #de466f;
+}
+
+html{
+  color: #414656;
+  background: #e8ebe4;
+}
+
+.container {
+  max-width: 100%;
+}
+.full-height {
+  height: 100vh;
+}
+
+.full-width {
+  width: 100%;
+}
+
+header {
+  height: 4rem;
+  color: #e8ebe4;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 0 6px 0 #414656;
+  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #55acee), color-stop(1, #468ccf));
+  background:-moz-linear-gradient(top, #55acee 5%, #468ccf 100%);
+  background:-webkit-linear-gradient(top, #55acee 5%, #468ccf 100%);
+  background:-o-linear-gradient(top, #55acee 5%, #468ccf 100%);
+  background:-ms-linear-gradient(top, #55acee 5%, #468ccf 100%);
+  background:linear-gradient(to bottom, #55acee 5%, #468ccf 100%);
+}
+
+.logo {
+  display: inline-block;
+  vertical-align: top;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: .5rem;
+}
+
+.logo img {
+  width: 100%;
+}
+
+header .site-caption {
+  display: inline-block;
+  vertical-align: top;
+  font-size: 1.6rem;
+  margin-top: 0.8rem;
+}
+
+.nav-left {
+  width: 15rem ;
+  float: left;
+  height: 100vh;
+}
+
+.nav-item {
+  /*background: #55acee;*/
+  color: #e8ebe4;
+  border: .1rem solid #929d9e;
+  border-radius: .1rem;
+  text-align: center;
+  height: 4rem;
+  width: 14rem;
+  margin-bottom: 0.5rem;
+  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #55acee), color-stop(1, #468ccf));
+  background:-moz-linear-gradient(top, #55acee 5%, #468ccf 100%);
+  background:-webkit-linear-gradient(top, #55acee 5%, #468ccf 100%);
+  background:-o-linear-gradient(top, #55acee 5%, #468ccf 100%);
+  background:-ms-linear-gradient(top, #55acee 5%, #468ccf 100%);
+  background:linear-gradient(to bottom, #55acee 5%, #468ccf 100%);
+  transition: all 0.3s ease;
+}
+
+.nav-item i{
+  display: block;
+  float: left;
+  margin: 10px auto 0;
+  position: absolute;
+}
+
+.nav-item img{
+  width: 2rem;
+  height: 2rem;
+  /*margin: 10px auto 0;*/
+}
+
+.nav-item p{
+  vertical-align: middle;
+}
+
+.nav-item:hover {
+  box-shadow: 0 6px 6px 0 #414656;
+  /*box-shadow: inset 0 0 0 23px #53ea93;*/
+  transition: all 0.3s ease;
+}
+
+.page-content {
+  background: #e8ebe4;
+  min-height: 70vh;
+}
+
+.login-form {
+  width: 400px;
+  background: #aeafb2;
+  border: 1px solid #cacaca;
+  padding: 1rem;
+  border-radius: 0;
+}
+
+.login-btn {
+  margin-top: 1rem;
+  border: .1rem solid #929d9e !important;
+  border-radius: .1rem !important;
+  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #55acee), color-stop(1, #468ccf)) !important;
+  background:-moz-linear-gradient(top, #55acee 5%, #468ccf 100%) !important;
+  background:-webkit-linear-gradient(top, #55acee 5%, #468ccf 100%) !important;
+  background:-o-linear-gradient(top, #55acee 5%, #468ccf 100%) !important;
+  background:-ms-linear-gradient(top, #55acee 5%, #468ccf 100%) !important;
+  background:linear-gradient(to bottom, #55acee 5%, #468ccf 100%) !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-primary {
+  background: #55acee !important;
+
+}
+
+.btn-link {
+  color: #55acee !important;
+}
+.sendreadings:hover {
+  box-shadow: 0 6px 6px 0 #414656;
+  transition: all 0.3s ease;
+}
+
+.table tr.abonent {
+  background: #d1d1d3;
+}
+
+.table tr.connection td:nth-child(2) {
+  padding-left: 3rem;
+}
+
+.modal .content {
+  min-height: 10vh;
+}
+
+.info-block {
+  width: 100%;
+  background: #fff9b4;
+  color: #414656;
+  border: solid 1px #414656 ;
+}

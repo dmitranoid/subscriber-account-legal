@@ -1,0 +1,24 @@
+{% extends 'blank.twig' %}
+
+{% block body %}
+<header>
+    {% include 'partial/header.twig' %}
+</header>
+<nav class="nav-left">
+    {% include 'partial/nav-left-items.twig' %}
+</nav>
+<div class="columns">
+    <div class="column col-12 page-content">
+        <h1>{{ block('title') }}</h1>
+        {% block content %}
+            content here
+        {% endblock %}
+    </div>
+</div>
+<footer class="full-width">
+<div class="text-center">
+    <div class="divider full-width"></div>
+    <p>Барановичские электрические сети, 2019</p>
+</div>
+</footer>
+{%  endblock %}

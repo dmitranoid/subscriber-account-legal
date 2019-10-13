@@ -1,0 +1,13 @@
+syntax: glob
+include/setup.php
+composer.lock
+.idea/**
+.sublime/**
+.vscode/**
+.git/**
+.gitignore
+vendor/**
+data/dbf/**
+storage/log/**.log
+storage/cache/**
+**.tmp

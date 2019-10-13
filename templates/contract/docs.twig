@@ -1,0 +1,32 @@
+{% extends 'layout_main.twig' %}
+
+{% block title %}Документы{% endblock %}
+
+{% block content %}
+<div class="contract">
+    <h5>Договор  №{{ contract.kp }}, {{ contract.npp1 }} {{ contract.npp2 }}</h5>
+</div>
+
+    <table class="table docs">
+    <thead>
+    <tr>
+        <th>дата</th>
+        <th>расчетный период</th>
+        <th>документ</th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for doc in docList %}
+    <tr class="">
+        <td>{{ doc.date|date('d.m.Y') }}</td>
+        <td>{{ doc.period }}</td>
+        <td><a href="#" target="_blank">посмотреть</a></td>
+        <td></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
