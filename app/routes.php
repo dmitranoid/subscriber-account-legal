@@ -6,7 +6,7 @@ use App\Application\Actions\User\ListUsersAction;
 use App\Application\Actions\User\ViewUserAction;
 use App\Application\Actions\Contract\ViewContractInfoAction;
 use App\Application\Actions\Contract\ViewContractConnectionsAction;
-use App\Application\Actions\Contract\ViewContractTuAction;
+use App\Application\Actions\Contract\ViewContractConnectionAction;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
@@ -32,6 +32,7 @@ return function (App $app) {
     $app->group('/contract', function (Group $group) use ($container) {
         $group->get('/info', ViewContractInfoAction::class);
         $group->get('/connections', ViewContractConnectionsAction::class);
+        $group->get('/connection/{abtu}', ViewContractConnectionAction::class);
         $group->get('/sendreadings', \App\Application\Actions\Contract\ViewContractReadingsAction::class);
         $group->post('/sendreadings', \App\Application\Actions\Contract\SendContractReadingsAction::class);
         $group->get('/payments', \App\Application\Actions\Contract\ViewContractPaymentsAction::class);

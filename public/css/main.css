@@ -151,6 +151,11 @@ header .site-caption {
 .table tr.connection td:nth-child(2) {
   padding-left: 3rem;
 }
+.table tr.clickable-row:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 
 .modal .content {
   min-height: 10vh;

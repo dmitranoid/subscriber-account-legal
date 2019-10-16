@@ -1,3 +1,9 @@
+// on startup
+
+$('.clickable-row').on('click', clickableRowOnClick);
+
+//   functions
+
 function sendreadings() {
     let readings = {};
     $(".table-readings input").each(function(index, el){
@@ -35,4 +41,9 @@ function showModal(title, content)
 function hideModal() {
     $('#modal-id').removeClass('active');
     $('#modal-id .content').text('');
+}
+
+function clickableRowOnClick(){
+    window.location = $(this).data('href');
+    return false;
 }
