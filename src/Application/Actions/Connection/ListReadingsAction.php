@@ -10,24 +10,12 @@ use App\Infrastructure\Persistence\Abonent\FoxproAbonentRepository;
 use App\Infrastructure\Persistence\Connection\FoxproConnectionRepository;
 use App\Infrastructure\Persistence\Contract\FoxproContractRepository;
 use Psr\Http\Message\ResponseInterface as Response;
-use Slim\Exception\HttpBadRequestException;
 
-class ViewContractConnectionAction extends ContractAction
+class ListReadingsAction extends ContractAction
 {
-    private function extractAbTu($str):array
-    {
-        $delimPos = mb_strpos($str, '-');
-        return [
-            mb_substr($str, 0 ,$delimPos),
-            mb_substr($str, $delimPos+1, mb_strlen($str)-$delimPos)
-        ];
-    }
-
     protected function action(): Response
     {
         $contractNom = $_SESSION['contract'] ?? null;
-
-        list($abonentNo, $tuName)= $this->extractAbTu($this->request->getAttribute('abtu', ''));
 
         $contractRepository = new FoxproContractRepository();
         $connectionsRepository = new FoxproConnectionRepository();
@@ -38,19 +26,26 @@ class ViewContractConnectionAction extends ContractAction
         $abonentsList = $abonentsRepository->getByContract($contractNom);
 
         /* combine abonents and connections */
-        usort($abonentsList, function($a, $b){return $a['nab'] - $b['nab'];});
-        usort($connectionsList, function($a, $b){return $a['nab'] - $b['nab'];});
+        usort($abonentsList, function ($a, $b) { return $a['nab'] - $b['nab']; } );
+        usort($connectionsList, function ($a, $b) { return $a['nab'] - $b['nab']; } );
 
 
         reset($connectionsList);
-        array_walk($abonentsList, function (&$abonent) use (&$connectionsList){
-            while ($abonent['nab'] == current($connectionsList)['nab']??'') {
+        array_walk($abonentsList, function (&$abonent) use (&$connectionsList) {
+            while ($abonent['nab'] == current($connectionsList)['nab'] ?? '') {
                 $abonent['connections'][] = array_shift($connectionsList);
             }
         });
+        // check file with sended readings
+        $filename = sprintf("%s-%s.txt", $contractNom, date('Ym'));
+        $dir = $_SERVER['DOCUMENT_ROOT'] . sprintf("/../storage/readings/%s/", date('Ym'));
+        $readings = [];
+        if (file_exists($dir . $filename)) {
+            $readingsTxt = file_get_contents($dir . $filename);
+            $readings = json_decode($readingsTxt, true);
+        }
 
-        return $this->view->render($this->response, '/contract/connections.twig', ['contract'=>$contract, 'abonentsList'=>$abonentsList]);
-
+        return $this->view->render($this->response, '/contract/readings.twig', ['contract'=>$contract, 'abonentsList'=>$abonentsList, 'readings'=>$readings]);
     }
 
 }

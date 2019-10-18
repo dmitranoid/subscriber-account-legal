@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpBadRequestException;
 use XBase\Table;
 
-class GetContractCounterReadingsAction extends ContractAction
+class GetCounterReadingsAction extends ContractAction
 {
     protected function action(): Response
     {

@@ -31,5 +31,11 @@ return function (ContainerBuilder $containerBuilder) {
             $twigSettings = $settings['twig'];
             return new Twig($twigSettings['path'], ['cache' => $twigSettings['cachePath']]);
         },
+        PDO::class => function (ContainerInterface $c) {
+            $dbSettings = $c->get('settings')['db']['operational'];
+            $dsn = $dbSettings['driver'] . ":" . $dbSettings['db'];
+            $pdo = new PDO($dsn);
+            return $pdo;
+        },
     ]);
 };

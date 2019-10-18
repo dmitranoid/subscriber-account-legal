@@ -17,5 +17,5 @@ interface ContractRepository
      * @return Contract
      * @throws ContractNotFoundException
      */
-    function getByNom($contractNo):Contract;
+    function getById($contractNo):array ;
 }

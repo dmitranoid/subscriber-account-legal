@@ -11,18 +11,27 @@ use App\Infrastructure\Persistence\Connection\FoxproConnectionRepository;
 use App\Infrastructure\Persistence\Contract\FoxproContractRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpBadRequestException;
-use XBase\Table;
 
-class ViewContractConnectionsAction extends ContractAction
+class ViewConnectionAction extends ContractAction
 {
+    private function extractAbTu($str):array
+    {
+        $delimPos = mb_strpos($str, '-');
+        return [
+            mb_substr($str, 0 ,$delimPos),
+            mb_substr($str, $delimPos+1, mb_strlen($str)-$delimPos)
+        ];
+    }
+
     protected function action(): Response
     {
         $contractNom = $_SESSION['contract'] ?? null;
 
+        list($abonentNo, $tuName)= $this->extractAbTu($this->request->getAttribute('abtu', ''));
+
         $contractRepository = new FoxproContractRepository();
         $connectionsRepository = new FoxproConnectionRepository();
         $abonentsRepository = new FoxproAbonentRepository();
-
 
         $contract = $contractRepository->getByNomArr($contractNom);
         $connectionsList = $connectionsRepository->getByContract($contractNom);
@@ -36,7 +45,7 @@ class ViewContractConnectionsAction extends ContractAction
         reset($connectionsList);
         array_walk($abonentsList, function (&$abonent) use (&$connectionsList){
             while ($abonent['nab'] == current($connectionsList)['nab']??'') {
-               $abonent['connections'][] = array_shift($connectionsList);
+                $abonent['connections'][] = array_shift($connectionsList);
             }
         });
 

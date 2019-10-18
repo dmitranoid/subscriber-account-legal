@@ -10,29 +10,38 @@ use App\Infrastructure\Persistence\Abonent\FoxproAbonentRepository;
 use App\Infrastructure\Persistence\Connection\FoxproConnectionRepository;
 use App\Infrastructure\Persistence\Contract\FoxproContractRepository;
 use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Exception\HttpBadRequestException;
+use XBase\Table;
 
-class SendContractReadingsAction extends ContractAction
+class ListConnectionsAction extends ContractAction
 {
     protected function action(): Response
     {
         $contractNom = $_SESSION['contract'] ?? null;
 
-        $readings = $this->request->getParsedBody();
-
         $contractRepository = new FoxproContractRepository();
         $connectionsRepository = new FoxproConnectionRepository();
         $abonentsRepository = new FoxproAbonentRepository();
+
 
         $contract = $contractRepository->getByNomArr($contractNom);
         $connectionsList = $connectionsRepository->getByContract($contractNom);
         $abonentsList = $abonentsRepository->getByContract($contractNom);
 
-        $filename = sprintf("%s-%s.txt", $contractNom, date('Ymd'));
-        $dir = $_SERVER['DOCUMENT_ROOT'] . sprintf("/../storage/readings/%s/", date('Ym'));
-        if (!file_exists($dir)) {
-            mkdir($dir);
-        }
-        file_put_contents($dir . $filename, json_encode($readings));
-        return $this->respondWithData(['message' => 'данные приняты на обработку']);
+        /* combine abonents and connections */
+        usort($abonentsList, function($a, $b){return $a['nab'] - $b['nab'];});
+        usort($connectionsList, function($a, $b){return $a['nab'] - $b['nab'];});
+
+
+        reset($connectionsList);
+        array_walk($abonentsList, function (&$abonent) use (&$connectionsList){
+            while ($abonent['nab'] == current($connectionsList)['nab']??'') {
+               $abonent['connections'][] = array_shift($connectionsList);
+            }
+        });
+
+        return $this->view->render($this->response, '/contract/connections.twig', ['contract'=>$contract, 'abonentsList'=>$abonentsList]);
+
     }
+
 }

@@ -14,14 +14,14 @@ class DoLoginAction extends AuthAction
 {
     protected function action(): Response
     {
-
         $data = $this->request->getParsedBody();
         $contractNom = $data['nom'] ?? null;
         $password = $data['password'] ?? null;
         if((empty($contractNom)||empty($password)) || ($contractNom != $password)){
             return $this->response->withHeader('Location', '/login');
         }
-        $contract = (new FoxproContractRepository)->getByNomArr($contractNom);
+
+        $contract = $this->contractRepository->getById($contractNom);
         if (empty($contract)) {
             return $this->response->withHeader('Location', '/login');
         }

@@ -21,6 +21,20 @@ return function (ContainerBuilder $containerBuilder) {
             'dbf-data' => [
                 'dir' =>  realpath(__DIR__ . '/../data/dbf'),
             ],
+            'db' => [
+                'operational' => [
+                    'driver' => 'sqlite',
+                    'db'=>__DIR__ . '/../data/sqlite/legal-operational.sqlite3',
+                    'username'=> '',
+                    'password' => '',
+                ],
+                'archive' => [
+                    'driver' => 'sqlite',
+                    'db'=>__DIR__ . '/../data/sqlite/archive/legal-arch.sqlite3',
+                    'username'=> '',
+                    'password' => '',
+                ]
+            ],
             'invoiceDir' => '\\vms8\prom_arch\AMSRV\schet\2019\\',
         ],
     ]);
