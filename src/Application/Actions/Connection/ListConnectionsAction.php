@@ -2,36 +2,35 @@
 declare(strict_types=1);
 
 
-namespace App\Application\Actions\Contract;
+namespace App\Application\Actions\Connection;
 
 
-use App\Domain\DomainException\DomainRecordNotFoundException;
-use App\Infrastructure\Persistence\Abonent\FoxproAbonentRepository;
-use App\Infrastructure\Persistence\Connection\FoxproConnectionRepository;
-use App\Infrastructure\Persistence\Contract\FoxproContractRepository;
+use App\Application\Actions\Action;
+use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
+use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
+use App\Infrastructure\Persistence\Contract\SqlContractRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpBadRequestException;
-use XBase\Table;
 
-class ListConnectionsAction extends ContractAction
+class ListConnectionsAction extends Action
 {
     protected function action(): Response
     {
         $contractNom = $_SESSION['contract'] ?? null;
 
-        $contractRepository = new FoxproContractRepository();
-        $connectionsRepository = new FoxproConnectionRepository();
-        $abonentsRepository = new FoxproAbonentRepository();
+        $contractRepository = new SqlContractRepository($this->pdo);
+        $connectionsRepository = new SqlConnectionRepository($this->pdo);
+        $abonentsRepository = new SqlAbonentRepository($this->pdo);
 
-
-        $contract = $contractRepository->getByNomArr($contractNom);
+        $contract = $contractRepository->getById($contractNom);
         $connectionsList = $connectionsRepository->getByContract($contractNom);
         $abonentsList = $abonentsRepository->getByContract($contractNom);
 
         /* combine abonents and connections */
         usort($abonentsList, function($a, $b){return $a['nab'] - $b['nab'];});
-        usort($connectionsList, function($a, $b){return $a['nab'] - $b['nab'];});
-
+        usort($connectionsList, function($a, $b){
+            return $a['nab'] - $b['nab'];
+        });
 
         reset($connectionsList);
         array_walk($abonentsList, function (&$abonent) use (&$connectionsList){

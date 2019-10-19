@@ -39,14 +39,18 @@ abstract class Action
      */
     protected $args;
 
+    /** @var \PDO */
+    protected $pdo;
     /**
      * @param LoggerInterface $logger
      * @param Twig $view
+     * @param \PDO $pdo
      */
-    public function __construct(LoggerInterface $logger,  Twig $view)
+    public function __construct(LoggerInterface $logger,  Twig $view, \PDO $pdo)
     {
         $this->logger = $logger;
         $this->view = $view;
+        $this->pdo = $pdo;
     }
 
     /**

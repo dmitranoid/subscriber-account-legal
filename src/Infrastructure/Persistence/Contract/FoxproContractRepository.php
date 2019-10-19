@@ -10,7 +10,7 @@ use App\Domain\Contract\ContractNotFoundException;
 use App\Domain\Contract\ContractRepository;
 use XBase\Table;
 
-class FoxproContractRepository implements ContractRepository
+class FoxproContractRepository
 {
     private $dbPath;
 

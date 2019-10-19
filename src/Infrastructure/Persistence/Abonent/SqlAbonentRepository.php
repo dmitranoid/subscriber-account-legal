@@ -10,7 +10,14 @@ use Envms\FluentPDO\Query;
 
 final class SqlAbonentRepository extends GenericSqlRepository
 {
-    protected $tableName='splat';
+    protected $tableName='ambab';
     protected $identity = ['kp', 'nab'];
 
+
+    public function getByContract($contractNo)
+    {
+        return $this->getAllSql()
+            ->where('kp', $contractNo)
+            ->fetchAll();
+    }
 }

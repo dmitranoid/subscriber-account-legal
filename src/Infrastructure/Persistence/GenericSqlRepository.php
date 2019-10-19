@@ -30,22 +30,25 @@ class GenericSqlRepository
         return $this->tableName;
     }
 
-    public function getAll():array
+    protected function getAllSql()
     {
         return $this->fpdo
             ->from($this->getTableName())
-            ->select('*')
+            ->select('*');
+    }
+
+    public function getAll():array
+    {
+        return $this
+            ->getAllSql()
             ->fetch();
     }
 
     public function getById($id):array
     {
-            $data = $this->fpdo
-            ->from($this->getTableName())
-            ->select('*')
+        $data = $this->getAllSql()
             ->where($this->identity, $id)
             ->fetch();
-
         return $data;
     }
 

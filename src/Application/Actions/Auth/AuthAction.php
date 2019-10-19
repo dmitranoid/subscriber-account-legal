@@ -12,15 +12,10 @@ use Slim\Views\Twig;
 
 abstract class AuthAction extends Action
 {
-    /**
-     * @var ContractRepository
-     */
-    protected $contractRepository;
 
-    public function __construct(LoggerInterface $logger, Twig $view, ContractRepository $contractRepository)
+    public function __construct(LoggerInterface $logger, Twig $view, \PDO $pdo)
     {
-        parent::__construct($logger, $view);
-        $this->contractRepository = $contractRepository;
+        parent::__construct($logger, $view, $pdo);
     }
 
 }

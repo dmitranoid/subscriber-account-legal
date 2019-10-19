@@ -34,7 +34,7 @@ class FoxproAbonentRepository
         return $dataList;
     }
 
-    public function getByContract($contractNom)
+    public function getById($contractNom):array
     {
         $ambtu = new Table(
             $this->dbPath . 'ambab.dbf',

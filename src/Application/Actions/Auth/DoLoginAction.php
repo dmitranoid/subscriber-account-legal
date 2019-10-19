@@ -8,6 +8,7 @@ namespace App\Application\Actions\Auth;
 use App\Domain\Contract\ContractNotFoundException;
 use App\Domain\DomainException\DomainRecordNotFoundException;
 use App\Infrastructure\Persistence\Contract\FoxproContractRepository;
+use App\Infrastructure\Persistence\Contract\SqlContractRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class DoLoginAction extends AuthAction
@@ -21,7 +22,7 @@ class DoLoginAction extends AuthAction
             return $this->response->withHeader('Location', '/login');
         }
 
-        $contract = $this->contractRepository->getById($contractNom);
+        $contract = (new SqlContractRepository($this->pdo))->getById($contractNom);
         if (empty($contract)) {
             return $this->response->withHeader('Location', '/login');
         }
