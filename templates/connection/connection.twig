@@ -1,0 +1,48 @@
+{% extends '../layout_main.twig' %}
+
+{% block title %}Точки учета{% endblock %}
+
+{% set connectionTypes= {'1':'показания', '2':'мощность', '3':'сумматор'} %}
+
+{% block content %}
+<div class="contract">
+    <h5>Договор  №{{ contract.kp }}, {{ contract.npp1 }} {{ contract.npp2 }}</h5>
+</div>
+
+    <table class="table abonents">
+    <thead>
+    <tr>
+        <th>№</th>
+        <th>наименование</th>
+        <th>заводской №</th>
+        <th>дата установки</th>
+        <th>тип расчетов</th>
+        <th>коэфф.трансф.</th>
+        <th>дата поверки</th>
+        <th>показания</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for ab in abonentsList %}
+    <tr class="abonent">
+        <td>{{ ab.nab }}</td>
+        <td>{{ ab.naim }}</td>
+        <td colspan=6>{{ ab.tip_np }} {{ ab.name_np }} {{ ab.tip_ul }} {{ ab.name_ul }} {{ ab.dom }} {{ ab.korpus }}</td>
+    </tr>
+    {% for conn in ab.connections %}
+    <tr class="connection clickable-row" data-href="/contract/connection/{{ ab.nab }}-{{ conn.naim|url_encode }}">
+        <td><a title="подробнее о точке учета"><i class="icon icon-location"></i></a></td>
+        <td>{{ conn.naim }}</td>
+        <td>{{ conn.nst }}</td>
+        <td>{{ conn.datu|date("d.m.Y") }}</td>
+        <td>{{ connectionTypes[conn.sr] }}</td>
+        <td>1</td>
+        <td>{{ conn.kvpov }} кв. {{ conn.godpov }}</td>
+        <td>{{ conn.ppok }}</td>
+    </tr>
+    {% endfor %}
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

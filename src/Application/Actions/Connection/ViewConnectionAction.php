@@ -50,7 +50,7 @@ class ViewConnectionAction extends Action
             }
         });
 
-        return $this->view->render($this->response, '/contract/connections.twig', ['contract'=>$contract, 'abonentsList'=>$abonentsList]);
+        return $this->view->render($this->response, '/contract/connection.twig', ['contract'=>$contract, 'abonentsList'=>$abonentsList]);
 
     }
 

@@ -19,19 +19,21 @@ return function (ContainerBuilder $containerBuilder) {
                 'cachePath' => false,
             ],
             'dbf-data' => [
-                'dir' =>  realpath(__DIR__ . '/../data/dbf'),
             ],
             'db' => [
+                'dbf' => [
+                    'dir' =>  realpath(__DIR__ . '/../data/dbf'),
+                ],
                 'operational' => [
                     'driver' => 'sqlite',
-                    'db'=>__DIR__ . '/../data/sqlite/legal-operational.sqlite3',
-                    'username'=> '',
+                    'db'=> __DIR__ . '/../data/sqlite/legal-operational.sqlite3',
+                    'username' => '',
                     'password' => '',
                 ],
                 'archive' => [
                     'driver' => 'sqlite',
-                    'db'=>__DIR__ . '/../data/sqlite/archive/legal-arch.sqlite3',
-                    'username'=> '',
+                    'db' => __DIR__ . '/../data/sqlite/legal-arch.sqlite3',
+                    'username' => '',
                     'password' => '',
                 ]
             ],

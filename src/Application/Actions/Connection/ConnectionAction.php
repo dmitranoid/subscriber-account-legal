@@ -7,15 +7,14 @@ namespace App\Application\Actions\Contract;
 
 use App\Application\Actions\Action;
 use App\Application\View\ViewInterface;
-use App\Domain\Contract\ContractRepository;
 use Psr\Log\LoggerInterface;
 use Slim\Views\Twig;
 
 abstract class ConnectionAction extends Action
 {
 
-    public function __construct(LoggerInterface $logger, Twig $view)
+    public function __construct(LoggerInterface $logger, Twig $view, \PDO $pdo)
     {
-        parent::__construct($logger, $view);
+        parent::__construct($logger, $view, $pdo);
     }
 }
