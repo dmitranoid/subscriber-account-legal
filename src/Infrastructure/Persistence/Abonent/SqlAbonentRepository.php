@@ -14,10 +14,19 @@ final class SqlAbonentRepository extends GenericSqlRepository
     protected $identity = ['kp', 'nab'];
 
 
-    public function getByContract($contractNo)
+    public function getByContract($contractNom)
     {
         return $this->getAllSql()
-            ->where('kp', $contractNo)
+            ->where('kp', $contractNom)
             ->fetchAll();
+    }
+
+    public function getByNom($contractNom, $abonentNom)
+    {
+        return $this->getAllSql()
+            ->where('kp', $contractNom)
+            ->where('nab', $abonentNom)
+            ->fetch();
+
     }
 }

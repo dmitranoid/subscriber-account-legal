@@ -46,7 +46,7 @@ class ListReadingsAction extends Action
             $readings = json_decode($readingsTxt, true);
         }
 
-        return $this->view->render($this->response, '/connection/readings.twig', ['contract'=>$contract, 'abonentsList'=>$abonentsList, 'readings'=>$readings]);
+        return $this->view->render($this->response, 'connection/readings.twig', ['contract'=>$contract, 'abonentsList'=>$abonentsList, 'readings'=>$readings]);
     }
 
 }

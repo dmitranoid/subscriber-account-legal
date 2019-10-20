@@ -25,7 +25,7 @@ class GenericSqlRepository
     /**
      * @return string
      */
-    private function getTableName(): string
+    protected function getTableName(): string
     {
         return $this->tableName;
     }
@@ -41,7 +41,7 @@ class GenericSqlRepository
     {
         return $this
             ->getAllSql()
-            ->fetch();
+            ->fetchAll();
     }
 
     public function getById($id):array

@@ -20,11 +20,12 @@ final class SqlConnectionRepository extends GenericSqlRepository
             ->fetchAll();
     }
 
-    public function getByNom($contractNom, $counterNom)
+    public function getByNom($contractNom, $abonentNom, $counterNom)
     {
         $data = $this->getAllSql()
             ->where('kp', $contractNom)
-            ->where('nst', $counterNom)
+            ->where('nab', $abonentNom)
+            ->where('naim', $counterNom)
             ->fetch();
         return $data;
     }

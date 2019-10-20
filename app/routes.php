@@ -23,7 +23,7 @@ return function (App $app) {
     $container = $app->getContainer();
 
     $app->get('/', function (Request $request, Response $response) {
-        $response = $response->withHeader('Location', '/contract/info');
+        $response = $response->withHeader('Location', '/contract');
         return $response;
     });
 
@@ -31,18 +31,20 @@ return function (App $app) {
     $app->post('/login', DoLoginAction::class);
     $app->get('/logout', DoLogoutAction::class)->setname('logout')
         ->add(GuardedMiddleware::class);
+
+    $app->group('/', function (Group $group) use ($container) {
+        $group->get('contract', ViewContractInfoAction::class);
+        $group->get('connections', ListConnectionsAction::class);
+        $group->get('connection/{abtu}', ViewConnectionAction::class);
+        $group->get('sendreadings', ListReadingsAction::class);
+        $group->post('sendreadings', SendReadingsActionAlias::class);
+        $group->get('payments', ViewContractPaymentsAction::class);
+        $group->get('docs', ViewContractDocsAction::class);
+    })->add(GuardedMiddleware::class);
+/*
     $app->group('/users', function (Group $group) use ($container) {
         $group->get('', ListUsersAction::class);
         $group->get('/{id}', ViewUserAction::class);
     });
-
-    $app->group('/contract', function (Group $group) use ($container) {
-        $group->get('/info', ViewContractInfoAction::class);
-        $group->get('/connections', ListConnectionsAction::class);
-        $group->get('/connection/{abtu}', ViewConnectionAction::class);
-        $group->get('/sendreadings', ListReadingsAction::class);
-        $group->post('/sendreadings', SendReadingsActionAlias::class);
-        $group->get('/payments', ViewContractPaymentsAction::class);
-        $group->get('/docs', ViewContractDocsAction::class);
-    })->add(GuardedMiddleware::class);
+*/
 };
