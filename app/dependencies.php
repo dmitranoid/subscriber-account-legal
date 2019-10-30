@@ -34,7 +34,11 @@ return function (ContainerBuilder $containerBuilder) {
         PDO::class => function (ContainerInterface $c) {
             $dbSettings = $c->get('settings')['db']['operational'];
             $dsn = $dbSettings['driver'] . ":" . $dbSettings['db'];
-            $pdo = new PDO($dsn);
+            try {
+                $pdo = new PDO($dsn);
+            } catch (Exception $e) {
+                die('database open error');
+            }
             return $pdo;
         },
     ]);

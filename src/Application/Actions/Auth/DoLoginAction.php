@@ -28,7 +28,7 @@ class DoLoginAction extends AuthAction
         }
         $_SESSION['contract'] = $contractNom;
 
-        return $this->response->withHeader('Location', '/contract/info');
+        return $this->response->withHeader('Location', '/contract');
     }
 
 }

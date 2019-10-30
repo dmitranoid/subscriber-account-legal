@@ -17,6 +17,8 @@ final class SqlInvoiceRepository extends GenericSqlRepository
     {
         return $this->getAllSql()
             ->where('kp', $contractNom)
+            ->where('vpt', ['A', 'R'])
+            ->where('protkaz', '')
             ->fetchAll();
     }
 

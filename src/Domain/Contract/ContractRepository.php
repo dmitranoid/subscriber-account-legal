@@ -10,12 +10,12 @@ interface ContractRepository
     /**
      * @return Contract[]
      */
-    function getAll():array;
+    function getAll():?array;
 
     /**
      * @param $contractNo
      * @return Contract
      * @throws ContractNotFoundException
      */
-    function getById($contractNo):array ;
+    function getById($contractNo):?array ;
 }

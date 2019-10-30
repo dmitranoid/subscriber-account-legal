@@ -37,18 +37,21 @@ class GenericSqlRepository
             ->select('*');
     }
 
-    public function getAll():array
+    public function getAll():?array
     {
         return $this
             ->getAllSql()
             ->fetchAll();
     }
 
-    public function getById($id):array
+    public function getById($id):?array
     {
         $data = $this->getAllSql()
             ->where($this->identity, $id)
             ->fetch();
+        if (!$data) {
+            return null;
+        }
         return $data;
     }
 

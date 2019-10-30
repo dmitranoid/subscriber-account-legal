@@ -18,30 +18,30 @@ class ViewContractPaymentsAction extends Action
         $contractNo = $_SESSION['contract'];
         $contractRepository = new SqlContractRepository($this->pdo);
         $contractInfo = $contractRepository->getById($contractNo);
-        $payments = (new SqlPaymentRepository($this->pdo))->getByContract($contractNo);
-        $invoices = (new SqlInvoiceRepository($this->pdo))->getByContract($contractNo);
+        $paymentsList = (new SqlPaymentRepository($this->pdo))->getByContract($contractNo);
+        $invoicesList = (new SqlInvoiceRepository($this->pdo))->getByContract($contractNo);
         // date, period, doctype, docno, sumInv, sumPay
         $docList = [];
 //        $invoices = [];
-        foreach ($invoices as $inv) {
+        foreach ($invoicesList as $invoice) {
             $paydocs[] = [
-                'date' => $inv['data'],
-                'period' => $inv['rp'],
-                'doctype' => $inv['vids'],
+                'date' => $invoice['data'],
+                'period' => $invoice['rp'],
+                'doctype' => $invoice['vids'],
                 'docno' => '?',
-                'sumInv' => $inv['sum'],
+                'sumInv' => $invoice['sum'],
                 'sumPay' => ''
             ];
         }
 
-        foreach ($payments as $paym) {
+        foreach ($paymentsList as $payment) {
             $paydocs[] = [
-                'date' => $paym['data'],
-                'period' => $paym['rp'],
-                'doctype' => $paym['vids'],
+                'date' => $payment['data'],
+                'period' => $payment['rp'],
+                'doctype' => $payment['vids'],
                 'docno' => '?',
                 'sumInv' =>  '',
-                'sumPay' => $paym['sum']
+                'sumPay' => $payment['sum']
             ];
         }
         $docList = array_reverse($paydocs);
