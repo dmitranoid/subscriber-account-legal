@@ -6,11 +6,15 @@
     <div class="content col-9 ">
     <div class="form-group d-inline-block">
         <label class="form-label">Договор:</label>
-        <input class="input" name="contractNo" value="{{ contract.kp }}">
+        <input class="form-input" name="contractNo" value="{{ contract.kp }}">
     </div>
     <div class="form-group d-inline-block">
         <label class="form-label">Дата заключения:</label>
-        <input class="input" name="contractDate" value="{{ contract.datd|date('d.m.Y') }}">
+        <input class="form-input" name="contractDate" value="{{ contract.datd|date('d.m.Y') }}">
+    </div>
+    <div class="form-group d-inline-block">
+        <label class="form-label">УНП:</label>
+        <input class="form-input" name="org_unp" value="{{ contract.kodni }}">
     </div>
     <div class="form-group">
         <label class="form-label">Название организации:</label>
@@ -20,17 +24,13 @@
         <label class="form-label">Юридический адрес:</label>
         <input class="form-input" name="org_address" value="{{ contract.tip_np }} {{ contract.adres2 }} {{ contract.tip_ul }} {{ contract.adres3 }} {{ contract.tip_kv }} {{ contract.adres4 }}">
     </div>
-    <div class="form-group">
-        <label class="form-label">УНП:</label>
-        <input class="form-input" name="contract.kodni">
-    </div>
-    <div class="form-group">
+    <div class="form-group d-inline-block">
         <label class="form-label">Руководитель:</label>
         <input class="form-input" name="org_director" value="{{ contract.fio }}">
     </div>
-    <div class="form-group">
+    <div class="form-group d-inline-block">
         <label class="form-label">Ответственный за электрохозяйство:</label>
-        <input class="form-input" name="org_director" value="{{ fio }}">
+        <input class="form-input" name="org_director" value="{{ contract.sfio }}">
     </div>
 
 {% endblock %}
