@@ -10,6 +10,14 @@
   color: #de466f;
 }
 
+@media print
+{
+  .no-print, .no-print *
+  {
+    display: none !important;
+  }
+}
+
 html{
   color: #414656;
   background: #e8ebe4;

@@ -6,7 +6,6 @@ namespace App\Application\Actions\Contract;
 
 
 use App\Application\Actions\Action;
-use App\Application\View\ViewInterface;
 use Psr\Log\LoggerInterface;
 use Slim\Views\Twig;
 
