@@ -1,6 +1,6 @@
 {% extends 'layout_main.twig' %}
 
-{% block title %}Точки учета{% endblock %}
+{% block title %}Точка учета{% endblock %}
 
 {% set connectionTypes= {'1':'показания', '2':'мощность', '3':'сумматор'} %}
 
@@ -37,43 +37,24 @@
         <label class="form-label">Коэффициент трансформации:</label>
         <input class="form-input" name="org_director" value="{{ fio }}">
     </div>
-
-{#
+    <div><h4>История показаний прибора учета:</h4></div>
     <table class="table readings-history">
     <thead>
     <tr>
-        <th>№</th>
-        <th>наименование</th>
-        <th>заводской №</th>
-        <th>дата установки</th>
-        <th>тип расчетов</th>
-        <th>коэфф.трансф.</th>
-        <th>дата поверки</th>
-        <th>показания</th>
+        <th>период</th>
+        <th>показание</th>
+        <th>потребление</th>
     </tr>
     </thead>
     <tbody>
-    {% for ab in abonentsList %}
-    <tr class="abonent">
-        <td>{{ ab.nab }}</td>
-        <td>{{ ab.naim }}</td>
-        <td colspan=6>{{ ab.tip_np }} {{ ab.name_np }} {{ ab.tip_ul }} {{ ab.name_ul }} {{ ab.dom }} {{ ab.korpus }}</td>
+    {% for rd in readingsHistory %}
+    <tr class="reading">
+        <td> 20{{ rd.rp_part_y }}/{{ rd.rp_part_m }}</td>
+        <td>{{ rd.tpok }}</td>
+        <td>{{ rd.consumption }}</td>
     </tr>
-    {% for conn in ab.connections %}
-    <tr class="connection clickable-row" data-href="/contract/connection/{{ ab.nab }}-{{ conn.naim|url_encode }}">
-        <td><a title="подробнее о точке учета"><i class="icon icon-location"></i></a></td>
-        <td>{{ conn.naim }}</td>
-        <td>{{ conn.nst }}</td>
-        <td>{{ conn.datu|date("d.m.Y") }}</td>
-        <td>{{ connectionTypes[conn.sr] }}</td>
-        <td>1</td>
-        <td>{{ conn.kvpov }} кв. {{ conn.godpov }}</td>
-        <td>{{ conn.ppok }}</td>
-    </tr>
-    {% endfor %}
     {% endfor %}
     </tbody>
 </table>
-#}
 
 {% endblock %}

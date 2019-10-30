@@ -6,9 +6,8 @@ namespace App\Application\Actions\Connection;
 
 
 use App\Application\Actions\Action;
-use App\Domain\DomainException\DomainRecordNotFoundException;
+use App\Application\Service\Connection\ConnectionHistoryService;
 use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
-use App\Infrastructure\Persistence\Connection\SqlConnectionArchRepository;
 use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
 use App\Infrastructure\Persistence\Contract\SqlContractRepository;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -28,22 +27,25 @@ class ViewConnectionAction extends Action
     protected function action(): Response
     {
         $contractNom = $_SESSION['contract'] ?? null;
-
+        // историю показаний можно собрать только из архивной базы
         $archPdo = new \PDO('sqlite:'. realpath($_SERVER['DOCUMENT_ROOT'] . '\..\data\sqlite\legal-arch.sqlite3'));
 
         list($abonentNom, $tuName)= $this->extractAbTu($this->request->getAttribute('abtu', ''));
 
+        $connectionHistory = new ConnectionHistoryService($archPdo);
+
         $contractRepository = new SqlContractRepository($this->pdo);
         $connectionsRepository = new SqlConnectionRepository($this->pdo);
         $abonentsRepository = new SqlAbonentRepository($this->pdo);
-        $connectionArchRepository = new SqlConnectionArchRepository($archPdo);
+
 
         $contract = $contractRepository->getById($contractNom);
         $abonent = $abonentsRepository->getByNom($contractNom, $abonentNom);
         $connection = $connectionsRepository->getByNom($contractNom, $abonentNom, $tuName);
-        $readingsHistory = $connectionArchRepository->getByNom($contractNom, $abonentNom, $tuName);
 
-        return $this->view->render(
+        $readingsHistory = $connectionHistory->getReadingsHistory($contractNom, $abonentNom, $tuName);
+
+            return $this->view->render(
             $this->response,
             'connection/connection.twig',
             [
