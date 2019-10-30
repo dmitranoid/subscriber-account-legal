@@ -7,9 +7,9 @@ namespace App\Application\Actions\Connection;
 
 use App\Application\Actions\Action;
 use App\Application\Service\Connection\ConnectionHistoryService;
+use App\Application\Service\Contract\ContractInfoService;
 use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
 use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
-use App\Infrastructure\Persistence\Contract\SqlContractRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpBadRequestException;
 
@@ -34,12 +34,11 @@ class ViewConnectionAction extends Action
 
         $connectionHistory = new ConnectionHistoryService($archPdo);
 
-        $contractRepository = new SqlContractRepository($this->pdo);
         $connectionsRepository = new SqlConnectionRepository($this->pdo);
         $abonentsRepository = new SqlAbonentRepository($this->pdo);
 
 
-        $contract = $contractRepository->getById($contractNom);
+        $contract = (new ContractInfoService($this->pdo))->getContractInfo($contractNom);
         $abonent = $abonentsRepository->getByNom($contractNom, $abonentNom);
         $connection = $connectionsRepository->getByNom($contractNom, $abonentNom, $tuName);
 

@@ -6,10 +6,10 @@ namespace App\Application\Actions\Connection;
 
 
 use App\Application\Actions\Action;
+use App\Application\Service\Contract\ContractInfoService;
 use App\Domain\DomainException\DomainRecordNotFoundException;
 use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
 use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
-use App\Infrastructure\Persistence\Contract\SqlContractRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class ListReadingsAction extends Action
@@ -18,11 +18,10 @@ class ListReadingsAction extends Action
     {
         $contractNom = $_SESSION['contract'] ?? null;
 
-        $contractRepository = new SqlContractRepository($this->pdo);
         $connectionsRepository = new SqlConnectionRepository($this->pdo);
         $abonentsRepository = new SqlAbonentRepository($this->pdo);
 
-        $contract = $contractRepository->getById($contractNom);
+        $contract = (new ContractInfoService($this->pdo))->getContractInfo($contractNom);
         $connectionsList = $connectionsRepository->getByContract($contractNom);
         $abonentsList = $abonentsRepository->getByContract($contractNom);
 
