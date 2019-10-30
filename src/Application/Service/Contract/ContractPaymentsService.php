@@ -21,34 +21,40 @@ final class ContractPaymentsService
 
     public function getPaymentsAndInvoicesList($contractNo)
     {
+        $invoiceDocTypes = ['V' => 'счет V', 'R' => 'счет R',  'A' => 'акт'];
+        $paymentDocTypes = ['V' => 'платежное поручение'];
         $paymentsList = (new SqlPaymentRepository($this->pdo))->getByContract($contractNo);
         $invoicesList = (new SqlInvoiceRepository($this->pdo))->getByContract($contractNo);
         // date, period, doctype, docno, sumInv, sumPay
         $docList = [];
         foreach ($invoicesList as $invoice) {
             $paydocs[] = [
-                'date' => $invoice['data'],
-                'period' => $invoice['rp'],
-                'doctype' => $invoice['vids'],
-                'docno' => '?',
-                'sumInv' => $invoice['sum'],
+                'date' => \DateTime::createFromFormat(DATE_RFC2822, $invoice['data']),
+                'period_y' => '20' . substr($invoice['rp'], 1,2),
+                'period_m' => substr($invoice['rp'], 3,2),
+                'doctype' => $invoiceDocTypes[$invoice['vpt']],
+                'docno' => $invoice['akt_nomer'],
+                'sumInv' => $invoice['sumTotal'],
                 'sumPay' => ''
             ];
         }
 
         foreach ($paymentsList as $payment) {
             $paydocs[] = [
-                'date' => $payment['data'],
-                'period' => $payment['rp'],
-                'doctype' => $payment['vids'],
-                'docno' => '?',
+                'date' => \DateTime::createFromFormat(DATE_RFC2822, $payment['data']),
+                'period_y' => '20' . substr($payment['rp'], 1,2),
+                'period_m' => substr($invoice['rp'], 3,2),
+                'doctype' => $paymentDocTypes[$payment['vids']],
+                'docno' => '',
                 'sumInv' =>  '',
                 'sumPay' => $payment['sum']
             ];
         }
-        $docList = array_reverse($paydocs);
+        usort($paydocs, function($item1, $item2) {
+            return ($item1['date'] ?? 0) < ($item2['date'] ?? 0) ? -1 : 1;
+        });
 
-        return $docList;
+        return array_reverse($paydocs);
     }
 
 }

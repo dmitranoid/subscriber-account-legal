@@ -16,9 +16,12 @@ final class SqlInvoiceRepository extends GenericSqlRepository
     public function getByContract($contractNom)
     {
         return $this->getAllSql()
+            ->select('kp, rp, data, akt_nomer, sum(`sum`) sumTotal')
             ->where('kp', $contractNom)
             ->where('vpt', ['A', 'R'])
             ->where('protkaz', '')
+            ->group('kp, rp, data, akt_nomer')
+            ->order('data, rp')
             ->fetchAll();
     }
 

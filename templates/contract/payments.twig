@@ -7,25 +7,24 @@
     <h5>Договор  №{{ contract.kp }}, {{ contract.npp1 }} {{ contract.npp2 }}</h5>
 </div>
 
-    <table class="table paydocs">
+    <table class="table contract-paydocs">
     <thead>
     <tr>
         <th>дата</th>
         <th>расчетный период</th>
         <th>документ</th>
-        <th>выставлено</th>
-        <th>оплачено</th>
+        <th>выставлено, руб.</th>
+        <th>оплачено, руб.</th>
     </tr>
     </thead>
     <tbody>
     {% for doc in docList %}
     <tr class="">
         <td>{{ doc.date|date('d.m.Y') }}</td>
-        <td>{{ doc.period }}</td>
+        <td>{{ doc.period_m }}.{{ doc.period_y }}</td>
         <td>{{ doc.doctype }} {{ doc.docno }}</td>
-        <td>{{ doc.sumInv }}</td>
-        <td>{{ doc.sumPay }}</td>
-
+        <td>{% if doc.sumInv %}{{ doc.sumInv|number_format(2, '.', ' ') }}{% endif %}</td>
+        <td>{% if doc.sumPay %}{{ doc.sumPay|number_format(2, '.', ' ') }}{% endif %}</td>
     </tr>
     {% endfor %}
     </tbody>
