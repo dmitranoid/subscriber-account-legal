@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace App\Application\Actions\Contract;
+namespace App\Application\Actions\Connection;
 
 
 use App\Application\Actions\Action;
@@ -28,7 +28,7 @@ class SendReadingsAction extends Action
         $connectionsList = $connectionsRepository->getByContract($contractNom);
         $abonentsList = $abonentsRepository->getByContract($contractNom);
 
-        $filename = sprintf("%s-%s.txt", $contractNom, date('Ymd'));
+        $filename = sprintf("%s-%s.json", $contractNom, date('Ym'));
         $dir = $_SERVER['DOCUMENT_ROOT'] . sprintf("/../storage/readings/%s/", date('Ym'));
         if (!file_exists($dir)) {
             mkdir($dir);

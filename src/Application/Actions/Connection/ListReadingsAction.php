@@ -37,7 +37,7 @@ class ListReadingsAction extends Action
             }
         });
         // check file with sended readings
-        $filename = sprintf("%s-%s.txt", $contractNom, date('Ym'));
+        $filename = sprintf("%s-%s.json", $contractNom, date('Ym'));
         $dir = $_SERVER['DOCUMENT_ROOT'] . sprintf("/../storage/readings/%s/", date('Ym'));
         $readings = [];
         if (file_exists($dir . $filename)) {
