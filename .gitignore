@@ -3,8 +3,8 @@
 .hg/
 .hgignore
 
-/vendor/
-/storage/
-/data/
+/vendor/*
+/storage/*
+/data/*
 
-!.empty
+!*/.empty
