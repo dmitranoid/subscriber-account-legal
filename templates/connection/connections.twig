@@ -2,7 +2,7 @@
 
 {% block title %}Точки учета{% endblock %}
 
-{% set connectionTypes= {'1':'показания', '2':'мощность', '3':'сумматор'} %}
+{% set connectionTypes= {'1':'показания', '2':'расчет по индексам', '3':'мощность', '4':'сумматор'} %}
 
 {% block content %}
 <div class="contract">
@@ -24,21 +24,24 @@
     </thead>
     <tbody>
     {% for ab in abonentsList %}
+        {% set address = ab.tip_np ~ ab.name_np ~ ', ' ~ ab.tip_ul ~ ab.name_ul ~ ', ' ~ (ab.dom ? 'д. ') ~ ab.dom ~ ' ' ~ ab.korpus %}
     <tr class="abonent">
         <td>{{ ab.nab }}</td>
         <td>{{ ab.naim }}</td>
-        <td colspan=6>{{ ab.tip_np }} {{ ab.name_np }} {{ ab.tip_ul }} {{ ab.name_ul }} {{ ab.dom }} {{ ab.korpus }}</td>
+        <td colspan=6> <a href="https://maps.google.com/?q={{ address }}" target="_blank" title="Посмотреть на карте"><i class="icon icon-location"></i></a>&nbsp
+            {{ address }}
+        </td>
     </tr>
     {% for conn in ab.connections %}
     <tr class="connection clickable-row" data-href="/connection/{{ ab.nab }}-{{ conn.naim|url_encode }}">
-        <td><a title="подробнее о точке учета"><i class="icon icon-location"></i></a></td>
+        <td><a title="подробнее о точке учета">{#<i class="icon icon-location"></i>#}</a></td>
         <td>{{ conn.naim }}</td>
         <td>{{ conn.nst }}</td>
         <td>{{ conn.datu|date("d.m.Y") }}</td>
         <td>{{ connectionTypes[conn.sr] }}</td>
         <td>{{ conn.ktt }}</td>
-        <td>{{ conn.kvpov }} кв. {{ conn.godpov }}</td>
-        <td>{{ conn.ppok }}</td>
+        <td>{{ conn.kvpov }} {{ conn.kvpov ? 'кв.' : '' }} {{ conn.godpov }}</td>
+        <td>{{ conn.ppok ? conn.ppok : '' }}</td>
     </tr>
     {% endfor %}
     {% endfor %}
