@@ -14,16 +14,15 @@
         <th>расчетный период</th>
         <th>документ</th>
         <th></th>
-        <th></th>
     </tr>
     </thead>
     <tbody>
-    {% for doc in docList %}
-    <tr class="">
+    {% for doc in docsList %}
+    <tr>
         <td>{{ doc.date|date('d.m.Y') }}</td>
         <td>{{ doc.period }}</td>
-        <td><a href="#" target="_blank">посмотреть</a></td>
-        <td></td>
+        <td>{{ doc.docName }}</td>
+        <td><a href="/viewdoc?filename={{ doc.fullFilename }}" target="_blank">посмотреть</a></td>
     </tr>
     {% endfor %}
     </tbody>

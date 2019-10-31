@@ -27,6 +27,7 @@
         "slim/psr7": "^0.5",
         "slim/slim": "^4.1",
         "slim/twig-view": "3.0.0-beta",
+        "symfony/finder": "dev-master",
         "twig/twig": "^2.8"
     },
     "require-dev": {

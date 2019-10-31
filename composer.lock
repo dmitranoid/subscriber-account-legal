@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d13da74c1f3862ce8409a1060d87a00",
+    "content-hash": "b5ab09295f4dd497145db7410f004423",
     "packages": [
         {
             "name": "envms/fluentpdo",
@@ -1092,6 +1092,55 @@
                 "view"
             ],
             "time": "2019-08-20T00:55:36+00:00"
+        },
+        {
+            "name": "symfony/finder",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/finder.git",
+                "reference": "bd866ffc62322350897dac99d1cf96b1b5879700"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/bd866ffc62322350897dac99d1cf96b1b5879700",
+                "reference": "bd866ffc62322350897dac99d1cf96b1b5879700",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2.9"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Finder\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Finder Component",
+            "homepage": "https://symfony.com",
+            "time": "2019-10-30T13:09:48+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -2803,13 +2852,15 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "envms/fluentpdo": 20,
-        "slim/twig-view": 10
+        "slim/twig-view": 10,
+        "symfony/finder": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.1",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-pdo": "*"
     },
     "platform-dev": []
 }
