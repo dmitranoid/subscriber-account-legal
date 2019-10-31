@@ -28,7 +28,7 @@ final class ContractPaymentsService
 
     public function getPaymentsAndInvoicesList($contractNo)
     {
-        $invoiceDocTypes = ['V' => 'счет', 'R' => 'счет',  'A' => 'акт'];
+        $invoiceDocTypes = ['V' => 'счет', 'R' => 'счет',  'A' => 'акт', '1'=> '1 аванс', '2'=> '2 аванс', '3'=>'3 аванс'];
         $paymentDocTypes = ['V' => 'поступление д/с', 'W' => 'поступление д/с', 'R' => 'поступление д/с', 'Z' => 'взаимозачет'];
         $paymentsList = (new SqlPaymentRepository($this->pdo))->getByContract($contractNo);
         $invoicesList = (new SqlInvoiceRepository($this->pdo))->getByContract($contractNo);
@@ -39,7 +39,7 @@ final class ContractPaymentsService
                 'date' => \DateTime::createFromFormat(DATE_RFC2822, $invoice['data']),
                 'period_y' => '20' . substr($invoice['rp'], 1,2),
                 'period_m' => substr($invoice['rp'], 3,2),
-                'doctype' => $invoiceDocTypes[$invoice['vpt']],
+                'doctype' => $invoiceDocTypes[$invoice['vpt']]??'?',
                 'docno' => '', //$invoice['akt_nomer'],
                 'sumInv' => $invoice['sumTotal'],
                 'sumPay' => ''
@@ -51,7 +51,7 @@ final class ContractPaymentsService
                 'date' => \DateTime::createFromFormat(DATE_RFC2822, $payment['data']),
                 'period_y' => '20' . substr($payment['rp'], 1,2),
                 'period_m' => substr($invoice['rp'], 3,2),
-                'doctype' => $paymentDocTypes[$payment['vids']],
+                'doctype' => $paymentDocTypes[$payment['vids']]??'?',
                 'docno' => '',
                 'sumInv' =>  '',
                 'sumPay' => $payment['sum']

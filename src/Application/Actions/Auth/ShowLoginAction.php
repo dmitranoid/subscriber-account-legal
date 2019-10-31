@@ -17,6 +17,7 @@ class ShowLoginAction extends AuthAction
         if (isset($_SESSION['contract'])) {
             return $this->response->withHeader('Location', '/contract/info');
         }
+
         return $this->view->render($this->response, 'auth/login.twig');
     }
 

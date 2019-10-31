@@ -15,6 +15,7 @@ use App\Application\Actions\Connection\ViewConnectionAction;
 use App\Application\Actions\Connection\ListReadingsAction;
 use App\Application\Actions\Chat\ViewChatAction;
 use App\Application\Actions\Contract\ViewDocAction;
+use App\Application\Actions\Contract\ViewContractsListAction;
 use App\Application\Middleware\GuardedMiddleware;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -29,6 +30,7 @@ return function (App $app) {
         return $response;
     });
 
+    $app->get('/contractslist', ViewContractsListAction::class);
     $app->get('/login', ShowLoginAction::class)->setname('login');
     $app->post('/login', DoLoginAction::class);
     $app->get('/logout', DoLogoutAction::class)->setname('logout')
