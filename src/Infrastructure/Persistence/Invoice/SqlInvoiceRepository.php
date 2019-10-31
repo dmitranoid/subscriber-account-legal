@@ -20,8 +20,21 @@ final class SqlInvoiceRepository extends GenericSqlRepository
             ->where('kp', $contractNom)
 //           ->where('vpt', ['A', 'R'])
             ->where('protkaz', '')
+            ->where('rp like \'119%\'')
             ->group('kp, rp, data, akt_nomer')
             ->order('data, rp')
+            ->fetchAll();
+    }
+
+    public function getSumByContract($contractNom, $periodStart = '20190101', $periodEnd = '20191231')
+    {
+        return $this->getAllSql()
+            ->select('kp, sum(`sum`) invoicesum')
+            ->where('kp', $contractNom)
+            ->where('protkaz', '')
+            ->where('rp like \'119%\'')
+            ->group('kp')
+            ->order('rp')
             ->fetchAll();
     }
 

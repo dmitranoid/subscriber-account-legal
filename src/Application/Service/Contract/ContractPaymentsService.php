@@ -19,9 +19,15 @@ final class ContractPaymentsService
         $this->pdo = $pdo;
     }
 
+    public function getDebt($contractNo, $periodStart='20190110', $periodEnd='20191231')
+    {
+        $paymentsSum = (new SqlPaymentRepository($this->pdo))->getSumByContract($contractNo, $periodStart, $periodEnd);
+        $invoicesSum = (new SqlInvoiceRepository($this->pdo))->getSumContract($contractNo, $periodStart, $periodEnd);
+    }
+
     public function getPaymentsAndInvoicesList($contractNo)
     {
-        $invoiceDocTypes = ['V' => 'счет V', 'R' => 'счет R',  'A' => 'акт'];
+        $invoiceDocTypes = ['V' => 'счет', 'R' => 'счет',  'A' => 'акт'];
         $paymentDocTypes = ['V' => 'поступление д/с', 'W' => 'поступление д/с', 'R' => 'поступление д/с', 'Z' => 'взаимозачет'];
         $paymentsList = (new SqlPaymentRepository($this->pdo))->getByContract($contractNo);
         $invoicesList = (new SqlInvoiceRepository($this->pdo))->getByContract($contractNo);
