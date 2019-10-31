@@ -7,6 +7,7 @@ namespace App\Application\Actions\Connection;
 
 use App\Application\Actions\Action;
 use App\Application\Service\Connection\ConnectionHistoryService;
+use App\Application\Service\Connection\ConnectionService;
 use App\Application\Service\Contract\ContractInfoService;
 use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
 use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
@@ -33,15 +34,14 @@ class ViewConnectionAction extends Action
         list($abonentNom, $tuName)= $this->extractAbTu($this->request->getAttribute('abtu', ''));
 
         $connectionHistory = new ConnectionHistoryService($archPdo);
+        $connectionService = new ConnectionService($this->pdo);
 
-        $connectionsRepository = new SqlConnectionRepository($this->pdo);
         $abonentsRepository = new SqlAbonentRepository($this->pdo);
 
 
         $contract = (new ContractInfoService($this->pdo))->getContractInfo($contractNom);
         $abonent = $abonentsRepository->getByNom($contractNom, $abonentNom);
-        $connection = $connectionsRepository->getByNom($contractNom, $abonentNom, $tuName);
-
+        $connection = $connectionService->getConnectionInfo($contractNom, $abonentNom, $tuName);
         $readingsHistory = $connectionHistory->getReadingsHistory($contractNom, $abonentNom, $tuName);
 
             return $this->view->render(

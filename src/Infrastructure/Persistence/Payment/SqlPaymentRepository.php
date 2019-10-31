@@ -16,7 +16,7 @@ final class SqlPaymentRepository extends GenericSqlRepository
     {
         return $this->getAllSql()
             ->where('kp', $contractNom)
-            ->where('vids', ['V'])
+            ->where('vids', ['V', 'W', 'R', 'Z'])
             ->fetchAll();
     }
 

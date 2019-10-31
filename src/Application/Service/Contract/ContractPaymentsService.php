@@ -22,7 +22,7 @@ final class ContractPaymentsService
     public function getPaymentsAndInvoicesList($contractNo)
     {
         $invoiceDocTypes = ['V' => 'счет V', 'R' => 'счет R',  'A' => 'акт'];
-        $paymentDocTypes = ['V' => 'платежное поручение'];
+        $paymentDocTypes = ['V' => 'поступление д/с', 'W' => 'поступление д/с', 'R' => 'поступление д/с', 'Z' => 'взаимозачет'];
         $paymentsList = (new SqlPaymentRepository($this->pdo))->getByContract($contractNo);
         $invoicesList = (new SqlInvoiceRepository($this->pdo))->getByContract($contractNo);
         // date, period, doctype, docno, sumInv, sumPay

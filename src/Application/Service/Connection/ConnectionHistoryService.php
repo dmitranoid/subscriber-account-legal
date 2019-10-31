@@ -30,7 +30,7 @@ final class ConnectionHistoryService
                 $item['rp_part_y'] = substr($item['rppok'], 1,2);
             }
         );
-        return $readingsHistory;
+        return array_reverse($readingsHistory);
     }
 
 }
