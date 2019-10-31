@@ -4,22 +4,24 @@ $('.clickable-row').on('click', clickableRowOnClick);
 
 //   functions
 
-function sendreadings() {
+function sendreadings(saveonly=false) {
     let readings = {};
     $(".table-readings input").each(function(index, el){
         $(el).attr("disabled", true);
         readings[$(el).attr("name")] = $(el).val();
     });
 
-    console.log(readings);
     $(".btn.sendreadings").addClass("loading");
     $(".btn.sendreadings i").hide();
     $(".btn.sendreadings").attr("disabled", true);
     $.ajax({
         method: "post",
-        url: "/contract/sendreadings",
+        url: "/sendreadings?saveonly=" + saveonly,
         data: readings,
     }).done(function(data) {
+        if (saveonly) {
+            showModal('Сохранение показаний', 'Данные были сохранены.');
+        }
         showModal('Передача показаний', 'Данные были переданы на обработку. Копия данных отправлена на указанный в настройках электронный ящик.');
 
     }).fail(function (jqXHR, textStatus ) {

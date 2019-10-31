@@ -34,6 +34,12 @@ html{
   width: 100%;
 }
 
+.half-width {
+  width: 45%;
+  margin:0 2%
+}
+
+
 header {
   height: 4rem;
   color: #e8ebe4;
@@ -147,7 +153,7 @@ header .site-caption {
 .btn-link {
   color: #55acee !important;
 }
-.sendreadings:hover {
+.savereadings:hover, .sendreadings:hover {
   box-shadow: 0 6px 6px 0 #414656;
   transition: all 0.3s ease;
 }

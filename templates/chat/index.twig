@@ -1,0 +1,50 @@
+{% extends 'layout_main.twig' %}
+
+{% block title %}Консультации с менеджером{% endblock %}
+
+{% set managers = ['Елена', 'Анна', 'Алексей', 'Наталья', 'Ольга', 'Николай'] %}
+
+{% block content %}
+<div class="contract">
+    <h5 class="float-left">Ваш договор  №{{ contract.kp }}</h5>
+    <h5 class="float-right">Ваш менеджер: {{ random(managers) }} <span style="color: green">(онлайн)</span></h5>
+</div>
+<div class="clearfix"></div>
+<div class="empty">
+    <div class="empty-icon">
+        <i class="icon icon-message icon-4x"></i>
+    </div>
+    <p class="empty-title h5">Здесь пока нет сообщений</p>
+    <p class="empty-subtitle">Отправьте вопрос чтобы начать разговор</p>
+    <div class="empty-action">
+        <button class="btn btn-primary">Задать вопрос</button>
+    </div>
+</div>
+{#
+<div class="tile tile-centered">
+  <div class="tile-icon">
+    <div class="example-tile-icon">
+      <i class="icon icon-file centered"></i>
+    </div>
+  </div>
+  <div class="tile-content">
+    <div class="tile-title">spectre-docs.pdf</div>
+    <small class="tile-subtitle text-gray">14MB · Public · 1 Jan, 2017</small>
+  </div>
+  <div class="tile-action">
+    <button class="btn btn-link">
+      <i class="icon icon-more-vert"></i>
+    </button>
+  </div>
+</div>
+#}
+<div style="height: 9rem"></div>
+<div class="columns">
+    <div class="column col-10 chat-input-panel">
+        <input class="form-input" name="chat-input">
+    </div>
+    <div class="column col-2">
+        <button class="btn btn-primary full-width " value="">отправить</button>
+    </div>
+</div>
+{% endblock %}
