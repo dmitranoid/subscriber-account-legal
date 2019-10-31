@@ -37,9 +37,9 @@
         <td><a title="подробнее о точке учета">{#<i class="icon icon-location"></i>#}</a></td>
         <td>{{ conn.naim }}</td>
         <td>{{ conn.nst }}</td>
-        <td>{{ conn.datu|date("d.m.Y") }}</td>
+        <td>{{ conn.datu ? conn.datu|date("d.m.Y") : '' }}</td>
         <td>{{ connectionTypes[conn.sr] }}</td>
-        <td>{{ conn.ktt }}</td>
+        <td>{{ conn.ktt==1 ? '' :  conn.ktt }}</td>
         <td>{{ conn.kvpov }} {{ conn.kvpov ? 'кв.' : '' }} {{ conn.godpov }}</td>
         <td>{{ conn.ppok ? conn.ppok : '' }}</td>
     </tr>

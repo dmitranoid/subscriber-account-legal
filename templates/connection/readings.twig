@@ -5,11 +5,13 @@
 {% block content %}
 <div class="contract">
     <h5>Договор  №{{ contract.kp }}, {{ contract.npp1 }} {{ contract.npp2 }}</h5>
+    <br>
+    <h5>Ввод показаний за период: {{ "now-5 days"|date('m.Y') }}</h5>
 </div>
 
 <div class="info-block">
-    Показания вносятся с 15 по 25 числа месяца !!!
-    {% if readings is not empty %}<p class="text-error">Вы уже внесли показания в текущем месяце'</p> {% endif %}
+    Показания вносятся с 25 по 05 числа месяца !!!
+    {% if readings is not empty %}<p class="text-error">Вы уже внесли показания в текущем месяце !</p> {% endif %}
 </div>
 
 <table class="table abonents table-readings">
@@ -39,11 +41,16 @@
     {% endfor %}
     </tbody>
 </table>
-<div>
+<div style="margin:1rem 0;">
     <div class="divider"></div>
-    <button class="btn btn-primary btn-lg full-width sendreadings {{ (readings|length)?'disabled':'' }}" onclick="sendreadings()">
+    <button class="btn btn-primary btn-lg half-width savereadings {{ (readings|length)?'disabled':'' }}" onclick="sendreadings(1)" title="Сохранить данные и продолжить их ввод позднее">
+        <i class="icon icon-time"></i>
+        Сохранить
+    </button>
+
+    <button class="btn btn-primary btn-lg half-width sendreadings {{ (readings|length)?'disabled':'' }}" onclick="sendreadings()" title="Подписать и отправить данные для принятия к расчету">
         <i class="icon icon-share"></i>
-        Передать показания
+        Подписать и передать показания
     </button>
 </div>
 

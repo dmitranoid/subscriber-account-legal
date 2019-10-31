@@ -17,7 +17,6 @@
         <label class="form-label">наименование ТУ</label>
         <input class="form-input" name="contractDate" readonly value="{{ connection.naim }}">
     </div>
-    <div class="clearfix"></div>
     <div class="form-group d-inline-block">
         <label class="form-label">способ расчетов</label>
         <input class="form-input" name="calc_method" readonly value="{{ connectionTypes[connection.sr] }}">
@@ -26,8 +25,9 @@
         <label class="form-label">тариф</label>
         <input class="form-input" name="tu_tariff" value="{{ connection.tarnaim }}">
     </div>
-
-    <div class="form-group ">
+    <div class="clearfix"></div>
+    <div><h4>Прибор учета</h4></div>
+    <div class="form-group d-inline-block">
         <label class="form-label">тип прибора</label>
         <input class="form-input" name="org_name" readonly value="{{ connection.tsch }} ">
     </div>
@@ -36,14 +36,14 @@
         <input class="form-input" name="org_address" readonly value="{{ connection.nst }}">
     </div>
     <div class="form-group d-inline-block">
-        <label class="form-label">дата установки:</label>
-        <input class="form-input" name="contract.kodni" readonly value="{{ connection.datu|date('d.m.Y') }}">
+        <label class="form-label">дата установки</label>
+        <input class="form-input" name="contract.datu" readonly value="{{ connection.datu ? connection.datu|date('d.m.Y') : '-' }}">
     </div>
     <div class="form-group d-inline-block">
-        <label class="form-label">коэффициент трансформации:</label>
+        <label class="form-label">коэфф. трансформации</label>
         <input class="form-input" name="org_director" readonly value="{{ connection.ktt }}">
     </div>
-    <div><h4>История показаний прибора учета:</h4></div>
+    <div><h4>История показаний</h4></div>
     <table class="table readings-history">
     <thead>
     <tr>
