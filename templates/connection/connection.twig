@@ -11,37 +11,37 @@
     <div class="content col-9 ">
     <div class="form-group d-inline-block">
         <label class="form-label">абонент</label>
-        <input class="form-input" name="contractNo" readonly value="{{ abonent.naim }}">
+        <input class="form-input" name="contract[no]" readonly value="{{ abonent.naim }}">
     </div>
     <div class="form-group d-inline-block">
         <label class="form-label">наименование ТУ</label>
-        <input class="form-input" name="contractDate" readonly value="{{ connection.naim }}">
+        <input class="form-input" name="contract[date]" readonly value="{{ connection.naim }}">
     </div>
     <div class="form-group d-inline-block">
         <label class="form-label">способ расчетов</label>
-        <input class="form-input" name="calc_method" readonly value="{{ connectionTypes[connection.sr] }}">
+        <input class="form-input" name="conn[calc_method]" readonly value="{{ connectionTypes[connection.sr] }}">
     </div>
     <div class="form-group d-inline-block">
         <label class="form-label">тариф</label>
-        <input class="form-input" name="tu_tariff" value="{{ connection.tarnaim }}">
+        <input class="form-input" name="conn[tariff]" value="{{ connection.tarnaim }}">
     </div>
     <div class="clearfix"></div>
     <div><h4>Прибор учета</h4></div>
     <div class="form-group d-inline-block">
         <label class="form-label">тип прибора</label>
-        <input class="form-input" name="org_name" readonly value="{{ connection.tsch }} ">
+        <input class="form-input" name="conn[tsch]" readonly value="{{ connection.tsch }} ">
     </div>
     <div class="form-group d-inline-block">
         <label class="form-label">заводской номер</label>
-        <input class="form-input" name="org_address" readonly value="{{ connection.nst }}">
+        <input class="form-input" name="conn[nst]" readonly value="{{ connection.nst }}">
     </div>
     <div class="form-group d-inline-block">
         <label class="form-label">дата установки</label>
-        <input class="form-input" name="contract.datu" readonly value="{{ connection.datu ? connection.datu|date('d.m.Y') : '-' }}">
+        <input class="form-input" name="conn[datu]" readonly value="{{ connection.datu ? connection.datu|date('d.m.Y') : '-' }}">
     </div>
     <div class="form-group d-inline-block">
         <label class="form-label">коэфф. трансформации</label>
-        <input class="form-input" name="org_director" readonly value="{{ connection.ktt }}">
+        <input class="form-input" name="conn[ktt]" readonly value="{{ connection.ktt }}">
     </div>
     <div><h4>История показаний</h4></div>
     <table class="table readings-history">
@@ -55,7 +55,7 @@
     <tbody>
     {% for rd in readingsHistory %}
     <tr class="reading">
-        <td> {{ rd.rp_part_m }}.20{{ rd.rp_part_y }}</td>
+        <td>{{ rd.rp_part_m }}.20{{ rd.rp_part_y }}</td>
         <td>{{ rd.tpok }}</td>
         <td>{{ rd.consumption }}</td>
     </tr>
