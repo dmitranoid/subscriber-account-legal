@@ -14,6 +14,7 @@ final class SqlPaymentRepository extends GenericSqlRepository
 
     public function getByContract($contractNom)
     {
+        //TODO переделать проверку на период
         return $this->getAllSql()
             ->where('kp', $contractNom)
             ->where('vids', ['V', 'W', 'R', 'Z'])
@@ -21,15 +22,16 @@ final class SqlPaymentRepository extends GenericSqlRepository
             ->fetchAll();
     }
 
-    public function getSumByContract($contractNom)
+    public function getSumByContract($contractNom, \DateTime $periodStart, \DateTime $periodEnd)
     {
+        //TODO переделать проверку на период
         return $this->getAllSql()
-            ->select('kp, sum(`sum`) paymentsum')
+            ->select('kp, sum(`sum`) sumTotal', true)
             ->where('kp', $contractNom)
             ->where('vids', ['V', 'W', 'R', 'Z'])
             ->where('rp like \'119%\'')
             ->group('kp')
-            ->fetchAll();
+            ->fetch();
     }
 
 }

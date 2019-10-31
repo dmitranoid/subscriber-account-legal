@@ -3,10 +3,12 @@
 {% block title %}Счета и оплаты{% endblock %}
 
 {% block content %}
-<div class="contract">
-    <h5>Договор  №{{ contract.kp }}, {{ contract.npp1 }} {{ contract.npp2 }}</h5>
+    <div class="contract">
+        <h5>Договор  №{{ contract.kp }}, {{ contract.npp1 }} {{ contract.npp2 }}</h5>
+    </div>
+<div class="info-block">
+    <p>Задолженность на {{ 'now'|date('d.m.Y') }} : <span class="text-bold">{{ debtInfo.invoicesSum.sumTotal - debtInfo.paymentsSum.sumTotal }}</span></p>
 </div>
-
     <table class="table contract-paydocs">
     <thead>
     <tr>

@@ -19,10 +19,11 @@ final class ContractPaymentsService
         $this->pdo = $pdo;
     }
 
-    public function getDebt($contractNo, $periodStart='20190110', $periodEnd='20191231')
+    public function getDebt($contractNo, \DateTime $periodStart, \DateTime $periodEnd):array
     {
         $paymentsSum = (new SqlPaymentRepository($this->pdo))->getSumByContract($contractNo, $periodStart, $periodEnd);
-        $invoicesSum = (new SqlInvoiceRepository($this->pdo))->getSumContract($contractNo, $periodStart, $periodEnd);
+        $invoicesSum = (new SqlInvoiceRepository($this->pdo))->getSumByContract($contractNo, $periodStart, $periodEnd);
+        return ['invoicesSum'=>$invoicesSum, 'paymentsSum'=>$paymentsSum];
     }
 
     public function getPaymentsAndInvoicesList($contractNo)
@@ -39,7 +40,7 @@ final class ContractPaymentsService
                 'period_y' => '20' . substr($invoice['rp'], 1,2),
                 'period_m' => substr($invoice['rp'], 3,2),
                 'doctype' => $invoiceDocTypes[$invoice['vpt']],
-                'docno' => $invoice['akt_nomer'],
+                'docno' => '', //$invoice['akt_nomer'],
                 'sumInv' => $invoice['sumTotal'],
                 'sumPay' => ''
             ];

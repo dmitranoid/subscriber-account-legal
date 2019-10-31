@@ -17,12 +17,14 @@ class ViewContractPaymentsAction extends Action
         $contractNo = $_SESSION['contract'];
         $contractInfo = (new ContractInfoService($this->pdo))->getContractInfo($contractNo);
         $contractPaymentsService = new ContractPaymentsService($this->pdo);
+        $debtInfo = $contractPaymentsService->getDebt($contractNo, \DateTime::createFromFormat('Ymd', '20190101'), \DateTime::createFromFormat('Ymd', '20191231'));
         $docList = $contractPaymentsService->getPaymentsAndInvoicesList($contractNo);
         return $this->view->render(
             $this->response,
             'contract/payments.twig',
             [
                 'contract' => $contractInfo,
+                'debtInfo'=>$debtInfo,
                 'docList' => $docList
             ]
         );
