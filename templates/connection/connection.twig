@@ -2,7 +2,7 @@
 
 {% block title %}Точка учета{% endblock %}
 
-{% set connectionTypes= {'1':'показания', '2':'мощность', '3':'сумматор'} %}
+{% set connectionTypes= {'1':'показания', '2':'расчет по индексам', '3':'мощность', '4':'сумматор'} %}
 
 {% block content %}
 <div class="contract">
@@ -10,32 +10,38 @@
 </div>
     <div class="content col-9 ">
     <div class="form-group d-inline-block">
-        <label class="form-label">Абонент:</label>
-        <input class="form-input" name="contractNo" value="{{ abonent.naim }}">
+        <label class="form-label">абонент</label>
+        <input class="form-input" name="contractNo" readonly value="{{ abonent.naim }}">
     </div>
     <div class="form-group d-inline-block">
-        <label class="form-label">Наимнование точки учета:</label>
-        <input class="form-input" name="contractDate" value="{{ connection.naim }}">
+        <label class="form-label">наименование ТУ</label>
+        <input class="form-input" name="contractDate" readonly value="{{ connection.naim }}">
+    </div>
+    <div class="clearfix"></div>
+    <div class="form-group d-inline-block">
+        <label class="form-label">способ расчетов</label>
+        <input class="form-input" name="calc_method" readonly value="{{ connectionTypes[connection.sr] }}">
     </div>
     <div class="form-group d-inline-block">
-        <label class="form-label">Тип прибора:</label>
-        <input class="form-input" name="org_name" value="{{ connection.ts }} ">
+        <label class="form-label">тариф</label>
+        <input class="form-input" name="tu_tariff" value="{{ connection.tarnaim }}">
+    </div>
+
+    <div class="form-group ">
+        <label class="form-label">тип прибора</label>
+        <input class="form-input" name="org_name" readonly value="{{ connection.tsch }} ">
     </div>
     <div class="form-group d-inline-block">
-        <label class="form-label">Заводской номер:</label>
-        <input class="form-input" name="org_address" value="{{ connection.nst }}">
+        <label class="form-label">заводской номер</label>
+        <input class="form-input" name="org_address" readonly value="{{ connection.nst }}">
     </div>
     <div class="form-group d-inline-block">
-        <label class="form-label">Дата установки:</label>
-        <input class="form-input" name="contract.kodni" value="{{ connection.datu|date('d.m.Y') }}">
+        <label class="form-label">дата установки:</label>
+        <input class="form-input" name="contract.kodni" readonly value="{{ connection.datu|date('d.m.Y') }}">
     </div>
     <div class="form-group d-inline-block">
-        <label class="form-label">Тип расчетов:</label>
-        <input class="form-input" name="org_director" value="{{ connectionTypes[connection.sr] }}">
-    </div>
-    <div class="form-group d-inline-block">
-        <label class="form-label">Коэффициент трансформации:</label>
-        <input class="form-input" name="org_director" value="{{ connection.ktt }}">
+        <label class="form-label">коэффициент трансформации:</label>
+        <input class="form-input" name="org_director" readonly value="{{ connection.ktt }}">
     </div>
     <div><h4>История показаний прибора учета:</h4></div>
     <table class="table readings-history">
@@ -49,7 +55,7 @@
     <tbody>
     {% for rd in readingsHistory %}
     <tr class="reading">
-        <td> 20{{ rd.rp_part_y }}/{{ rd.rp_part_m }}</td>
+        <td> {{ rd.rp_part_m }}.20{{ rd.rp_part_y }}</td>
         <td>{{ rd.tpok }}</td>
         <td>{{ rd.consumption }}</td>
     </tr>

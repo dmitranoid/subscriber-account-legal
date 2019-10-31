@@ -169,6 +169,10 @@ header .site-caption {
   text-align: right;
 }
 
+.table.readings-history td:nth-child(2),
+.table.readings-history td:nth-child(3) {
+  text-align: right;
+}
 .modal .content {
   min-height: 10vh;
 }
