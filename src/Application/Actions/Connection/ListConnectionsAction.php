@@ -26,6 +26,14 @@ class ListConnectionsAction extends Action
         $connectionsList = $connectionsRepository->getByContract($contractNom);
         $abonentsList = $abonentsRepository->getByContract($contractNom);
 
+        array_walk($connectionsList, function (&$item) {
+            $tuUrl = $item['naim'];
+            $tuUrl = str_replace('.', 'dot', $tuUrl);
+            $tuUrl = str_replace('/', 'slashr', $tuUrl);
+            $tuUrl = str_replace('\\', 'slashl', $tuUrl);
+            $item['naim_url'] = $tuUrl;
+        });
+
         /* combine abonents and connections */
         usort($abonentsList, function($a, $b){return $a['nab'] - $b['nab'];});
         usort($connectionsList, function($a, $b){

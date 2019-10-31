@@ -33,7 +33,7 @@
         </td>
     </tr>
     {% for conn in ab.connections %}
-    <tr class="connection clickable-row" data-href="/connection/{{ ab.nab }}-{{ conn.naim|url_encode }}">
+    <tr class="connection clickable-row" data-href="/connection/{{ ab.nab }}-{{ conn.naim_url }}">
         <td><a title="подробнее о точке учета">{#<i class="icon icon-location"></i>#}</a></td>
         <td>{{ conn.naim }}</td>
         <td>{{ conn.nst }}</td>

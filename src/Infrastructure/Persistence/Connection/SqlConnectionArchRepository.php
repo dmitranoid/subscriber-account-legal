@@ -31,6 +31,7 @@ final class SqlConnectionArchRepository extends GenericSqlRepository
             ['2019','07'],
             ['2019','08'],
             ['2019','09'],
+            ['2019','10'],
 /*
             '201901',
             '201902',
@@ -70,10 +71,13 @@ final class SqlConnectionArchRepository extends GenericSqlRepository
                 ->where('nab', $abonentNom)
                 ->where('naim', $counterNom);
 
-            $archData = array_merge(
-                $archData,
-                $sql->fetchAll()
-            );
+            $currData = $sql->fetchAll();
+            if ($currData) {
+                $archData = array_merge(
+                    $archData,
+                    $currData
+                );
+            }
         }
         return $archData;
     }

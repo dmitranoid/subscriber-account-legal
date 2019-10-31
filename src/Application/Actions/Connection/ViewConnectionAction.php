@@ -19,9 +19,14 @@ class ViewConnectionAction extends Action
     private function extractAbTu($str):array
     {
         $delimPos = mb_strpos($str, '-');
+        $ab = mb_substr($str, 0 ,$delimPos);
+        $tu = mb_substr($str, $delimPos+1, mb_strlen($str)-$delimPos);
+        $tu = str_replace('dot', '.', $tu);
+        $tu = str_replace('slashr', '/', $tu);
+        $tu = str_replace('slashl', '\\', $tu);
         return [
-            mb_substr($str, 0 ,$delimPos),
-            mb_substr($str, $delimPos+1, mb_strlen($str)-$delimPos)
+            $ab,
+            $tu           
         ];
     }
 
