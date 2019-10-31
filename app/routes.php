@@ -14,6 +14,7 @@ use App\Application\Actions\Connection\ListConnectionsAction;
 use App\Application\Actions\Connection\ViewConnectionAction;
 use App\Application\Actions\Connection\ListReadingsAction;
 use App\Application\Actions\Chat\ViewChatAction;
+use App\Application\Actions\Contract\ViewDocAction;
 use App\Application\Middleware\GuardedMiddleware;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -41,6 +42,7 @@ return function (App $app) {
         $group->post('sendreadings', SendReadingsAction::class);
         $group->get('payments', ViewContractPaymentsAction::class);
         $group->get('docs', ViewContractDocsAction::class);
+        $group->get('viewdoc', ViewDocAction::class);
         $group->get('chat', ViewChatAction::class);
     })->add(GuardedMiddleware::class);
 /*
