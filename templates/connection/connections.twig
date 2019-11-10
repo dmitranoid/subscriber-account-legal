@@ -9,24 +9,24 @@
     <h5>Договор  №{{ contract.kp }}, {{ contract.npp1 }} {{ contract.npp2 }}</h5>
 </div>
 
-    <table class="table abonents">
+    <table class="table table-responsive abonents">
     <thead>
     <tr>
-        <th>№</th>
-        <th>наименование</th>
-        <th>заводской №</th>
-        <th>дата установки</th>
-        <th>способ расчета</th>
-        <th>коэфф.трансф.</th>
-        <th>дата поверки</th>
-        <th>показания</th>
+        <th scope="col">№</th>
+        <th scope="col">наименование</th>
+        <th scope="col">заводской №</th>
+        <th scope="col">дата установки</th>
+        <th scope="col">способ расчета</th>
+        <th scope="col">коэфф.трансф.</th>
+        <th scope="col">дата поверки</th>
+        <th scope="col">показания</th>
     </tr>
     </thead>
     <tbody>
     {% for ab in abonentsList %}
         {% set address = ab.tip_np ~ ab.name_np ~ ', ' ~ ab.tip_ul ~ ab.name_ul ~ ', ' ~ (ab.dom ? 'д. ') ~ ab.dom ~ ' ' ~ ab.korpus %}
     <tr class="abonent">
-        <td>{{ ab.nab }}</td>
+        <th scope="row">{{ ab.nab }}</th>
         <td>{{ ab.naim }}</td>
         <td colspan=6> <a href="https://maps.google.com/?q={{ address }}" target="_blank" title="Посмотреть на карте"><i class="icon icon-location"></i></a>&nbsp
             {{ address }}

@@ -3,7 +3,7 @@
 {% block body %}
 {#
 <header>
-    {% include 'partial/header.twig' %}
+    {% include 'partial/header-content.twig' %}
 </header>
 #}
 <nav class="navbar fixed-top navbar-expand-xl navbar-light scrolling-navbar navbarhover">
@@ -28,7 +28,7 @@
 <footer class="full-width">
 <div class="text-center">
     <div class="divider full-width"></div>
-    <p>Барановичские электрические сети, 2019</p>
+    {% include 'partial/footer-content.twig' %}
 </div>
 </footer>
 {%  endblock %}
