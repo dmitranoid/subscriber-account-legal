@@ -1,11 +1,21 @@
 {% extends 'blank.twig' %}
 
 {% block body %}
+{#
 <header>
     {% include 'partial/header.twig' %}
 </header>
-<nav class="nav-left no-print">
-    {% include 'partial/nav-left-items.twig' %}
+#}
+<nav class="navbar fixed-top navbar-expand-xl navbar-light scrolling-navbar navbarhover">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="https://brestenergo.by" >
+            <img src="/img/brenergo-logo-small.png" class="d-inline-block align-center logo" alt="">
+            Брестэнерго
+        </a>
+        <div class="collapse navbar-collapse">
+            {% include 'partial/nav-top-items.twig' %}
+        </div>
+    </div>
 </nav>
 <div class="columns">
     <div class="column col-12 page-content">
