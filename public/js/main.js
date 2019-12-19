@@ -1,5 +1,6 @@
 // on startup
 
+
 $('.clickable-row').on('click', clickableRowOnClick);
 
 //   functions
@@ -34,15 +35,15 @@ function sendreadings(saveonly=false) {
 
 function showModal(title, content)
 {
-    $('#modal-id .modal-title').text(title);
-    $('#modal-id .content').text(content);
-    $('#modal-id').addClass('active');
+    $('#modalTemplate-Title').text(title);
+    $('#modalTemplate-Body').text(content);
+    $('#modalTemplate').modal('show');
 
 }
 
 function hideModal() {
-    $('#modal-id').removeClass('active');
-    $('#modal-id .content').text('');
+    $('#modalTemplate').modal('hide');
+    $('#modalTemplate-Body').text('');
 }
 
 function clickableRowOnClick(){
