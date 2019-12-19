@@ -73,6 +73,10 @@ header .site-caption {
   margin-top: 0.8rem;
 }
 
+.navbar.navbar-light {
+  background-color:  white
+}
+
 .nav-link img {
   height: 1rem;
 }
@@ -87,7 +91,6 @@ margin-top: 100px ;
 
 .btn-primary {
   background: #55acee !important;
-
 }
 
 .btn-link {

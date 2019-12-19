@@ -32,6 +32,9 @@ final class SqlConnectionArchRepository extends GenericSqlRepository
             ['2019','08'],
             ['2019','09'],
             ['2019','10'],
+            ['2019','11'],
+            ['2019','12'],
+
 /*
             '201901',
             '201902',
