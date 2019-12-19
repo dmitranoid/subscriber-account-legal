@@ -5,62 +5,123 @@
 {% set connectionTypes= {'1':'показания', '2':'расчет по индексам', '3':'мощность', '4':'сумматор'} %}
 
 {% block content %}
-<div class="contract">
-    <h5>Договор  №{{ contract.kp }}, {{ contract.npp1 }} {{ contract.npp2 }}</h5>
-</div>
-    <div class="content col-9 ">
-    <div class="form-group d-inline-block">
-        <label class="form-label">абонент</label>
-        <input class="form-input" name="contract[no]" readonly value="{{ abonent.naim }}">
+    <div class="contract">
+        <h5>Договор №{{ contract.kp }}, {{ contract.npp1 }} {{ contract.npp2 }}</h5>
     </div>
-    <div class="form-group d-inline-block">
-        <label class="form-label">наименование ТУ</label>
-        <input class="form-input" name="contract[date]" readonly value="{{ connection.naim }}">
+    <div class="content">
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">абонент</label>
+        <div class="col-sm-4">
+            <input
+                    class="form-control"
+                    id="contract_no"
+                    name="contract_no"
+                    readonly
+                    value="{{ abonent.naim }}"
+            >
+        </div>
+        <label class="col-sm-2 col-form-label">наименование ТУ</label>
+        <div class="col-sm-4">
+            <input
+                    class="form-control"
+                    id="connection[naim]"
+                    name="connection[naim]"
+                    readonly
+                    value="{{ connection.naim }}"
+            >
+        </div>
     </div>
-    <div class="form-group d-inline-block">
-        <label class="form-label">способ расчетов</label>
-        <input class="form-input" name="conn[calc_method]" readonly value="{{ connectionTypes[connection.sr] }}">
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="conn[calc_method]">способ расчетов</label>
+        <div class="col-sm-4">
+            <input
+                    class="form-control"
+                    id="conn[calc_method]"
+                    name="conn[calc_method]"
+                    readonly
+                    value="{{ connectionTypes[connection.sr] }}"
+            >
+        </div>
+        <label class="col-sm-2 col-form-label" for="conn[calc_method]">тариф</label>
+        <div class="col-sm-4">
+            <input
+                    class="form-control"
+                    id="conn[tariff]"
+                    name="conn[tariff]"
+                    readonly
+                    value="{{ connection.tarnaim }}"
+            >
+        </div>
     </div>
-    <div class="form-group d-inline-block">
-        <label class="form-label">тариф</label>
-        <input class="form-input" name="conn[tariff]" value="{{ connection.tarnaim }}">
-    </div>
+
     <div class="clearfix"></div>
     <div><h4>Прибор учета</h4></div>
-    <div class="form-group d-inline-block">
-        <label class="form-label">тип прибора</label>
-        <input class="form-input" name="conn[tsch]" readonly value="{{ connection.tsch }} ">
+
+    <div class="form-group row">
+        <label class="col-sm-3 col-form-label" for="conn[tsch]">тип прибора</label>
+        <div class="col-sm-3">
+            <input
+                    class="form-control"
+                    id="conn[tsch]"
+                    name="conn[tsch]"
+                    readonly
+                    value="{{ connection.tsch }}"
+            >
+        </div>
+
+        <label class="col-sm-3 col-form-label" for="conn[nst]">заводской номер</label>
+        <div class="col-sm-3">
+            <input
+                    class="form-control"
+                    id="conn[nst]"
+                    name="conn[nst]"
+                    readonly
+                    value="{{ connection.nst }}"
+            >
+        </div>
     </div>
-    <div class="form-group d-inline-block">
-        <label class="form-label">заводской номер</label>
-        <input class="form-input" name="conn[nst]" readonly value="{{ connection.nst }}">
+    <div class="form-group row">
+        <label class="col-sm-3 col-form-label" for="conn[datu]">дата установки</label>
+        <div class="col-sm-3">
+            <input
+                    class="form-control"
+                    id="conn[datu]"
+                    name="conn[datu]"
+                    readonly
+                    value="{{ connection.datu ? connection.datu|date('d.m.Y') : '-' }}"
+            >
+        </div>
+
+        <label class="col-sm-3 col-form-label" for="conn[ktt]">коэфф. трансформации</label>
+        <div class="col-sm-3">
+            <input
+                    class="form-control"
+                    id="conn[ktt]"
+                    name="conn[ktt]"
+                    readonly
+                    value="{{ connection.ktt }}"
+            >
+        </div>
     </div>
-    <div class="form-group d-inline-block">
-        <label class="form-label">дата установки</label>
-        <input class="form-input" name="conn[datu]" readonly value="{{ connection.datu ? connection.datu|date('d.m.Y') : '-' }}">
-    </div>
-    <div class="form-group d-inline-block">
-        <label class="form-label">коэфф. трансформации</label>
-        <input class="form-input" name="conn[ktt]" readonly value="{{ connection.ktt }}">
-    </div>
+
     <div><h4>История показаний</h4></div>
     <table class="table readings-history">
-    <thead>
-    <tr>
-        <th>период</th>
-        <th>показание</th>
-        <th>потребление</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for rd in readingsHistory %}
-    <tr class="reading">
-        <td>{{ rd.rp_part_m }}.20{{ rd.rp_part_y }}</td>
-        <td>{{ rd.tpok }}</td>
-        <td>{{ rd.consumption }}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
+        <thead>
+        <tr>
+            <th>период</th>
+            <th>показание</th>
+            <th>потребление</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for rd in readingsHistory %}
+            <tr class="reading">
+                <td>{{ rd.rp_part_m }}.20{{ rd.rp_part_y }}</td>
+                <td>{{ rd.tpok }}</td>
+                <td>{{ rd.consumption }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
 {% endblock %}
