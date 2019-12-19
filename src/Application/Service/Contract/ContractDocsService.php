@@ -9,11 +9,15 @@ use App\Infrastructure\Service\DocumentFinder\DocumentFinder;
 
 final class ContractDocsService
 {
+    /** @var DocumentFinder */
     private $documentFinderService;
+    /** @var string */
+    private $docStorageRoot;
 
-    public function __construct(DocumentFinder $documentFinderService)
+    public function __construct(DocumentFinder $documentFinderService, string $docStorageRoot)
     {
         $this->documentFinderService = $documentFinderService;
+        $this->docStorageRoot = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $docStorageRoot);
     }
 
     public function getDocumentsByContract($contractNo, \DateTime $periodStart, \DateTime $periodEnd):?array
@@ -26,7 +30,7 @@ final class ContractDocsService
                 'date' => $docFile['modifyDate'],
                 'period' => $periodData[0] . '.' . $periodData[1],
                 'docName' => $docName,
-                'fullFilename' => $docFile['fullPath'],
+                'fullFilename' => str_replace($this->docStorageRoot, '', $docFile['fullPath']),  // относительный к $docStorageRoot
             ];
         }
 

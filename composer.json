@@ -20,6 +20,7 @@
         "php": ">=7.1",
         "ext-json": "*",
         "ext-pdo": "*",
+        "ext-iconv": "*",
         "envms/fluentpdo": "dev-master",
         "hisamu/php-xbase": "1.0.5",
         "monolog/monolog": "^1.24",

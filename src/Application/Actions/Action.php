@@ -11,6 +11,7 @@ use Psr\Log\LoggerInterface;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Views\Twig;
+use PDO;
 
 abstract class Action
 {
@@ -39,14 +40,14 @@ abstract class Action
      */
     protected $args;
 
-    /** @var \PDO */
+    /** @var PDO */
     protected $pdo;
     /**
      * @param LoggerInterface $logger
      * @param Twig $view
-     * @param \PDO $pdo
+     * @param PDO|null $pdo
      */
-    public function __construct(LoggerInterface $logger,  Twig $view, \PDO $pdo)
+    public function __construct(LoggerInterface $logger,  Twig $view, PDO $pdo)
     {
         $this->logger = $logger;
         $this->view = $view;

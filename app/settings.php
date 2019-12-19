@@ -37,7 +37,7 @@ return function (ContainerBuilder $containerBuilder) {
                     'password' => '',
                 ]
             ],
-            'invoiceDir' => '\\vms8\prom_arch\AMSRV\schet\2019\\',
+            'invoiceDir' => '\\vms8\prom_arch\AMSRV\schet\\',
         ],
     ]);
 };
