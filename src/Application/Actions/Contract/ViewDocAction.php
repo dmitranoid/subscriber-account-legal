@@ -15,6 +15,7 @@ class ViewDocAction extends Action
     protected function action(): Response
     {
         // TODO тщательно очищать ввод !!!
+        // TODO защиту от инъекций типа ../../../etc/passw
         $params = $this->request->getQueryParams();
         $contractNo = $_SESSION['contract'];
         $filename = $params['filename'];
@@ -22,8 +23,7 @@ class ViewDocAction extends Action
         $documentsStorageRoot = 'D:/work/legal-docs/';
 
         $filenameFull = $documentsStorageRoot . $filename;
-
-        if (!$this->accessToFileIsAllowed($contractNo, $params['filename']) || !file_exists($filenameFull)) {
+        if (!($this->isAccessToFileAllowed($contractNo, $params['filename']) && file_exists($filenameFull))) {
             // TODO возвращать 404 not found
             $this->logger->alert(
                 'попытка доступа к запрещенному файлу filename от абонента contractNo',
@@ -50,11 +50,11 @@ class ViewDocAction extends Action
         );
     }
 
-    private function accessToFileIsAllowed($contractNo, $filename)
+    private function isAccessToFileAllowed($contractNo, $filename)
     {
         // $filename = D:\work\legal-docs\2019\09-2019\802_счет.888 ; $contractNo= 802
         // $filename = D:\work\legal-docs\2019\09-2019\802_ндс.888 ; $contractNo= 802
-        return (false !== strpos($filename, '\\' . $contractNo . '_'));
+        return (false !== strpos($filename, DIRECTORY_SEPARATOR . $contractNo . '_'));
     }
 
 }
