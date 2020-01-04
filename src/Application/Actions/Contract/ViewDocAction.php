@@ -26,7 +26,7 @@ class ViewDocAction extends Action
         if (!($this->isAccessToFileAllowed($contractNo, $params['filename']) && file_exists($filenameFull))) {
             // TODO возвращать 404 not found
             $this->logger->alert(
-                'попытка доступа к запрещенному файлу filename от абонента contractNo',
+                'попытка доступа к запрещенному файлу {filename} от абонента {contractNo}',
                 ['filename' => $filename, 'contractNo' => $contractNo]
             );
             return $this->view->render(
