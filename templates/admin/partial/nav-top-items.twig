@@ -1,0 +1,16 @@
+{% set nav = {
+    contracts:{ title: "Пользователи",  link: "/users", icon: "/img/icons/crystal_oscillator.svg" },
+    users:    { title: "Договоры",      link: "/contracts", icon: "/img/icons/crystal_oscillator.svg" },
+    logout:   { title: "Выйти",         link: "/logout", icon: "/img/icons/crystal_oscillator.svg" },
+} %}
+
+<ul class="navbar-nav ml-auto">
+    {% for item in nav %}
+    <li class="nav-item" >
+        <a class="nav-link rounded" href="{{ item.link }}" >
+            <img src="{{ item.icon }}">
+            {{ item.title}}
+        </a>
+    </li>
+    {% endfor %}
+</ul>

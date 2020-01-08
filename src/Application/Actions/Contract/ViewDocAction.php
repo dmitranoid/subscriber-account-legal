@@ -31,7 +31,7 @@ class ViewDocAction extends Action
             );
             return $this->view->render(
                 $this->response,
-                'misc/docview.twig',
+                'front/misc/docview.twig',
                 [
                     'content' => 'файл не найден',
                 ]
@@ -43,7 +43,7 @@ class ViewDocAction extends Action
         $content = nl2br($content, false);
         return $this->view->render(
             $this->response,
-            'misc/docview.twig',
+            'front/misc/docview.twig',
             [
                 'content' => $content,
             ]

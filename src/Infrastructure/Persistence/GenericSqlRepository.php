@@ -11,7 +11,7 @@ use \PDO;
 class GenericSqlRepository
 {
     /** @var Query */
-    private $fpdo;
+    protected $fpdo;
 
     protected $tableName = '';
 

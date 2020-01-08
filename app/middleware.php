@@ -8,5 +8,5 @@ use App\Application\Middleware\SessionMiddleware;
 
 return function (App $app) {
     $app->add(SessionMiddleware::class);
-    $app->add(TwigMiddleware::createFromContainer($app, Twig::class));
+//    $app->add(TwigMiddleware::createFromContainer($app, Twig::class));
 };

@@ -41,7 +41,7 @@ class ViewContractDocsAction extends Action
 
         return $this->view->render(
             $this->response,
-            'contract/docs.twig',
+            'front/contract/docs.twig',
             [
                 'contract' => $contractInfo, 
                 'docsList' => $docList

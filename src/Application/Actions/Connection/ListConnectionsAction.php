@@ -47,7 +47,7 @@ class ListConnectionsAction extends Action
             }
         });
 
-        return $this->view->render($this->response, 'connection/connections.twig', ['contract'=>$contract, 'abonentsList'=>$abonentsList]);
+        return $this->view->render($this->response, 'front/connection/connections.twig', ['contract'=>$contract, 'abonentsList'=>$abonentsList]);
 
     }
 

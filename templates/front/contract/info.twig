@@ -1,0 +1,90 @@
+{% extends 'front/layout_main.twig' %}
+
+{% block title %}Данные о договоре{% endblock %}
+
+{% block content %}
+    <div class="content">
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label" for="contract_no">Договор №</label>
+            <div class="col-sm-3">
+                <input
+                        class="form-control"
+                        id="contract_no"
+                        name="contract_no"
+                        readonly
+                        value="{{ contract.kp }}"
+                >
+            </div>
+            <label class="col-sm-3 col-form-label" for="contract_date">Дата заключения</label>
+            <div class="col-sm-3">
+                <input
+                        class="form-control"
+                        id="contract_date"
+                        name="contract_date"
+                        readonly
+                        value="{{ contract.datd|date('d.m.Y') }}"
+                >
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label" for="org_unp">УНП:</label>
+            <div class="col-sm-3">
+                <input
+                        class="form-control"
+                        id="org_unp"
+                        type="text" readonly
+                        name="org_unp"
+                        value="{{ contract.kodni }}"
+                >
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label" for="org_name">Название организации</label>
+            <div class="col-sm-8">
+                <input
+                        class="form-control"
+                        id="org_name"
+                        name="org_name"
+                        readonly
+                        value="{{ contract.npp1 }} {{ contract.npp2 }}"
+                >
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label" for="org_address">Юридический адрес:</label>
+            <div class="col-sm-8">
+                <input
+                        class="form-control"
+                        id="org_address"
+                        name="org_address"
+                        readonly
+                        value="{{ contract.tip_np }} {{ contract.adres2 }} {{ contract.tip_ul }} {{ contract.adres3 }} {{ contract.tip_kv }} {{ contract.adres4 }}"
+                >
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label" for="org_director">Руководитель:</label>
+            <div class="col-sm-8">
+                <input
+                        class="form-control"
+                        id="org_director"
+                        name="org_director"
+                        readonly
+                        value="{{ contract.fio }}"
+                >
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label" for="org_director">Ответственный за электрохозяйство:</label>
+            <div class="col-sm-8">
+                <input
+                        class="form-control"
+                        id="org_director"
+                        name="org_director"
+                        readonly
+                        value="{{ contract.fio }}"
+                >
+            </div>
+        </div>
+    </div>
+{% endblock %}

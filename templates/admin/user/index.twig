@@ -1,0 +1,27 @@
+{%  extends 'admin/layout_main.twig' %}
+
+{% block content %}
+    <div class="row">
+        <a class="btn" href="/admin/user">Добавить пользователя</a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>логин</th>
+                <th>договор</th>
+                <th>группа</th>
+                <th>...</th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for item in customersList %}
+        <tr>
+            <td>{{ item.login }}</td>
+            <td>{{ item.contract }}</td>
+            <td>{{ item.code_group }}</td>
+            <td><a href="/delete">X</a>/td>
+        </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
