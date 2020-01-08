@@ -16,7 +16,5 @@ use Slim\Views\Twig;
 
 abstract class UserAction extends Action
 {
-    protected function action(): Response
-    {
-    }
+
 }

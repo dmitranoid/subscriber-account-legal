@@ -42,7 +42,7 @@ class DoLoginAction extends AuthAction
             $redirectUrl = '/contract';
         }
         if ($authService->isManager()) {
-            $redirectUrl = '/admin/home';
+            $redirectUrl = '/admin/users';
         }
 
         return $this->response->withHeader('Location', $redirectUrl);

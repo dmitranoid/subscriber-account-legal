@@ -31,4 +31,12 @@ class SqlUserRepository extends GenericSqlRepository
             ->where('code_group', 'customer')
             ->fetchAll();
     }
+
+    public function getCustomerByLogin($login):?array
+    {
+        return $this->getAllSql()
+            ->where('code_group', 'customer')
+            ->where('login', $login)
+            ->fetch();
+    }
 }

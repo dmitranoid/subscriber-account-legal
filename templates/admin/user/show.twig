@@ -3,13 +3,23 @@
 {% block title %}Потребитель{% endblock %}
 
 {% block content %}
-    <form class="md-form" action="/admin/user/{{ login }}">
-        <div class="form-group">
-            <label></label>
-        </div>
+    <form class="md-form" action="/admin/user/{{ user['login'] }}">
+            <label for="login">Логин</label>
+            <input name="login" value="{{ user['login'] }}">
 
-        <input type="submit" class="btn btn-default">
-        <input type="button" class="btn btn-amber">
+
+            <label for="password">Пароль</label>
+            <input name="password" value="{{ user['password'] }}">
+
+            <label for="password">Категория</label>
+            <input name="password" value="{{ user['group'] }}">
+
+            <label for="password">Номер договора</label>
+            <input name="password" value="{{ user['code_contract'] }}">
+
+
+        <input type="submit" class="btn btn-default" value="записать">
+        <input type="button" class="btn btn-amber" value="отменить">
     </form>
 
 {% endblock %}

@@ -31,10 +31,13 @@ class UserAuthService
 
     private function saveToSession($user)
     {
+        // TODO переделать на DI session manager
         if (empty($user)) {
             unset($_SESSION['user']);
+            unset($this->session['user']);
         } else {
             $_SESSION['user'] = $user;
+            $this->session['user'] =$user;
         }
     }
 

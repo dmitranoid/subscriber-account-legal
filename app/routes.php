@@ -17,8 +17,10 @@ use App\Application\Actions\Connection\ListReadingsAction;
 use App\Application\Actions\Contract\ViewDocAction;
 use App\Application\Middleware\CustomerGuardedMiddleware;
 use App\Application\Middleware\ManagerGuardedMiddleware;
+use App\Application\Service\Auth\UserAuthService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Log\LoggerInterface;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 
@@ -27,9 +29,9 @@ return function (App $app) {
 
     $app->get('/', function (Request $request, Response $response) use($container, $app) {
         // перебрасываем из корня в зависимости от группы
-        $authService = new \App\Application\Service\Auth\UserAuthService(
-            $container->get(\Psr\Log\LoggerInterface::class),
-            $container->get(\PDO::class),
+        $authService = new UserAuthService(
+            $container->get(LoggerInterface::class),
+            $container->get(PDO::class),
             $request->getAttribute('session', [])
         );
         if(!$authService->isUserAuthenticated()) {
@@ -57,14 +59,14 @@ return function (App $app) {
         $group->get('payments', ViewContractPaymentsAction::class);
         $group->get('docs', ViewContractDocsAction::class);
         $group->get('viewdoc', ViewDocAction::class);
- //       $group->get('chat', ViewChatAction::class);
+        //       $group->get('chat', ViewChatAction::class);
     })->add(CustomerGuardedMiddleware::class);
 
 // admin panel
     $app->group('/admin', function (Group $group) use ($container) {
         $group->get('/users', ListUsersAction::class);
-        $group->get('/user{/login}', ViewUserAction::class);
-        $group->post('/user{/login}', DoAddUserAction::class);
+        $group->get('/user[/{login}]', ViewUserAction::class);
+        $group->post('/user[/{login}]', DoAddUserAction::class);
     })->add(ManagerGuardedMiddleware::class);
 
 /*
