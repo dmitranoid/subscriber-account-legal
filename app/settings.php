@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Application\Service\Contract\ContractDocsService;
 use DI\ContainerBuilder;
 use Monolog\Logger;
 
@@ -22,11 +23,11 @@ return function (ContainerBuilder $containerBuilder) {
             ],
             'db' => [
                 'dbf' => [
-                    'dir' =>  realpath(__DIR__ . '/../data/dbf'),
+                     'dir' => realpath(__DIR__ . '/../data/dbf'),
                 ],
                 'operational' => [
                     'driver' => 'sqlite',
-                    'db'=> __DIR__ . '/../data/sqlite/legal-operational.sqlite3',
+                    'db' => __DIR__ . '/../data/sqlite/legal-operational.sqlite3',
                     'username' => '',
                     'password' => '',
                 ],
@@ -35,9 +36,18 @@ return function (ContainerBuilder $containerBuilder) {
                     'db' => __DIR__ . '/../data/sqlite/legal-arch.sqlite3',
                     'username' => '',
                     'password' => '',
-                ]
+                ],
+                'administration' => [
+                    'driver' => 'sqlite',
+                    'db' => __DIR__ . '/../data/sqlite/legal-administration.sqlite3',
+                    'username' => '',
+                    'password' => '',
+                ],
+
             ],
-            'invoiceDir' => '\\vms8\prom_arch\AMSRV\schet\\',
+            ContractDocsService::class => [
+                'docStorageRoot' => '\\vms8\prom_arch\AMSRV\schet\\',
+            ],
         ],
     ]);
 };

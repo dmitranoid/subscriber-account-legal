@@ -1,0 +1,32 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <base href="http://localhost/admin/">
+    <meta charset="utf-8">
+    <title>{% block title %}page title{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/mdb.min.css">
+    <link rel="stylesheet" href="/css/spectre-icons.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <script type="text/javascript" src="/js/vendor/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="/js/popper.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/mdb.min.js" defer></script>
+    <script type="text/javascript" src="/js/main.js" defer></script>
+</head>
+
+<body>
+<div class="container h-100">
+{% block body %}
+
+{% endblock %}
+</div>
+
+{% include 'front/partial/modal-template.twig' %}
+
+</body>
+
+</html>

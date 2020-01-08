@@ -16,7 +16,7 @@ class ViewContractInfoAction extends Action
     {
         $contractNo = $_SESSION['contract'];
         $contractInfo = (new ContractInfoService($this->pdo))->getContractInfo($contractNo);
-        return $this->view->render($this->response, 'contract/info.twig', ['contract'=>$contractInfo]);
+        return $this->view->render($this->response, 'front/contract/info.twig', ['contract'=>$contractInfo]);
 //        return $this->respondWithData($contractInfo);
     }
 

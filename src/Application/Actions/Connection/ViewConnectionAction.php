@@ -32,7 +32,7 @@ class ViewConnectionAction extends Action
 
     protected function action(): Response
     {
-        $contractNom = $_SESSION['contract'] ?? null;
+        $contractNom = $_SESSION['user']['code_contract'] ?? null;
         // историю показаний можно собрать только из архивной базы
         $archPdo = new \PDO('sqlite:'. realpath($_SERVER['DOCUMENT_ROOT'] . '\..\data\sqlite\legal-arch.sqlite3'));
 
@@ -51,7 +51,7 @@ class ViewConnectionAction extends Action
 
             return $this->view->render(
             $this->response,
-            'connection/connection.twig',
+            'front/connection/connection.twig',
             [
                 'contract' => $contract,
                 'abonent' => $abonent,

@@ -1,0 +1,30 @@
+{% extends 'front/blank.twig' %}
+
+{% block body %}
+
+<nav class="navbar fixed-top navbar-expand navbar-light scrolling-navbar navbarhover">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="https://brestenergo.by" >
+            <img src="/img/brenergo-logo-small.png" class="d-inline-block align-center logo" alt="">
+            Брестэнерго
+        </a>
+        <div class="collapse navbar-collapse">
+            {% include 'front/partial/nav-top-items.twig' %}
+        </div>
+    </div>
+</nav>
+<div class="columns">
+    <div class="column col-12 page-content">
+        <h1>{{ block('title') }}</h1>
+        {% block content %}
+            content here
+        {% endblock %}
+    </div>
+</div>
+<footer class="full-width">
+<div class="text-center">
+    <div class="divider full-width"></div>
+    {% include 'front/partial/footer-content.twig' %}
+</div>
+</footer>
+{%  endblock %}

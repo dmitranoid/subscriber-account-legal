@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Actions\Auth;
 
 
+use App\Application\Service\Auth\UserAuthService;
 use App\Domain\DomainException\DomainRecordNotFoundException;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -14,11 +15,12 @@ class ShowLoginAction extends AuthAction
 
     protected function action(): Response
     {
-        if (isset($_SESSION['contract'])) {
-            return $this->response->withHeader('Location', '/contract/info');
+        $authService = new UserAuthService($this->logger, $this->pdo, $this->request->getAttribute('session',[]));
+        if ($authService->isUserAuthenticated()) {
+            return $this->response->withHeader('Location', '/contract');
         }
 
-        return $this->view->render($this->response, 'auth/login.twig');
+        return $this->view->render($this->response, 'front/auth/login.twig');
     }
 
 }

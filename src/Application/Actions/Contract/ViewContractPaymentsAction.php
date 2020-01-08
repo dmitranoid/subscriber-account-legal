@@ -21,7 +21,7 @@ class ViewContractPaymentsAction extends Action
         $docList = $contractPaymentsService->getPaymentsAndInvoicesList($contractNo);
         return $this->view->render(
             $this->response,
-            'contract/payments.twig',
+            'front/contract/payments.twig',
             [
                 'contract' => $contractInfo,
                 'debtInfo'=>$debtInfo,

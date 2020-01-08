@@ -19,7 +19,7 @@ class ViewContractsListAction extends Action
         $contractsList = $contactsRepository->getIndexList();
         return $this->view->render(
             $this->response,
-            'misc/contractsIndex.twig',
+            'front/misc/contractsIndex.twig',
             ['contractsList' => $contractsList]
         );
     }

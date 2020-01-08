@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Application\Actions\Auth;
 
 
+use App\Application\Middleware\SessionMiddleware;
+use App\Application\Service\Auth\UserAuthService;
 use App\Domain\Contract\ContractNotFoundException;
 use App\Domain\DomainException\DomainRecordNotFoundException;
 use App\Infrastructure\Persistence\Contract\FoxproContractRepository;
@@ -16,19 +18,34 @@ class DoLoginAction extends AuthAction
     protected function action(): Response
     {
         $data = $this->request->getParsedBody();
-        $contractNom = $data['nom'] ?? null;
-        $password = $data['password'] ?? null;
-        if((empty($contractNom)||empty($password)) || ($contractNom != $password)){
+        $login = $data['login'] ?? '';
+        $password = $data['password'] ?? '';
+        if ((empty($login) || empty($password))) {
+            return $this->response->withHeader('Location', '/login');
+        }
+        $authService = new UserAuthService(
+            $this->logger,
+            $this->pdo,
+            $this->request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE, [])
+        );
+        if (!$authService->doLogin($login, $password)) {
             return $this->response->withHeader('Location', '/login');
         }
 
-        $contract = (new SqlContractRepository($this->pdo))->getById($contractNom);
-        if (empty($contract)) {
-            return $this->response->withHeader('Location', '/login');
+//        $contract = (new SqlContractRepository($this->pdo))->getById($contractNom);
+//        if (empty($contract)) {
+//            return $this->response->withHeader('Location', '/login');
+//        }
+//        $_SESSION['contract'] = $contractNom;
+        $redirectUrl = '/';
+        if ($authService->isCustomer()) {
+            $redirectUrl = '/contract';
         }
-        $_SESSION['contract'] = $contractNom;
+        if ($authService->isManager()) {
+            $redirectUrl = '/admin/home';
+        }
 
-        return $this->response->withHeader('Location', '/contract');
+        return $this->response->withHeader('Location', $redirectUrl);
     }
 
 }

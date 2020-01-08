@@ -23,7 +23,9 @@ final class ContractDocsService
     public function getDocumentsByContract($contractNo, \DateTime $periodStart, \DateTime $periodEnd):?array
     {
         $docFilesList = $this->documentFinderService->getDocsByContract($contractNo, $periodStart, $periodEnd);
+        $docList = [];
         foreach ($docFilesList as $docFile) {
+
             $periodData = explode('-', $docFile['datePath']); // 01-2019
             $docName = strpos($docFile['filename'], 'ндс') ? 'сч/ф Энергия' : 'сч/ф НДС';
                 $docList[] = [
