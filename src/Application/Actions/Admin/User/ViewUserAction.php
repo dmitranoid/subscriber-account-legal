@@ -16,10 +16,11 @@ class ViewUserAction extends UserAction
 
         if (empty($userLogin)) {
             $user = $userService->getEmptyUser();
+            $title = 'Добавление пользователя';
         } else {
             $user = $userService->getCustomerbyLogin($userLogin);
-
+            $title = 'Редактирование пользователя';
         }
-        return $this->view->render($this->response, '/admin/user/show.twig', ['user' => $user]);
+        return $this->view->render($this->response, '/admin/user/show.twig', ['user' => $user, 'title' => $title]);
     }
 }

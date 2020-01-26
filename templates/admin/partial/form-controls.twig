@@ -1,0 +1,34 @@
+{% macro inputGroup(label, name, value="", params="", type="text") %}
+    <div class="form-group">
+        <label for="{{ name }}" class="">{{ label }}</label>
+        <input name="{{ name }}" id="{{ name }}" class="form-control" type="{{ type }}"
+               value="{{ value }}" {{ params }}>
+    </div>
+{% endmacro %}
+
+{% macro selectGroup(label, name, value="", selectList, params="") %}
+    <div class="form-group">
+        <label for="{{ name }}" class="">{{ label }}</label>
+        <select
+                name="{{ name }}"
+                id="{{ name }}"
+                class="browser-default custom-select"
+                {{ params }}
+        >
+            {% for option in selectList %}
+                <option value="{{ option.value }}"
+                        {% if value == option.value %}selected{% endif %}>{{ option.label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+{% endmacro %}
+{% macro hidden(id, value) %}
+    <input type="hidden" name="{{ name }}" value="value">
+{% endmacro %}
+
+{% macro saveGroup(labelSubmit = "Записать", labelCancel = "Отменить") %}
+
+    <input type="submit" class="btn btn-default" value="{{ labelSubmit }}">
+    <input type="button" class="btn btn-amber" value="{{ labelCancel }}">
+{% endmacro %}

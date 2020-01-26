@@ -1,28 +1,26 @@
 {% extends 'admin/layout_main.twig' %}
 
-{% block title %}Потребитель{% endblock %}
+{% import '/admin/partial/form-controls.twig' as forms %}
+{% set groupOptions = {
+    admin: {label: 'Администратор', value: 'admin'},
+    manager: {label: 'Менеджер', value: 'manager'},
+    customer: {label: 'Потребитель', value: 'customer'}
+} %}
+
+{% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-    <form class="md-form" action="/admin/user/{{ user['login'] }}">
-        <div class="form-control col-8">
-            <label for="login" class="col-2">Логин</label>
-            <input name="login" class="col-6" value="{{ user['login'] }}">
-        </div>
-        <div class="form-control col-8">
-            <label for="password" class="col-2">Пароль</label>
-            <input name="password" class="col-6" value="{{ user['password'] }}">
-        </div>
-        <div class="form-control col-8">
-            <label for="repassword" class="col-2">Категория</label>
-            <input name="group" class="col-6" value="{{ user['group'] }}">
-        </div>
-        <div class="form-control col-8">
-            <label for="code_contract" class="col-2">Номер договора</label>
-            <input name="code_contract" class="col-6" value="{{ user['code_contract'] }}">
-        </div>
+    {% set action = "/admin/user" . empty(user['login']) ? "" : "/" . user['login'] %}
+    <form class="form col-8" role="form" method="post" action="{{ action }}">
+        {{ forms.inputGroup("Логин", "login", user['login'], "required") }}
+        {{ forms.inputGroup("Пароль", "password", "") }}
+        {{ forms.inputGroup("Повторите пароль", "repassword", "") }}
+        {{ forms.selectGroup("Категория", "group", user["group"], groupOptions) }}
+{#        {{ forms.inputGroup("Категория", "group", user["group"]) }}#}
+        {{ forms.inputGroup("Номер договора", "code_contract", user['code_contract'], "required") }}
+        {{ forms.inputGroup("Email", "email", user['email'], "email", "required") }}
 
-        <input type="submit" class="btn btn-default" value="записать">
-        <input type="button" class="btn btn-amber" value="отменить">
+        {{ forms.saveGroup }}
     </form>
 
 {% endblock %}
