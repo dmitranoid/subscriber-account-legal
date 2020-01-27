@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence;
 
 
+use App\Application\Exceptions\AppDbException;
+use Envms\FluentPDO\Exception as FpdoException;
 use Envms\FluentPDO\Query;
 use \PDO;
 
@@ -53,6 +55,49 @@ class GenericSqlRepository
             return null;
         }
         return $data;
+    }
+
+    /**
+     * @param $data
+     * @throws AppDbException
+     */
+    public function save($data)
+    {
+        {
+            try {
+                $this->fpdo->insertInto($this->tableName, $data)->execute();
+            } catch (FpdoException $e) {
+                throw new AppDbException('Ошибка вставки данных в ' . $this->tableName, $e);
+            }
+        }
+    }
+
+    /**
+     * @param $data
+     * @throws AppDbException
+     */
+    public function update($data)
+    {
+        $id = $data[$this->identity];
+        unset($data[$this->identity]);
+        try {
+            $this->fpdo->update($this->tableName, $data, $data['login'])->execute();
+        } catch (FpdoException $e) {
+            throw new AppDbException('Ошибка обновления данных в ' . $this->tableName, $e);
+        }
+    }
+
+    /**
+     * @param $id
+     * @throws AppDbException
+     */
+    public function delete($id)
+    {
+        try {
+            $this->fpdo->delete($this->tableName, $id)->execute();
+        } catch (FpdoException $e) {
+            throw new AppDbException('Ошибка удаления данных в ' . $this->tableName, $e);
+        }
     }
 
 }

@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\User;
 
 
+use App\Application\Exceptions\AppDbException;
 use App\Infrastructure\Persistence\GenericSqlRepository;
-use Envms\FluentPDO\Exception;
+use Envms\FluentPDO\Exception as FpdoException;
+use Exception;
 
 class SqlUserRepository extends GenericSqlRepository
 {
@@ -20,7 +22,7 @@ class SqlUserRepository extends GenericSqlRepository
                 ->where('login', $login)
                 ->fetch();
         } catch (Exception $e) {
-            new \Exception('internal error', 0, $e);
+            new Exception('internal error', 0, $e);
         }
         return $user ? $user : null;
     }
@@ -40,18 +42,4 @@ class SqlUserRepository extends GenericSqlRepository
             ->fetch();
     }
 
-    public function insert($data)
-    {
-        $this->fpdo->insertInto($this->tableName, $data)->execute();
-    }
-
-    public function update(array $userData)
-    {
-        $this->fpdo->update($this->tableName, $userData, $userData['login'])->execute();
-    }
-
-    public function delete($id)
-    {
-        $this->fpdo->delete($this->tableName, $id)->execute();
-    }
 }

@@ -86,7 +86,7 @@ abstract class Action
      * @return array|object
      * @throws HttpBadRequestException
      */
-    protected function getFormData()
+    protected function getJsonData()
     {
         $input = json_decode(file_get_contents('php://input'));
 
@@ -96,6 +96,18 @@ abstract class Action
 
         return $input;
     }
+
+    /**
+     * @return array|object
+     * @throws HttpBadRequestException
+     */
+    protected function getFormData()
+    {
+        $input = ($this->request->getParsedBody());
+
+        return $input;
+    }
+
 
     /**
      * @param  string $name

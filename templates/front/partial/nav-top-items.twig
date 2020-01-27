@@ -7,47 +7,26 @@
 /consultation           Получить консультацию
 /logout                 Выйти
 #}
+
+{% set nav = {
+    contract: {title: "Договор", link: "/contract", icon: "/img/icons/organization.svg"},
+    connections: {title: "Точки учета", link: "/connections", icon: "/img/icons/crystal_oscillator.svg"},
+    sendreadings: {title: "Передать показания", link: "/sendreadings", icon: "/img/icons/display.svg"},
+    payments: {title: "Счета и оплаты", link: "/payments", icon: "/img/icons/sales_performance.svg"},
+    docs: {title: "Документы", link: "/docs", icon: "/img/icons/document.svg"},
+    docs: {title: "Документы", link: "/docs", icon: "/img/icons/document.svg"},
+    logout: {title: "Выйти", link: "/logout", icon: "/img/icons/key.svg"},
+} %}
+{#//    chat: {title: "Получить консультацию", link: "/chat", icon: "/img/icons/assistant.svg"},#}
+
 <ul class="navbar-nav ml-auto">
-    <li class="nav-item" >
-        <a class="nav-link rounded" href="/contract" >
-            <img src="/img/icons/organization.svg">
-            Договор
+{% for item as nav %}
+    <li class="nav-item">
+        <a class="nav-link rounded" href="{{ item.link }}">
+            <img src="{{ item.icon }}">
+            {{ item.title }}
         </a>
     </li>
-    <li class="nav-item" >
-        <a class="nav-link rounded" href="/connections" >
-            <img src="/img/icons/crystal_oscillator.svg">
-            Точки учета
-        </a>
-    </li>
-    <li class="nav-item" >
-        <a class="nav-link rounded" href="/sendreadings" >
-            <img src="/img/icons/display.svg">
-            Передать показания
-        </a>
-    </li>
-    <li class="nav-item" >
-        <a class="nav-link rounded" href="/payments" >
-            <img src="/img/icons/sales_performance.svg">
-            Счета и оплаты
-        </a>
-    </li>
-    <li class="nav-item" >
-        <a class="nav-link rounded" href="/docs" >
-            <img src="/img/icons/document.svg">
-            Документы
-        </a>
-    </li>
-{#    <li class="nav-item" >#}
-{#        <a class="nav-link rounded" href="/chat" >#}
-{#            <img src="/img/icons/assistant.svg">#}
-{#            Получить консультацию#}
-{#        </a>#}
-{#    </li>#}
-    <li class="nav-item" >
-        <a class="nav-link rounded" href="/logout" >
-            <img src="/img/icons/key.svg">
-            Выйти
-        </a>
-    </li>
+{% endfor %}
+</ul>
 </ul>

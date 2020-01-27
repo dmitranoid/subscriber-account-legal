@@ -67,6 +67,7 @@ return function (App $app) {
         $group->get('/users', ListUsersAction::class);
         $group->get('/user[/{login}]', ViewUserAction::class);
         $group->post('/user[/{login}]', DoAddUserAction::class);
+//        $group->post('/user/{login}', DoEditUserAction::class);
     })->add(ManagerGuardedMiddleware::class);
 
 /*

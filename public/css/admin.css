@@ -1,0 +1,134 @@
+
+.color-list {
+    /* https://coolors.co/007fe9-de466f-414656-aeafb2-e8ebe4 */
+    color: #007fe9;
+    color: #55acee;
+    color: #414656;
+    color: #e8ebe4;
+    color: #d1d1d3;
+    color: #aeafb2; /* google*/
+    color: #de466f;
+}
+
+@media print
+{
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
+
+html{
+
+}
+
+.container {
+
+}
+
+.full-height {
+    height: 100vh;
+}
+
+.half-width {
+    width: 45%;
+    margin:0 2%
+}
+
+.monotype-text {
+    font-family: monospace, monospace;
+    font-size: 1rem;
+}
+
+header {
+    height: 4rem;
+    color: #e8ebe4;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 0 6px 0 #414656;
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #55acee), color-stop(1, #468ccf));
+    background:-moz-linear-gradient(top, #55acee 5%, #468ccf 100%);
+    background:-webkit-linear-gradient(top, #55acee 5%, #468ccf 100%);
+    background:-o-linear-gradient(top, #55acee 5%, #468ccf 100%);
+    background:-ms-linear-gradient(top, #55acee 5%, #468ccf 100%);
+    background:linear-gradient(to bottom, #55acee 5%, #468ccf 100%);
+}
+
+.menu-logo {
+    display: inline-block;
+    vertical-align: top;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin: .5rem;
+}
+
+img.logo{
+    width: 100%;
+    max-width: 50px;
+}
+
+header .site-caption {
+    display: inline-block;
+    vertical-align: top;
+    font-size: 1.6rem;
+    margin-top: 0.8rem;
+}
+
+.navbar.navbar-light {
+    background-color:  white
+}
+
+.nav-link img {
+    height: 1rem;
+}
+
+.page-content {
+    margin-top: 100px ;
+}
+
+.login-form {
+    margin-top: 50px;
+}
+
+.btn-primary {
+    background: #55acee !important;
+}
+
+.btn-link {
+    color: #55acee !important;
+}
+.savereadings:hover, .sendreadings:hover {
+    box-shadow: 0 6px 6px 0 #414656;
+    transition: all 0.3s ease;
+}
+
+.table tr.abonent {
+    background: #d1d1d3;
+}
+
+.table tr.connection td:nth-child(2) {
+    padding-left: 3rem;
+}
+.table tr.clickable-row:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.table.contract-paydocs td:nth-child(4),
+.table.contract-paydocs td:nth-child(5) {
+    text-align: right;
+}
+
+.table.readings-history td:nth-child(2),
+.table.readings-history td:nth-child(3) {
+    text-align: right;
+}
+.modal .content {
+    min-height: 10vh;
+}
+
+.info-block {
+    width: 100%;
+    background: #fff9b4;
+    color: #414656;
+    border: solid 1px #414656 ;
+}
