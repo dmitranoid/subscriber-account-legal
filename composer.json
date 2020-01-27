@@ -1,19 +1,14 @@
 {
-    "name": "slim/slim-skeleton",
-    "description": "A Slim Framework skeleton application for rapid development",
-    "keywords": ["microframework", "rest", "router", "psr7"],
-    "homepage": "http://github.com/slimphp/Slim-Skeleton",
+    "name": "bretenergo/lkprom",
+    "description": "Личный кабинет пользователя (юридические лица)",
+    "keywords": ["brestenergo", "web"],
+    "homepage": "http://www.brestenergo.by/lkprom",
     "license": "MIT",
     "authors": [
         {
-            "name": "Josh Lockhart",
-            "email": "info@joshlockhart.com",
-            "homepage": "http://www.joshlockhart.com/"
-        },
-        {
-            "name": "Pierre Berube",
-            "email": "pierre@lgse.com",
-            "homepage": "http://www.lgse.com/"
+            "name": "Шляхтич Дмитрий",
+            "email": "dvshlyahtich@brestenergo.by",
+            "homepage": "http://www.brestenergo.by"
         }
     ],
     "require": {
