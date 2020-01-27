@@ -38,7 +38,7 @@ class UserService
      */
     public function add(array $data)
     {
-        // todo validation
+
         try {
             $this->userRepository->insert($data);
         } catch (AppDbException $e) {

@@ -1,6 +1,6 @@
 {% extends 'admin/layout_main.twig' %}
 
-{% import '/admin/partial/form-controls.twig' as forms %}
+{% import 'admin/partial/form-controls.twig' as forms %}
 {% set groupOptions = {
     admin: {label: 'Администратор', value: 'admin'},
     manager: {label: 'Менеджер', value: 'manager'},
@@ -18,7 +18,7 @@
         {{ forms.selectGroup("Категория", "group", user["group"], groupOptions) }}
 {#        {{ forms.inputGroup("Категория", "group", user["group"]) }}#}
         {{ forms.inputGroup("Номер договора", "code_contract", user['code_contract'], "required") }}
-        {{ forms.inputGroup("Email", "email", user['email'], "email", "required") }}
+        {{ forms.inputGroup("Email", "email", user['email'], "required", "email") }}
 
         {{ forms.saveGroup }}
     </form>
