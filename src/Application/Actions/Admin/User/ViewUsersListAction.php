@@ -6,7 +6,7 @@ namespace App\Application\Actions\Admin\User;
 use App\Infrastructure\Persistence\User\SqlUserRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 
-class ListUsersAction extends UserAction
+class ViewUsersListAction extends UserAction
 {
 
     protected function action(): Response

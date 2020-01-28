@@ -10,7 +10,7 @@ use App\Application\Validator\ValitronValidator;
 use App\Infrastructure\Persistence\User\SqlUserRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 
-class DoAddUserAction extends UserAction
+class NewUserAction extends UserAction
 {
     protected function action(): Response
     {
@@ -19,6 +19,7 @@ class DoAddUserAction extends UserAction
         $validator->setRules([
             'required'=>['login', 'group', 'code_contract', 'email'],
             'email'=>'email',
+            'isEqual'=>['password', 'repassword'],
         ]);
         if(false === $validator->validate()) {
             $this->flash->set('form-errors', $validator->getErrors());
@@ -26,9 +27,14 @@ class DoAddUserAction extends UserAction
         }
         // todo надо репозитории вынести в фабрику, чтото типа $repositoryFactory::produce('UserRepositoryInterface)
         $userService = new UserService(new SqlUserRepository($this->pdo));
+
         if (!$this->request->getAttribute('login')) {
+            $formData = $newUserValidator->validate($formData);
+            // обновляем
             $userService->add($formData);
         } else {
+            // добавляем
+            $existingUserValidator->validate($formData);
             $userService->edit($formData);
         }
 

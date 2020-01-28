@@ -12,7 +12,7 @@ use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
 use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 
-class ListReadingsAction extends Action
+class ViewListReadingsAction extends Action
 {
     protected function action(): Response
     {

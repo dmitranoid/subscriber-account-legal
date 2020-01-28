@@ -10,7 +10,7 @@ use App\Domain\DomainException\DomainRecordNotFoundException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpBadRequestException;
 
-class DoLogoutAction extends AuthAction
+class LogoutAction extends AuthAction
 {
 
     protected function action(): Response

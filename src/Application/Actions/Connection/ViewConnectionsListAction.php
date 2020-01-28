@@ -13,7 +13,7 @@ use App\Infrastructure\Persistence\Contract\SqlContractRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpBadRequestException;
 
-class ListConnectionsAction extends Action
+class ViewConnectionsListAction extends Action
 {
     protected function action(): Response
     {

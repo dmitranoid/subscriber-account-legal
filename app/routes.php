@@ -1,19 +1,19 @@
 <?php
 declare(strict_types=1);
 
-use App\Application\Actions\Admin\User\DoAddUserAction;
-use App\Application\Actions\Admin\User\ListUsersAction;
+use App\Application\Actions\Admin\User\NewUserAction;
+use App\Application\Actions\Admin\User\ViewUsersListAction;
 use App\Application\Actions\Admin\User\ViewUserAction;
-use App\Application\Actions\Auth\DoLoginAction;
-use App\Application\Actions\Auth\DoLogoutAction;
+use App\Application\Actions\Auth\LoginAction;
+use App\Application\Actions\Auth\LogoutAction;
 use App\Application\Actions\Auth\ShowLoginAction;
 use App\Application\Actions\Connection\SendReadingsAction;
 use App\Application\Actions\Contract\ViewContractDocsAction;
 use App\Application\Actions\Contract\ViewContractPaymentsAction;
 use App\Application\Actions\Contract\ViewContractInfoAction;
-use App\Application\Actions\Connection\ListConnectionsAction;
+use App\Application\Actions\Connection\ViewConnectionsListAction;
 use App\Application\Actions\Connection\ViewConnectionAction;
-use App\Application\Actions\Connection\ListReadingsAction;
+use App\Application\Actions\Connection\ViewListReadingsAction;
 use App\Application\Actions\Contract\ViewDocAction;
 use App\Application\Middleware\CustomerGuardedMiddleware;
 use App\Application\Middleware\ManagerGuardedMiddleware;
@@ -47,26 +47,26 @@ return function (App $app) {
 
  //   $app->get('/contractslist', ViewContractsListAction::class);
     $app->get('/login', ShowLoginAction::class)->setname('login');
-    $app->post('/login', DoLoginAction::class);
-    $app->get('/logout', DoLogoutAction::class)->setname('logout');
+    $app->post('/login', LoginAction::class);
+    $app->any('/logout', LogoutAction::class)->setname('logout');
 
     $app->group('/', function (Group $group) use ($container) {
-        $group->get('contract', ViewContractInfoAction::class);
-        $group->get('connections', ListConnectionsAction::class);
-        $group->get('connection/{abtu}', ViewConnectionAction::class);
-        $group->get('sendreadings', ListReadingsAction::class);
+        $group->get('contract', ViewContractInfoAction::class)->setName('front.contract');
+        $group->get('connections', ViewConnectionsListAction::class)->setName('front.conections');
+        $group->get('connection/{abtu}', ViewConnectionAction::class)->setName('front.connection');
+        $group->get('sendreadings', ViewListReadingsAction::class)->setName('front.sendreadings');
         $group->post('sendreadings', SendReadingsAction::class);
-        $group->get('payments', ViewContractPaymentsAction::class);
-        $group->get('docs', ViewContractDocsAction::class);
-        $group->get('viewdoc', ViewDocAction::class);
+        $group->get('payments', ViewContractPaymentsAction::class)->setName('front.payments');
+        $group->get('docs', ViewContractDocsAction::class)->setName('front.docs');
+        $group->get('viewdoc', ViewDocAction::class)->setName('viewdoc');
         //       $group->get('chat', ViewChatAction::class);
     })->add(CustomerGuardedMiddleware::class);
 
 // admin panel
     $app->group('/admin', function (Group $group) use ($container) {
-        $group->get('/users', ListUsersAction::class);
-        $group->get('/user[/{login}]', ViewUserAction::class);
-        $group->post('/user[/{login}]', DoAddUserAction::class);
+        $group->get('/users', ViewUsersListAction::class)->setName('admin.users');
+        $group->get('/user[/{login}]', ViewUserAction::class)->setName('admin.user');
+        $group->post('/user[/{login}]', NewUserAction::class);
 //        $group->post('/user/{login}', DoEditUserAction::class);
     })->add(ManagerGuardedMiddleware::class);
 

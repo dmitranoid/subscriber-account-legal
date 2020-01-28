@@ -16,7 +16,7 @@ class ViewUserAction extends UserAction
 
         if (empty($userLogin)) {
             $user = $userService->getEmptyUser();
-            $title = 'Добавление пользователя';
+            $title = 'Новый пользователь';
         } else {
             $user = $userService->getCustomerbyLogin($userLogin);
             $title = 'Редактирование пользователя';

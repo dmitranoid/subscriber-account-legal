@@ -26,7 +26,6 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
-
     public function getUsersList()
     {
         
@@ -38,14 +37,17 @@ class UserService
      */
     public function add(array $data)
     {
-
         try {
-            $this->userRepository->insert($data);
+            $this->userRepository->save($data);
         } catch (AppDbException $e) {
             throw new AppException();
         }
     }
 
+    /**
+     * @param array $data
+     * @throws AppException
+     */
     public function edit(array $data)
     {
         // todo validation
@@ -56,5 +58,16 @@ class UserService
         }
     }
 
-
+    /**
+     * @param $id
+     * @throws AppException
+     */
+    public function delete($id)
+    {
+        try {
+            $this->userRepository->delete($id);
+        } catch (AppDbException $e) {
+            throw new AppException();
+        }
+    }
 }
