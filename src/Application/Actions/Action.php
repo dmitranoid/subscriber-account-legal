@@ -150,4 +150,18 @@ abstract class Action
         $this->response->getBody()->write($json);
         return $this->response->withHeader('Content-Type', 'application/json');
     }
+
+    protected function setFormOldData(array $oldData):void
+    {
+        foreach ($oldData as $field => $value) {
+            $this->flash->addMessage( $field  . '.old', $value);
+        }
+    }
+
+    protected function setFormErrors(array $errors):void
+    {
+        foreach ($errors as $field => $value) {
+            $this->flash->addMessage($field . '.error' , $value);
+        }
+    }
 }

@@ -1,12 +1,11 @@
 <?php
 declare(strict_types=1);
 
+use App\Application\Middleware\TwigFlashMessageMiddleware;
 use Slim\App;
-use Slim\Views\Twig;
-use Slim\Views\TwigMiddleware;
 use App\Application\Middleware\SessionMiddleware;
 
 return function (App $app) {
+    $app->add(TwigFlashMessageMiddleware::class);
     $app->add(SessionMiddleware::class);
-//    $app->add(TwigMiddleware::createFromContainer($app, Twig::class));
 };

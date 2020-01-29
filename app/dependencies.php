@@ -29,8 +29,13 @@ return function (ContainerBuilder $containerBuilder) {
         Twig::class => function (ContainerInterface $c) {
             $settings = $c->get('settings');
             $twigSettings = $settings['twig'];
-            $twig = Twig::create($twigSettings['path'], ['cache' => $twigSettings['cachePath']]);
-            $twig->getEnvironment()->addGlobal('flash', $c->get(\Slim\Flash\Messages::class));
+            $twig = Twig::create(
+                $twigSettings['path'],
+                [
+                    'debug' => true,
+                    'cache' => $twigSettings['cachePath']
+                ]);
+            $twig->addExtension(new \Twig\Extension\DebugExtension());
             return $twig;
         },
         PDO::class => function (ContainerInterface $c) {

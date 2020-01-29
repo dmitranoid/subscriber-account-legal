@@ -10,12 +10,14 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
+    {{ dump(flash) }}
+    {{ dump(flash['login.old']) }}
     {% set action = "/admin/user" . empty(user['login']) ? "" : "/" . user['login'] %}
     <form class="form col-8" role="form" method="post" action="{{ action }}">
-        {{ forms.inputGroup("Логин", "login", user['login'], "required", "", {{ flash->getMessages('login') }}) }}
-        {{ forms.inputGroup("Пароль", "password", "") }}
+        {{ forms.inputGroup("Логин", "login", flash['login-old']|join , "required", "") }}
+        {{ forms.inputGroup("Пароль", "password", (flash.password.old) ?? '') }}
         {{ forms.inputGroup("Повторите пароль", "repassword", "") }}
-        {{ forms.selectGroup("Категория", "group", user["group"], groupOptions) }}
+        {{ forms.selectGroup("Категория", "code_group", user["code_group"], groupOptions) }}
 {#        {{ forms.inputGroup("Категория", "group", user["group"]) }}#}
         {{ forms.inputGroup("Номер договора", "code_contract", user['code_contract'], "required") }}
         {{ forms.inputGroup("Email", "email", user['email'], "required", "email") }}
