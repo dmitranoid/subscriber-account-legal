@@ -1,18 +1,21 @@
-{% macro inputGroup(label, name, value="", params="", type="text") %}
-    <div class="form-group">
-        <label for="{{ name }}" class="">{{ label }}</label>
-        <input name="{{ name }}" id="{{ name }}" class="form-control" type="{{ type }}"
+{% macro inputGroup(label, name, value="", params="", type="text", errors={}) %}
+    <div class="form-group row">
+        <label for="{{ name }}" class="col-3">{{ label }}</label>
+        <input name="{{ name }}" id="{{ name }}" class="form-control col-5" type="{{ type }}"
                value="{{ value }}" {{ params }}>
+        {% for fieldError in errors %}
+        <span class="text-danger col-4"><small>{{ fieldError }}</small></span>
+        {% endfor %}
     </div>
 {% endmacro %}
 
 {% macro selectGroup(label, name, value="", selectList, params="") %}
-    <div class="form-group">
-        <label for="{{ name }}" class="">{{ label }}</label>
+    <div class="form-group row">
+        <label for="{{ name }}" class="col-3">{{ label }}</label>
         <select
                 name="{{ name }}"
                 id="{{ name }}"
-                class="browser-default custom-select"
+                class="browser-default custom-select col-5"
                 {{ params }}
         >
             {% for option in selectList %}

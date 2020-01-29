@@ -29,7 +29,9 @@ return function (ContainerBuilder $containerBuilder) {
         Twig::class => function (ContainerInterface $c) {
             $settings = $c->get('settings');
             $twigSettings = $settings['twig'];
-            return Twig::create($twigSettings['path'], ['cache' => $twigSettings['cachePath']]);
+            $twig = Twig::create($twigSettings['path'], ['cache' => $twigSettings['cachePath']]);
+            $twig->getEnvironment()->addGlobal('flash', $c->get(\Slim\Flash\Messages::class));
+            return $twig;
         },
         PDO::class => function (ContainerInterface $c) {
             $dbSettings = $c->get('settings')['db'];
@@ -47,5 +49,8 @@ return function (ContainerBuilder $containerBuilder) {
             // подключим архивы
             return $pdo;
         },
+        Slim\Flash\Messages::class => function (ContainerInterface $c) {
+            return new Slim\Flash\Messages();
+        }
     ]);
 };

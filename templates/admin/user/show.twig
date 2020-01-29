@@ -12,7 +12,7 @@
 {% block content %}
     {% set action = "/admin/user" . empty(user['login']) ? "" : "/" . user['login'] %}
     <form class="form col-8" role="form" method="post" action="{{ action }}">
-        {{ forms.inputGroup("Логин", "login", user['login'], "required") }}
+        {{ forms.inputGroup("Логин", "login", user['login'], "required", "", {{ flash->getMessages('login') }}) }}
         {{ forms.inputGroup("Пароль", "password", "") }}
         {{ forms.inputGroup("Повторите пароль", "repassword", "") }}
         {{ forms.selectGroup("Категория", "group", user["group"], groupOptions) }}

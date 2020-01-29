@@ -10,6 +10,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpNotFoundException;
+use Slim\Flash\Messages;
 use Slim\Views\Twig;
 use PDO;
 
@@ -42,16 +43,22 @@ abstract class Action
 
     /** @var PDO */
     protected $pdo;
+
+    /** @var Messages */
+    protected $flash;
+
     /**
      * @param LoggerInterface $logger
      * @param Twig $view
      * @param PDO|null $pdo
+     * @param Messages $flash
      */
-    public function __construct(LoggerInterface $logger,  Twig $view, PDO $pdo)
+    public function __construct(LoggerInterface $logger,  Twig $view, PDO $pdo, Messages $flash)
     {
         $this->logger = $logger;
         $this->view = $view;
         $this->pdo = $pdo;
+        $this->flash = $flash;
     }
 
     /**

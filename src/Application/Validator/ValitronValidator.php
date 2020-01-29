@@ -5,32 +5,39 @@ declare(strict_types=1);
 namespace App\Application\Validator;
 
 
+use Valitron\Validator;
+
 class ValitronValidator implements ValidatorInterface
 {
-    private $rules;
+    /** @var Validator  */
+    private $validator;
 
-    public function __construct()
+    public function __construct($rules = null, $data = null)
     {
+        Validator::lang('ru');
+        $this->validator = new Validator($data);
+        $this->validator->rules($rules);
+
     }
 
     function setRules($rules): void
     {
-        // TODO: Implement setRules() method.
+        $this->validator->rules($rules);
     }
 
     function setData($data): void
     {
-        // TODO: Implement setData() method.
+        $this->validator = $this->validator->withData($data);
     }
 
     function validate(): bool
     {
-        // TODO: Implement validate() method.
+        return $this->validator->validate();
     }
 
     function getErrors(): ?array
     {
-        // TODO: Implement getErrors() method.
+        return $this->validator->errors();
     }
 
 }
