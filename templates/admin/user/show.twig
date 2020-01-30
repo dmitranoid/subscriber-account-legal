@@ -11,11 +11,11 @@
 
 {% block content %}
     {{ dump(flash) }}
-    {{ dump(flash['login.old']) }}
+    {{ dump(flash.old('login')) }}
     {% set action = "/admin/user" . empty(user['login']) ? "" : "/" . user['login'] %}
     <form class="form col-8" role="form" method="post" action="{{ action }}">
-        {{ forms.inputGroup("Логин", "login", flash['login-old']|join , "required", "") }}
-        {{ forms.inputGroup("Пароль", "password", (flash.password.old) ?? '') }}
+        {{ forms.inputGroup("Логин", "login", flash.old('login', '') , "required") }}
+        {{ forms.inputGroup("Пароль", "password", '') }}
         {{ forms.inputGroup("Повторите пароль", "repassword", "") }}
         {{ forms.selectGroup("Категория", "code_group", user["code_group"], groupOptions) }}
 {#        {{ forms.inputGroup("Категория", "group", user["group"]) }}#}

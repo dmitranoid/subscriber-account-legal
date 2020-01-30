@@ -9,7 +9,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Views\Twig;
 
-class TwigViewInterface implements ViewInterface
+class TwigView implements ViewInterface
 {
     /** @var Twig */
     private $twig ;
