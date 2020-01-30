@@ -1,15 +1,15 @@
-{% macro inputGroup(label, name, value="", params="", type="text", errors={}) %}
+{% macro inputGroup(label, name, value="", params="", type="text", error) %}
     <div class="form-group row">
         <label for="{{ name }}" class="col-3">{{ label }}</label>
         <input name="{{ name }}" id="{{ name }}" class="form-control col-5" type="{{ type }}"
                value="{{ value }}" {{ params }}>
-        {% for fieldError in errors %}
-        <span class="text-danger col-4"><small>{{ fieldError }}</small></span>
-        {% endfor %}
+        {% if error %}
+        <span class="text-danger col-4"><small>{{ error }}</small></span>
+        {% endif %}
     </div>
 {% endmacro %}
 
-{% macro selectGroup(label, name, value="", selectList, params="") %}
+{% macro selectGroup(label, name, value="", selectList, params="", error) %}
     <div class="form-group row">
         <label for="{{ name }}" class="col-3">{{ label }}</label>
         <select
@@ -31,7 +31,6 @@
 {% endmacro %}
 
 {% macro saveGroup(labelSubmit = "Записать", labelCancel = "Отменить") %}
-
     <input type="submit" class="btn btn-default" value="{{ labelSubmit }}">
     <input type="button" class="btn btn-amber" value="{{ labelCancel }}">
 {% endmacro %}
