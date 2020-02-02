@@ -28,11 +28,19 @@ class NewUserAction extends UserAction
         $inputDataValidator = new ValitronValidator(
             [
                 'required' => ['login', 'code_group', 'code_contract', 'email'],
-                'alpha' => ['login'],
+                'alphaNum' => ['login'],
                 'email' => ['email'],
                 'equals' => [['password', 'repassword']],
             ],
-            $formData
+            $formData,
+            [
+                'login' => 'логин',
+                'password' => 'пароль',
+                'repassword' => 'повтор пароля',
+                'code_group' => 'категория',
+                'code_contract' => 'договор',
+                'email' => 'E-mail',
+            ]
         );
         if (false === $inputDataValidator->validate()) {
             $this->setFormOldData($formData);
@@ -42,14 +50,14 @@ class NewUserAction extends UserAction
         // todo надо репозитории вынести в фабрику, чтото типа $repositoryFactory::produce('UserRepositoryInterface)
         $userService = new UserService(new SqlUserRepository($this->pdo));
 
-        if (!$this->request->getAttribute('login')) {
-            $formData = $newUserValidator->validate($formData);
+        if ($this->request->getAttribute('login')) {
             // обновляем
-            $userService->add($formData);
+            //$existingUserValidator->validate($formData);
+            $userService->edit($formData);
         } else {
             // добавляем
-            $existingUserValidator->validate($formData);
-            $userService->edit($formData);
+            //$formData = $newUserValidator->validate($formData);
+            $userService->add($formData);
         }
 
         return $this->response->withHeader('Location', '/admin/users');

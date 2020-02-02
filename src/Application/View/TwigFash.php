@@ -13,10 +13,10 @@ class TwigFash
 
     /**
      * TwigFash constructor.
+     * @param array $messages
      */
     public function __construct(array $messages)
     {
-
         $this->messages = $messages;
     }
 
@@ -25,9 +25,13 @@ class TwigFash
         return $this->messages[$field . '.old'][0] ?? $default;
     }
 
-    public function error($field, $glue='<br>')
+    public function error($field, $glue = '<br>')
     {
-        return implode($glue, $this->messages[$field . '.error'][0]) ?? '';
+        if (isset($this->messages[$field . '.error'])) {
+            return implode($glue, $this->messages[$field . '.error'][0]) ?? '';
+        } else {
+            return '';
+        }
     }
 
 }

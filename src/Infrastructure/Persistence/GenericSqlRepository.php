@@ -6,6 +6,7 @@ namespace App\Infrastructure\Persistence;
 
 
 use App\Application\Exceptions\AppDbException;
+use App\Application\Helpers\ArrayHelpers;
 use Envms\FluentPDO\Exception as FpdoException;
 use Envms\FluentPDO\Query;
 use \PDO;
@@ -18,6 +19,8 @@ class GenericSqlRepository
     protected $tableName = '';
 
     protected $identity='id';
+
+    protected $allowedFields = [];
 
     public function __construct(PDO $pdo)
     {
@@ -64,8 +67,10 @@ class GenericSqlRepository
     public function save($data)
     {
         {
+            $data = ArrayHelpers::filterArrayKeys($data, $this->getAllowedFields());
             try {
-                $this->fpdo->insertInto($this->tableName, $data)->execute();
+                $query = $this->fpdo->insertInto($this->tableName, $data);
+                $query->execute();
             } catch (FpdoException $e) {
                 throw new AppDbException('Ошибка вставки данных в ' . $this->tableName, $e);
             }
@@ -80,6 +85,7 @@ class GenericSqlRepository
     {
         $id = $data[$this->identity];
         unset($data[$this->identity]);
+        $data = ArrayHelpers::filterArrayKeys($data, $this->getAllowedFields());
         try {
             $this->fpdo->update($this->tableName, $data, $data['login'])->execute();
         } catch (FpdoException $e) {
@@ -98,6 +104,22 @@ class GenericSqlRepository
         } catch (FpdoException $e) {
             throw new AppDbException('Ошибка удаления данных в ' . $this->tableName, $e);
         }
+    }
+
+    private function getAllowedFields()
+    {
+        if (!empty($this->allowedFields)) {
+            return $this->allowedFields;
+        }
+        //todo cache table schema data
+        $tableSchema = $this->fpdo->getPdo()
+            ->query("PRAGMA table_info(" . $this->getTableName() . ")")
+            ->fetchAll(PDO::FETCH_ASSOC);
+        $allowedFields = [];
+        foreach ($tableSchema as $item) {
+            $allowedFields[] = $item['name'];
+        }
+        return $allowedFields;
     }
 
 }

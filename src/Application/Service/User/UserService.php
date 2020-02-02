@@ -7,6 +7,7 @@ namespace App\Application\Service\User;
 
 use App\Application\Exceptions\AppDbException;
 use App\Application\Exceptions\AppException;
+use App\Application\Helpers\ArrayHelpers;
 use App\Infrastructure\Persistence\User\SqlUserRepository;
 use PDO;
 
@@ -20,15 +21,23 @@ class UserService
     /** @var SqlUserRepository */
     private $userRepository;
 
+    private $allowedFields = [
+        'login',
+        'password',
+        'code_group',
+        'code_contract',
+        'email',
+    ];
+
     public function __construct(SqlUserRepository $userRepository)
     {
-
         $this->userRepository = $userRepository;
+
     }
 
     public function getUsersList()
     {
-        
+
     }
 
     /**
@@ -37,6 +46,11 @@ class UserService
      */
     public function add(array $data)
     {
+        $data = ArrayHelpers::filterArrayKeys($data, $this->allowedFields);
+
+        if (isset($data['password'])) {
+            $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        }
         try {
             $this->userRepository->save($data);
         } catch (AppDbException $e) {
@@ -69,5 +83,11 @@ class UserService
         } catch (AppDbException $e) {
             throw new AppException();
         }
+    }
+
+    public function deleteByLogin($login)
+    {
+        $user = $this->userRepository->getByLogin($login);
+        $this->delete($user['id']);
     }
 }

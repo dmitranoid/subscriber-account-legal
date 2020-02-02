@@ -1,4 +1,4 @@
-{% macro inputGroup(label, name, value="", params="", type="text", error) %}
+{% macro inputGroup(label, name, value="", params="", type="text", error="") %}
     <div class="form-group row">
         <label for="{{ name }}" class="col-3">{{ label }}</label>
         <input name="{{ name }}" id="{{ name }}" class="form-control col-5" type="{{ type }}"
@@ -9,7 +9,7 @@
     </div>
 {% endmacro %}
 
-{% macro selectGroup(label, name, value="", selectList, params="", error) %}
+{% macro selectGroup(label, name, value="", selectList, params="", error="") %}
     <div class="form-group row">
         <label for="{{ name }}" class="col-3">{{ label }}</label>
         <select
@@ -23,6 +23,9 @@
                         {% if value == option.value %}selected{% endif %}>{{ option.label }}</option>
             {% endfor %}
         </select>
+        {% if error %}
+            <span class="text-danger col-4"><small>{{ error }}</small></span>
+        {% endif %}
     </div>
 
 {% endmacro %}

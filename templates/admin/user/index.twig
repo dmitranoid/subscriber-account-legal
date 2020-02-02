@@ -17,9 +17,9 @@
     {% for item in customersList %}
         <tr>
             <td>{{ item.login }}</td>
-            <td>{{ item.contract }}</td>
+            <td>{{ item.code_contract }}</td>
             <td>{{ item.code_group }}</td>
-            <td><a href="/delete">X</a>/td>
+            <td><a href="/admin/user/{{ item.login }}/delete">X</a></td>
         </tr>
     {% endfor %}
         </tbody>
