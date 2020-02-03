@@ -13,9 +13,5 @@ use Slim\Views\Twig;
 abstract class AuthAction extends Action
 {
 
-    public function __construct(LoggerInterface $logger, Twig $view, \PDO $pdo)
-    {
-        parent::__construct($logger, $view, $pdo);
-    }
 
 }

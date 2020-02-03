@@ -20,7 +20,7 @@
 {#//    chat: {title: "Получить консультацию", link: "/chat", icon: "/img/icons/assistant.svg"},#}
 
 <ul class="navbar-nav ml-auto">
-{% for item as nav %}
+{% for item in nav %}
     <li class="nav-item">
         <a class="nav-link rounded" href="{{ item.link }}">
             <img src="{{ item.icon }}">

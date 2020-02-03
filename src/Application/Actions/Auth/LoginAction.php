@@ -17,9 +17,9 @@ class LoginAction extends AuthAction
 {
     protected function action(): Response
     {
-        $data = $this->request->getParsedBody();
-        $login = $data['login'] ?? '';
-        $password = $data['password'] ?? '';
+        $form = $this->request->getParsedBody();
+        $login = $form['login'] ?? '';
+        $password = $form['password'] ?? '';
         if ((empty($login) || empty($password))) {
             return $this->response->withHeader('Location', '/login');
         }
