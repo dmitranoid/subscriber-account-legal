@@ -68,7 +68,7 @@ return function (App $app) {
         $group->get('/users', ViewUsersListAction::class)->setName('admin.users');
         $group->get('/user[/{login}]', ViewUserAction::class)->setName('admin.user.show');
         $group->post('/user[/{login}]', NewUserAction::class);
-        $group->post('/user[/{login}]/delete', DeleteUserAction::class)->setName('admin.user.delete');
+        $group->post('/user/{login}/delete', DeleteUserAction::class)->setName('admin.user.delete');
 //        $group->post('/user/{login}', DoEditUserAction::class);
     })->add(ManagerGuardedMiddleware::class);
 
