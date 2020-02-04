@@ -164,4 +164,9 @@ abstract class Action
             $this->flash->addMessage($field . '.error' , $value);
         }
     }
+
+    protected function withRedirect(string $url):Response
+    {
+        return $this->response->withHeader('Location', $url);
+    }
 }

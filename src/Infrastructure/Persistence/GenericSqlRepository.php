@@ -6,7 +6,7 @@ namespace App\Infrastructure\Persistence;
 
 
 use App\Application\Exceptions\AppDbException;
-use App\Application\Helpers\ArrayHelpers;
+use App\Application\Helpers\ArrayHelper;
 use Envms\FluentPDO\Exception as FpdoException;
 use Envms\FluentPDO\Query;
 use \PDO;
@@ -67,7 +67,7 @@ class GenericSqlRepository
     public function save($data)
     {
         {
-            $data = ArrayHelpers::filterArrayKeys($data, $this->getAllowedFields());
+            $data = ArrayHelper::filterArrayKeys($data, $this->getAllowedFields());
             try {
                 $query = $this->fpdo->insertInto($this->tableName, $data);
                 $query->execute();
@@ -85,7 +85,7 @@ class GenericSqlRepository
     {
         $id = $data[$this->identity];
         unset($data[$this->identity]);
-        $data = ArrayHelpers::filterArrayKeys($data, $this->getAllowedFields());
+        $data = ArrayHelper::filterArrayKeys($data, $this->getAllowedFields());
         try {
             $this->fpdo->update($this->tableName, $data, $data['login'])->execute();
         } catch (FpdoException $e) {

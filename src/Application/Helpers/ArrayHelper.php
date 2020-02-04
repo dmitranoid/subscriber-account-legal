@@ -10,7 +10,7 @@ namespace App\Application\Helpers;
  * @return array
  */
 
-class ArrayHelpers
+class ArrayHelper
 {
     public static function filterArrayKeys(array $data, array $keysToKeep): array
     {

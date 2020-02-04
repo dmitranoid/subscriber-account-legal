@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Application\Actions\Admin\User;
 
 
-use App\Application\Helpers\ArrayHelpers;
+use App\Application\Exceptions\AppException;
+use App\Application\Helpers\ArrayHelper;
 use App\Application\Service\User\UserService;
-use App\Application\Validator\ValitronValidator;
+use App\Application\Validators\Input\ValitronInputValidator;
 use App\Infrastructure\Persistence\User\SqlUserRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -24,8 +25,8 @@ class NewUserAction extends UserAction
             'code_contract',
             'email',
         ];
-        $formData = ArrayHelpers::filterArrayKeys($formData, $allowedFields);
-        $inputDataValidator = new ValitronValidator(
+        $formData = ArrayHelper::filterArrayKeys($formData, $allowedFields);
+        $inputDataValidator = new ValitronInputValidator(
             [
                 'required' => ['login', 'code_group', 'code_contract', 'email'],
                 'alphaNum' => ['login'],
@@ -48,18 +49,30 @@ class NewUserAction extends UserAction
             return $this->response->withHeader('Location', '/admin/user');
         }
         // todo надо репозитории вынести в фабрику, чтото типа $repositoryFactory::produce('UserRepositoryInterface)
-        $userService = new UserService(new SqlUserRepository($this->pdo));
+        $userService = new UserService($this->pdo);
 
         if ($this->request->getAttribute('login')) {
-            // обновляем
+            // обновляем пользователя
             //$existingUserValidator->validate($formData);
-            $userService->edit($formData);
+            try {
+                $userService->edit($formData);
+            } catch (AppException $e) {
+                //todo возможно вынести в toast ошибку без привязки к полю
+                $this->setFormErrors(['code_contract' => $e->getMessage()]);
+                $this->setFormOldData($formData);
+                return $this->withRedirect('/admin/user');
+            }
         } else {
-            // добавляем
-            //$formData = $newUserValidator->validate($formData);
-            $userService->add($formData);
+            // добавляем пользователя
+            try {
+                $userService->add($formData);
+            } catch (AppException $e) {
+                $this->flash->addMessage('code_contract.error', $e->getMessage());
+                $this->setFormOldData($formData);
+                return $this->withRedirect('/admin/user');
+            }
         }
 
-        return $this->response->withHeader('Location', '/admin/users');
+        return $this->withRedirect('/admin/users');
     }
 }

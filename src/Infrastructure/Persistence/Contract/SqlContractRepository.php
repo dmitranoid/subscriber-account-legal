@@ -23,4 +23,9 @@ class SqlContractRepository extends GenericSqlRepository implements ContractRepo
             ->order('splat.kp')
             ->fetchAll();
     }
+
+    public function getByCode($code): ?array
+    {
+        return $this->getById($code);
+    }
 }

@@ -2,12 +2,14 @@
 declare(strict_types=1);
 
 
-namespace App\Application\Validator;
+namespace App\Application\Validators\Input;
 
 
+use App\Application\Validators\Input\InputValidatorInterface;
+use App\Application\Validators\ValidatorInterface;
 use Valitron\Validator;
 
-class ValitronValidator implements ValidatorInterface
+class ValitronInputValidator implements InputValidatorInterface, ValidatorInterface
 {
     /** @var Validator */
     private $validator;

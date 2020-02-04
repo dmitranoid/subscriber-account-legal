@@ -20,18 +20,22 @@ class TwigFash
         $this->messages = $messages;
     }
 
-    public function old($field, $default = '')
+    public function old(string $field, string $default = ''):string
     {
         return $this->messages[$field . '.old'][0] ?? $default;
     }
 
-    public function error($field, $glue = '<br>')
+    public function error($field, $glue = '<br>'):string
     {
-        if (isset($this->messages[$field . '.error'])) {
-            return implode($glue, $this->messages[$field . '.error'][0]) ?? '';
-        } else {
-            return '';
+        $fieldIndex = $field . '.error';
+        if (isset($this->messages[$fieldIndex])) {
+            // для valitron validator
+            if(isset($this->messages[$fieldIndex][0]) && is_array($this->messages[$fieldIndex][0])) {
+                return implode($glue, $this->messages[$fieldIndex][0]) ?? '';
+            }
+            return implode($glue, $this->messages[$fieldIndex]);
         }
+        return '';
     }
 
 }

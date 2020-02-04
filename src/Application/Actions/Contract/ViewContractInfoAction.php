@@ -8,7 +8,6 @@ namespace App\Application\Actions\Contract;
 use App\Application\Actions\Action;
 use App\Application\Middleware\SessionMiddleware;
 use App\Application\Service\Contract\ContractInfoService;
-use App\Domain\DomainException\DomainRecordNotFoundException;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class ViewContractInfoAction extends Action
@@ -18,8 +17,6 @@ class ViewContractInfoAction extends Action
         $session = $this->request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
         $contractNo = $session['user']['code_contract'] ?? 0;
         $contractInfo = (new ContractInfoService($this->pdo))->getContractInfo($contractNo);
-        return $this->view->render($this->response, 'front/contract/info.twig', ['contract'=>$contractInfo]);
-//        return $this->respondWithData($contractInfo);
+        return $this->view->render($this->response, 'front/contract/info.twig', ['contract' => $contractInfo]);
     }
-
 }
