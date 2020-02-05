@@ -9,8 +9,10 @@ use App\Application\Exceptions\AppDbException;
 use App\Application\Exceptions\AppException;
 use App\Application\Helpers\ArrayHelper;
 use App\Application\Validators\Contract\ContractExists;
+use App\Application\Validators\User\UserExists;
 use App\Infrastructure\Persistence\User\SqlUserRepository;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 class UserService
 {
@@ -26,16 +28,33 @@ class UserService
     ];
     /** @var PDO */
     private $pdo;
+    /** @var LoggerInterface */
+    private $logger;
 
-    public function __construct(PDO $pdo)
+    public function __construct(PDO $pdo, LoggerInterface $logger)
     {
         $this->pdo = $pdo;
         $this->userRepository = new SqlUserRepository($this->pdo);
+        $this->logger = $logger;
+    }
+
+    /**
+     * @param string $login
+     * @return array
+     * @throws AppException
+     */
+    public function getByLogin(string $login):array
+    {
+        $user = $this->userRepository->getByLogin($login);
+        if (false === $user || empty($user)) {
+            throw new AppException(sprintf('пользователь %s не существует', $login));
+        }
+        return $user;
     }
 
     public function getUsersList():array
     {
-
+        return [];
     }
 
     /**
@@ -50,11 +69,20 @@ class UserService
         $contractExistsValidator = new ContractExists($this->pdo);
         $contractExistsValidator->setData($data['code_contract']);
         if (!$contractExistsValidator->validate()) {
+            $this->logger->info('попытка регистрации пользователя {login} с несуществующим договором {code_contract}', $data);
             throw new AppException(sprintf('договор %s не найден', $data['code_contract']));
         }
+        $userExistsValidator = new UserExists($this->pdo);
+        $userExistsValidator->setData($data['login']);
+        if (!$contractExistsValidator->validate()) {
+            $this->logger->info('попытка повторно зарегистрировать пользователя {login}', $data);
+            throw new AppException(sprintf('пользователь %s уже существует', $data['login']));
+        }
+
         if (isset($data['password'])) {
             $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
         }
+
         try {
             $this->userRepository->save($data);
         } catch (AppDbException $e) {

@@ -16,7 +16,7 @@
         <tbody>
     {% for item in customersList %}
         <tr>
-            <td>{{ item.login }}</td>
+            <td><a href="/admin/user/{{ item.login }}">{{ item.login }}</a></td>
             <td>{{ item.code_contract }}</td>
             <td>{{ item.code_group }}</td>
             <td><a href="/admin/user/{{ item.login }}/delete">X</a></td>

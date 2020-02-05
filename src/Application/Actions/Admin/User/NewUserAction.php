@@ -49,7 +49,7 @@ class NewUserAction extends UserAction
             return $this->response->withHeader('Location', '/admin/user');
         }
         // todo надо репозитории вынести в фабрику, чтото типа $repositoryFactory::produce('UserRepositoryInterface)
-        $userService = new UserService($this->pdo);
+        $userService = new UserService($this->pdo, $this->logger);
 
         if ($this->request->getAttribute('login')) {
             // обновляем пользователя
