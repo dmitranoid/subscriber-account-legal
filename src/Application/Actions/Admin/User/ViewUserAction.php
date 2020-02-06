@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Application\Actions\Admin\User;
 
-use App\Application\Service\User\CustomerService;
 use App\Application\Service\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -12,15 +11,24 @@ class ViewUserAction extends UserAction
 
     protected function action(): Response
     {
+        /** @var string|null $userLogin */
         $userLogin = (string) isset($this->args['login']) ? $this->resolveArg('login') : null;
         $userService = new UserService($this->pdo, $this->logger);
 
         if (empty($userLogin)) {
-            $user = $userService->getEmptyUser();
+//            $user = $userService->getEmptyUser();
+            $user = [
+                'login' => '',
+                'code_group' => '',
+                'code_contract' => '',
+                'statuses' => '',
+            ];
             $title = 'Новый пользователь';
         } else {
-            $user = $userService->getUserByLogin($userLogin);
+//            $user = $userService->getUserByLogin($userLogin);
+            $user = $userService->getByLogin($userLogin);
             $title = 'Редактирование пользователя';
+
         }
         return $this->view->render($this->response, '/admin/user/show.twig', ['user' => $user, 'title' => $title]);
     }

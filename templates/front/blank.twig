@@ -2,7 +2,7 @@
 <html class="no-js" lang="">
 
 <head>
-    <base href="http://localhost/admin/">
+{#    <base href="http://localhost/admin/">#}
     <meta charset="utf-8">
     <title>{% block title %}page title{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,15 +15,13 @@
     <script type="text/javascript" src="/js/popper.min.js"></script>
     <script type="text/javascript" src="/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/js/mdb.min.js" defer></script>
-    <script type="text/javascript" src="/js/main.js" defer></script>
+    <script type="text/javascript" src="/js/front.js" defer></script>
 </head>
 
 <body>
-<div class="container h-100">
 {% block body %}
 
 {% endblock %}
-</div>
 
 {% include 'front/partial/modal-template.twig' %}
 

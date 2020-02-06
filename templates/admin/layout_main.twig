@@ -3,7 +3,7 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-
+<div class="container">
 <nav class="navbar fixed-top navbar-expand navbar-light scrolling-navbar navbarhover">
     <div class="container-fluid">
         <a class="navbar-brand" href="https://brestenergo.by" >
@@ -15,17 +15,17 @@
         </div>
     </div>
 </nav>
-<div class="columns">
+<main role="main" class="columns">
     <div class="column col-12 page-content">
         <h1>{{ block('title') }}</h1>
         {% block content %}
             content here
         {% endblock %}
     </div>
+</main>
 </div>
-<footer class="full-width">
+<footer class="footer">
 <div class="text-center">
-    <div class="divider full-width"></div>
     {% include 'admin/partial/footer-content.twig' %}
 </div>
 </footer>

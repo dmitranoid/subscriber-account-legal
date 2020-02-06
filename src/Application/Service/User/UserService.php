@@ -25,6 +25,7 @@ class UserService
         'code_group',
         'code_contract',
         'email',
+        'phones'
     ];
     /** @var PDO */
     private $pdo;
@@ -61,7 +62,7 @@ class UserService
      * @param array $data
      * @throws AppException
      */
-    public function add(array $data):void
+    public function addCustomer(array $data):void
     {
         $data = ArrayHelper::filterArrayKeys($data, $this->allowedFields);
         // проверяем существует ли договор
@@ -74,7 +75,7 @@ class UserService
         }
         $userExistsValidator = new UserExists($this->pdo);
         $userExistsValidator->setData($data['login']);
-        if (!$contractExistsValidator->validate()) {
+        if (!$userExistsValidator->validate()) {
             $this->logger->info('попытка повторно зарегистрировать пользователя {login}', $data);
             throw new AppException(sprintf('пользователь %s уже существует', $data['login']));
         }
@@ -89,6 +90,28 @@ class UserService
             throw new AppException('ошибка сохранения данных', 0, $e);
         }
     }
+
+    public function addManager(array $data):void
+    {
+        $data = ArrayHelper::filterArrayKeys($data, $this->allowedFields);
+        // проверяем существует ли договор
+        //todo инжектить котракт репозиторий или вынести проверку в валидатор
+        $userExistsValidator = new UserExists($this->pdo);
+        $userExistsValidator->setData($data['login']);
+        if (!$userExistsValidator->validate()) {
+            $this->logger->info('попытка повторно зарегистрировать пользователя {login}', $data);
+            throw new AppException(sprintf('пользователь %s уже существует', $data['login']));
+        }
+        if (isset($data['password'])) {
+            $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        }
+        try {
+            $this->userRepository->save($data);
+        } catch (AppDbException $e) {
+            throw new AppException('ошибка сохранения данных', 0, $e);
+        }
+    }
+
 
     /**
      * @param array $data
@@ -105,10 +128,10 @@ class UserService
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @throws AppException
      */
-    public function delete($id)
+    public function delete(int $id)
     {
         try {
             $this->userRepository->delete($id);
@@ -121,6 +144,6 @@ class UserService
     {
         //TODO проверить права пользователя, нельзя удалить с правами выше чем у себя
         $user = $this->userRepository->getByLogin($login);
-        $this->delete($user['id']);
+        $this->delete((int)$user['id']);
     }
 }

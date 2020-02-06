@@ -10,6 +10,7 @@ use App\Application\Helpers\ArrayHelper;
 use Envms\FluentPDO\Exception as FpdoException;
 use Envms\FluentPDO\Query;
 use \PDO;
+use phpDocumentor\Reflection\Types\Integer;
 
 class GenericSqlRepository
 {
@@ -94,10 +95,10 @@ class GenericSqlRepository
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @throws AppDbException
      */
-    public function delete($id)
+    public function delete(int $id)
     {
         try {
             $this->fpdo->delete($this->tableName, $id)->execute();

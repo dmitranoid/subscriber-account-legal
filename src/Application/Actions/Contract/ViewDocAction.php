@@ -6,6 +6,8 @@ namespace App\Application\Actions\Contract;
 
 
 use App\Application\Actions\Action;
+use App\Application\Exceptions\AppException;
+use App\Application\Service\Auth\UserAuthService;
 use App\Domain\DomainException\DomainRecordNotFoundException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpBadRequestException;
@@ -16,18 +18,24 @@ class ViewDocAction extends Action
     {
         // TODO тщательно очищать ввод !!!
         // TODO защиту от инъекций типа ../../../etc/passw
+        $session = $this->request->getAttribute('session', []);
+        $auth = new UserAuthService($this->logger, $this->pdo, $session);
+        $contractNom = $auth->getUser()['code_contract'] ?? null;
+        if (empty($contractNom)) {
+            $this->logger->error('не найден договор');
+            throw new AppException('не найден договор');
+        }
         $params = $this->request->getQueryParams();
-        $contractNo = $_SESSION['contract'];
         $filename = $params['filename'];
         // TODO брать путь к документам из настроек
-        $documentsStorageRoot = 'D:/work/legal-docs/';
+        $documentsStorageRoot = 'f:/lkprom-docs/';
 
         $filenameFull = $documentsStorageRoot . $filename;
-        if (!($this->isAccessToFileAllowed($contractNo, $params['filename']) && file_exists($filenameFull))) {
+        if (!($this->isAccessToFileAllowed($contractNom, $params['filename']) && file_exists($filenameFull))) {
             // TODO возвращать 404 not found
             $this->logger->alert(
                 'попытка доступа к запрещенному файлу {filename} от абонента {contractNo}',
-                ['filename' => $filename, 'contractNo' => $contractNo]
+                ['filename' => $filename, 'contractNo' => $contractNom]
             );
             return $this->view->render(
                 $this->response,

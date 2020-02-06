@@ -3,8 +3,15 @@
 {% block title %}Передача показаний приборов учета{% endblock %}
 
 {% block content %}
+
+    {% if contract.npp1 %}
+        {% set orgName = contract.npp1+" "+contract.npp2 %}
+    {% else %}
+        {% set orgName = contract.np1 %}
+    {% endif %}
+
 <div class="contract">
-    <h5>Договор  №{{ contract.kp }}, {{ contract.npp1 }} {{ contract.npp2 }}</h5>
+    <h5>Договор  №{{ contract.kp }}, {{ orgName }}</h5>
     <br>
     <h5>Ввод показаний за период: {{ "now-5 days"|date('m.Y') }}</h5>
 </div>

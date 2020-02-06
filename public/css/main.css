@@ -19,7 +19,11 @@
 }
 
 html{
-
+  position: relative;
+  min-height: 100%;
+}
+body {
+  margin-bottom: 60px; /* Margin bottom by footer height */
 }
 
 .container {
@@ -33,6 +37,18 @@ html{
 .half-width {
   width: 45%;
   margin:0 2%
+}
+
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 50px;
+  line-height: 50px; /* Vertically center the text there */
+  background-color: #f5f5f5;
+  margin-top: 10px;
 }
 
 .monotype-text {
@@ -132,3 +148,4 @@ margin-top: 100px ;
   color: #414656;
   border: solid 1px #414656 ;
 }
+

@@ -22,7 +22,7 @@ class SqlUserRepository extends GenericSqlRepository
                 ->where('login', $login)
                 ->fetch();
         } catch (Exception $e) {
-            new Exception('internal error', 0, $e);
+            new Exception('db error', 0, $e);
         }
         return $user ? $user : null;
     }
@@ -33,6 +33,14 @@ class SqlUserRepository extends GenericSqlRepository
             ->where('code_group', 'customer')
             ->fetchAll();
     }
+
+    public function getUsers(): ?array
+    {
+        return $this->getAllSql()
+            ->where('code_group <> ?', 'customer')
+            ->fetchAll();
+    }
+
 
     public function getCustomerByLogin($login): ?array
     {

@@ -58,9 +58,14 @@ class UserAuthService
 
     public function isManager()
     {
-        return (('manager' == $this->session['user']['code_group'] ?? '') ||
-            ('admin' == $this->session['user']['code_group'] ?? ''));
+        return ('manager' == $this->session['user']['code_group'] ?? '');
     }
+
+    public function isAdmin()
+    {
+        return ('admin' == $this->session['user']['code_group'] ?? '');
+    }
+
 
     public function doLogin(string $login, string $password): bool
     {

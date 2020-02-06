@@ -3,6 +3,11 @@
 {% block title %}Данные о договоре{% endblock %}
 
 {% block content %}
+    {% if contract.npp1 %}
+        {% set orgName = contract.npp1+" "+contract.npp2 %}
+    {% else %}
+        {% set orgName = contract.np1 %}
+    {% endif %}
     <div class="content">
         <div class="form-group row">
             <label class="col-sm-2 col-form-label" for="contract_no">Договор №</label>
@@ -46,7 +51,7 @@
                         id="org_name"
                         name="org_name"
                         readonly
-                        value="{{ contract.npp1 }} {{ contract.npp2 }}"
+                        value="{{ orgName }}"
                 >
             </div>
         </div>

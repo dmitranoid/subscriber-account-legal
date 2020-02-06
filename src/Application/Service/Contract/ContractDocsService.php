@@ -6,6 +6,7 @@ namespace App\Application\Service\Contract;
 
 
 use App\Infrastructure\Service\DocumentFinder\DocumentFinder;
+use DateTime;
 
 final class ContractDocsService
 {
@@ -20,7 +21,7 @@ final class ContractDocsService
         $this->docStorageRoot = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $docStorageRoot);
     }
 
-    public function getDocumentsByContract($contractNo, \DateTime $periodStart, \DateTime $periodEnd):?array
+    public function getDocumentsByContract($contractNo, DateTime $periodStart, DateTime $periodEnd): ?array
     {
         $docFilesList = $this->documentFinderService->getDocsByContract($contractNo, $periodStart, $periodEnd);
         $docList = [];
@@ -28,7 +29,7 @@ final class ContractDocsService
 
             $periodData = explode('-', $docFile['datePath']); // 01-2019
             $docName = strpos($docFile['filename'], 'ндс') ? 'сч/ф Энергия' : 'сч/ф НДС';
-                $docList[] = [
+            $docList[] = [
                 'date' => $docFile['modifyDate'],
                 'period' => $periodData[0] . '.' . $periodData[1],
                 'docName' => $docName,

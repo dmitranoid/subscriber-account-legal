@@ -30,6 +30,6 @@ class UserExists implements ValidatorInterface
     public function validate(): bool
     {
         $user = $this->userRepository->getByLogin($this->login);
-        return !(empty($user) || false === $user);
+        return (empty($user) || false === $user);
     }
 }

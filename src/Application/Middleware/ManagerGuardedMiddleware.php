@@ -38,7 +38,7 @@ class ManagerGuardedMiddleware implements MiddlewareInterface
         if (!$authService->isUserAuthenticated()) {
             return (new Response())->withHeader('Location', '/login');
         } else {
-            if (!$authService->isManager()) {
+            if (!($authService->isManager() || $authService->isAdmin())) {
                 $resp = new Response();
                 $resp->getBody()->write('Доступ запрещён');
                 return $resp->withStatus(403);

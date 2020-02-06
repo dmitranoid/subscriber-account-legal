@@ -15,7 +15,7 @@ class DeleteUserAction extends UserAction
     protected function action(): Response
     {
         $login = $this->resolveArg('login');
-        $userService = new UserService($this->pdo);
+        $userService = new UserService($this->pdo, $this->logger);
         try {
             $userService->deleteByLogin($login);
             $this->flash->addMessage('info', 'пользователь удалён');

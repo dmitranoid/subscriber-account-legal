@@ -24,25 +24,44 @@ class NewUserAction extends UserAction
             'code_group',
             'code_contract',
             'email',
+            'phones'
         ];
+        $formLabels = [
+            'login' => 'логин',
+            'password' => 'пароль',
+            'repassword' => 'повтор пароля',
+            'code_group' => 'категория',
+            'code_contract' => 'договор',
+            'email' => 'E-mail',
+            'phones' => 'номер телефона'
+        ];
+
         $formData = ArrayHelper::filterArrayKeys($formData, $allowedFields);
+        if (in_array($formData['code_group'], ['admin', 'manager'])){
+        // для администратора и менеджера договор не нужен
         $inputDataValidator = new ValitronInputValidator(
             [
-                'required' => ['login', 'code_group', 'code_contract', 'email'],
-                'alphaNum' => ['login'],
+                'required' => ['login', 'code_group', 'email'],
+                //'alphaNum' => ['login'],
                 'email' => ['email'],
                 'equals' => [['password', 'repassword']],
             ],
             $formData,
-            [
-                'login' => 'логин',
-                'password' => 'пароль',
-                'repassword' => 'повтор пароля',
-                'code_group' => 'категория',
-                'code_contract' => 'договор',
-                'email' => 'E-mail',
-            ]
+            $formLabels
         );
+
+    } else {
+        $inputDataValidator = new ValitronInputValidator(
+            [
+                'required' => ['login', 'code_group', 'code_contract', 'email'],
+                //'alphaNum' => ['login'],
+                'email' => ['email'],
+                'equals' => [['password', 'repassword']],
+            ],
+            $formData,
+            $formLabels
+        );
+    }
         if (false === $inputDataValidator->validate()) {
             $this->setFormOldData($formData);
             $this->setFormErrors($inputDataValidator->getErrors());
@@ -65,7 +84,11 @@ class NewUserAction extends UserAction
         } else {
             // добавляем пользователя
             try {
-                $userService->add($formData);
+                if ('customer' == $formData['code_group']) {
+                    $userService->addCustomer($formData);
+                } else {
+                    $userService->addManager($formData);
+                }
             } catch (AppException $e) {
                 $this->flash->addMessage('code_contract.error', $e->getMessage());
                 $this->setFormOldData($formData);

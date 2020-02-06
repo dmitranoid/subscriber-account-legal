@@ -41,7 +41,7 @@ return function (App $app) {
         if ($authService->isCustomer()) {
             return $response->withHeader('Location', '/contract');
         }
-        if ($authService->isManager()) {
+        if ($authService->isManager() || $authService->isAdmin()) {
             return $response->withHeader('Location', '/admin/users');
         }
     });
@@ -68,7 +68,8 @@ return function (App $app) {
         $group->get('/users', ViewUsersListAction::class)->setName('admin.users');
         $group->get('/user[/{login}]', ViewUserAction::class)->setName('admin.user.show');
         $group->post('/user[/{login}]', NewUserAction::class);
-        $group->post('/user/{login}/delete', DeleteUserAction::class)->setName('admin.user.delete');
+        //fixme delete -> post only !!!!
+        $group->any('/user/{login}/delete', DeleteUserAction::class)->setName('admin.user.delete');
 //        $group->post('/user/{login}', DoEditUserAction::class);
     })->add(ManagerGuardedMiddleware::class);
 

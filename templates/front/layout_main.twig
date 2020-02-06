@@ -1,7 +1,7 @@
 {% extends 'front/blank.twig' %}
 
 {% block body %}
-
+<div class="container">
 <nav class="navbar fixed-top navbar-expand navbar-light scrolling-navbar navbarhover">
     <div class="container-fluid">
         <a class="navbar-brand" href="https://brestenergo.by" >
@@ -13,18 +13,18 @@
         </div>
     </div>
 </nav>
-<div class="columns">
+<main role="main" class="columns">
     <div class="column col-12 page-content">
         <h1>{{ block('title') }}</h1>
         {% block content %}
             content here
         {% endblock %}
     </div>
+</main>
 </div>
-<footer class="full-width">
-<div class="text-center">
-    <div class="divider full-width"></div>
+<footer class="full-width footer">
+    <div class="text-center">
     {% include 'front/partial/footer-content.twig' %}
-</div>
+    </div>
 </footer>
 {%  endblock %}

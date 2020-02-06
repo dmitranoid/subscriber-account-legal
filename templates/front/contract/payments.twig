@@ -3,8 +3,14 @@
 {% block title %}Счета и оплаты{% endblock %}
 
 {% block content %}
+    {% if contract.npp1 %}
+        {% set orgName = contract.npp1+" "+contract.npp2 %}
+    {% else %}
+        {% set orgName = contract.np1 %}
+    {% endif %}
+
     <div class="contract">
-        <h5>Договор  №{{ contract.kp }}, {{ contract.npp1 }} {{ contract.npp2 }}</h5>
+        <h5>Договор  №{{ contract.kp }}, {{ orgName }}</h5>
     </div>
 <div class="info-block">
     <p>Задолженность на {{ 'now'|date('d.m.Y') }} : <span class="text-bold">{{ debtInfo.invoicesSum.sumTotal - debtInfo.paymentsSum.sumTotal }}</span></p>
