@@ -40,7 +40,7 @@ class ViewListReadingsAction extends Action
 
         reset($connectionsList);
         array_walk($abonentsList, function (&$abonent) use (&$connectionsList) {
-            while ($abonent['nab'] == current($connectionsList)['nab'] ?? '') {
+            while ($abonent['nab'] == (current($connectionsList)['nab'] ?? '')) {
                 $abonent['connections'][] = array_shift($connectionsList);
             }
         });
