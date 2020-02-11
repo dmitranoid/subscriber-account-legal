@@ -18,30 +18,34 @@
 
 <div class="info-block">
     Показания вносятся с 25 по 05 числа месяца !!!
-    {% if readings is not empty %}<p class="text-error">Вы уже внесли показания в текущем месяце !</p> {% endif %}
+    {% if (readings is not empty) and (not isSavedReadings) %}<p class="text-error">Вы уже внесли показания в текущем месяце !</p> {% endif %}
 </div>
+
+{% set disabledReadings = ((readings|length) and (not isSavedReadings)) ? 'disabled':'' %}
+<script>console.log('disabledReadings:{{ disabledReadings }}'); </script>
 
 <table class="table abonents table-readings">
     <thead>
     <tr>
         <th>номер прибора учета</th>
         <th>наименование</th>
-        <th>предыдущее показание</th>
-        <th>текущее показание</th>
+        <th>предыдущее<br> показание</th>
+        <th>расход за<br> предыдущий месяц</th>
+        <th>текущее<br> показание</th>
     </tr>
     </thead>
     <tbody>
     {% for ab in abonentsList %}
     <tr class="abonent">
-        <td colspan="4">абонент: {{ ab.nab }} {{ ab.naim }} {{ ab.address }}</td>
+        <td colspan="5">абонент: {{ ab.nab }} {{ ab.naim }} {{ ab.address }}</td>
     </tr>
     {% for conn in ab.connections %}
-    {% set cntname = 'cnt-' ~ ab.kp ~ '-' ~ ab.nab ~ '-' ~ conn.nst %}
-    {% set disabledReadings = (readings|length)?'disabled':'' %}
+    {% set cntname = 'cnt-' ~ ab.kp ~ '-' ~ ab.nab ~ '-' ~ conn.nst | replace({'.':'_'}) %}
     <tr class="connection">
         <td>{{ conn.nst }}</td>
         <td>{{ conn.naim }}</td>
         <td>{{ conn.ppok }}</td>
+        <td>{{ conn.mrasp }}</td>
         <td><input type="number" class="input-inline" {{ disabledReadings }} name = "{{ cntname }}" value="{{ attribute(readings, cntname) }}"></td>
     </tr>
     {% endfor %}
@@ -50,12 +54,12 @@
 </table>
 <div style="margin:1rem 0;">
     <div class="divider"></div>
-    <button class="btn btn-primary btn-lg half-width savereadings {{ (readings|length)?'disabled':'' }}" onclick="sendreadings(1)" title="Сохранить данные и продолжить их ввод позднее">
+    <button class="btn btn-primary btn-lg half-width savereadings " {{ disabledReadings }} onclick="sendreadings(true)" title="Сохранить данные и продолжить их ввод позднее">
         <i class="icon icon-time"></i>
         Сохранить
     </button>
 
-    <button class="btn btn-primary btn-lg half-width sendreadings {{ (readings|length)?'disabled':'' }}" onclick="sendreadings()" title="Подписать и отправить данные для принятия к расчету">
+    <button class="btn btn-primary btn-lg half-width sendreadings " {{ disabledReadings }} onclick="sendreadings()" title="Подписать и отправить данные для принятия к расчету">
         <i class="icon icon-share"></i>
         Подписать и передать показания
     </button>

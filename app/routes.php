@@ -8,6 +8,7 @@ use App\Application\Actions\Admin\User\ViewUserAction;
 use App\Application\Actions\Auth\LoginAction;
 use App\Application\Actions\Auth\LogoutAction;
 use App\Application\Actions\Auth\ShowLoginAction;
+use App\Application\Actions\Connection\SaveReadingsAction;
 use App\Application\Actions\Connection\SendReadingsAction;
 use App\Application\Actions\Contract\ViewContractDocsAction;
 use App\Application\Actions\Contract\ViewContractPaymentsAction;
@@ -57,6 +58,8 @@ return function (App $app) {
         $group->get('connection/{abtu}', ViewConnectionAction::class)->setName('front.connection');
         $group->get('sendreadings', ViewListReadingsAction::class)->setName('front.sendreadings');
         $group->post('sendreadings', SendReadingsAction::class);
+        $group->post('savereadings', SaveReadingsAction::class);
+
         $group->get('payments', ViewContractPaymentsAction::class)->setName('front.payments');
         $group->get('docs', ViewContractDocsAction::class)->setName('front.docs');
         $group->get('viewdoc', ViewDocAction::class)->setName('viewdoc');

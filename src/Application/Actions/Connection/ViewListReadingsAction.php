@@ -9,9 +9,11 @@ use App\Application\Actions\Action;
 use App\Application\Exceptions\AppException;
 use App\Application\Service\Auth\UserAuthService;
 use App\Application\Service\Contract\ContractInfoService;
+use App\Application\Service\Readings\ReadingsService;
 use App\Domain\DomainException\DomainRecordNotFoundException;
 use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
 use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
+use DateTime;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class ViewListReadingsAction extends Action
@@ -34,8 +36,12 @@ class ViewListReadingsAction extends Action
         $abonentsList = $abonentsRepository->getByContract($contractNom);
 
         /* combine abonents and connections */
-        usort($abonentsList, function ($a, $b) { return $a['nab'] - $b['nab']; } );
-        usort($connectionsList, function ($a, $b) { return $a['nab'] - $b['nab']; } );
+        usort($abonentsList, function ($a, $b) {
+            return $a['nab'] - $b['nab'];
+        });
+        usort($connectionsList, function ($a, $b) {
+            return $a['nab'] - $b['nab'];
+        });
 
 
         reset($connectionsList);
@@ -45,15 +51,25 @@ class ViewListReadingsAction extends Action
             }
         });
         // check file with sended readings
-        $filename = sprintf("%s-%s.json", $contractNom, date('Ym'));
-        $dir = $_SERVER['DOCUMENT_ROOT'] . sprintf("/../storage/readings/%s/", date('Ym'));
-        $readings = [];
-        if (file_exists($dir . $filename)) {
-            $readingsTxt = file_get_contents($dir . $filename);
-            $readings = json_decode($readingsTxt, true);
+        $readingsService = new ReadingsService($this->pdo, $auth->getUser());
+        $readings = $readingsService->loadPeriodReadings(new DateTime());
+        if($readings) {
+            $isSavedReadings = false;
+        } else {
+            $readings = $readingsService->loadTmpReadings();
+            $isSavedReadings = true;
         }
 
-        return $this->view->render($this->response, 'front/connection/readings.twig', ['contract'=>$contract, 'abonentsList'=>$abonentsList, 'readings'=>$readings]);
+        return $this->view->render(
+            $this->response,
+            'front/connection/readings.twig',
+            [
+                'contract' => $contract,
+                'abonentsList' => $abonentsList,
+                'readings' => $readings ?? [],
+                'isSavedReadings' => $isSavedReadings,
+            ]
+        );
     }
 
 }

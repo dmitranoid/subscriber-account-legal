@@ -15,21 +15,33 @@ function sendreadings(saveonly=false) {
     $(".btn.sendreadings").addClass("loading");
     $(".btn.sendreadings i").hide();
     $(".btn.sendreadings").attr("disabled", true);
+    $(".btn.savereadings").attr("disabled", true);
+
+    if (saveonly) {
+        urlPost = '/savereadings'
+    } else {
+        urlPost ='/sendreadings'
+    }
     $.ajax({
         method: "post",
-        url: "/sendreadings?saveonly=" + saveonly,
+        url: urlPost,
         data: readings,
     }).done(function(data) {
         if (saveonly) {
             showModal('Сохранение показаний', 'Данные были сохранены.');
+            $(".table-readings input").removeAttr("disabled");
+            $(".btn.sendreadings").removeAttr("disabled");
+            $(".btn.savereadings").removeAttr("disabled");
+        } else {
+            showModal('Передача показаний', 'Данные были переданы на обработку. Копия данных отправлена на указанный в настройках электронный ящик.');
         }
-        showModal('Передача показаний', 'Данные были переданы на обработку. Копия данных отправлена на указанный в настройках электронный ящик.');
-
     }).fail(function (jqXHR, textStatus ) {
       alert("ошибка: " + textStatus);
     }).always(function () {
         $(".btn.sendreadings").removeClass("loading");
         $(".btn.sendreadings i").show();
+        $(".btn.sendreadings").removeAttr("disabled");
+        $(".btn.savereadings").removeAttr("disabled");
     });
 }
 
