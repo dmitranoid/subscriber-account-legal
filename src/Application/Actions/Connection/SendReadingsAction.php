@@ -9,6 +9,7 @@ use App\Application\Actions\Action;
 use App\Application\Exceptions\AppException;
 use App\Application\Service\Auth\UserAuthService;
 use App\Application\Service\Contract\ContractInfoService;
+use App\Application\Service\Readings\ReadingsService;
 use App\Domain\DomainException\DomainRecordNotFoundException;
 use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
 use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
@@ -35,12 +36,8 @@ class SendReadingsAction extends Action
         $connectionsList = $connectionsRepository->getByContract($contractNom);
         $abonentsList = $abonentsRepository->getByContract($contractNom);
 
-        $filename = sprintf("%s-%s.json", $contractNom, date('Ym'));
-        $dir = $_SERVER['DOCUMENT_ROOT'] . sprintf("/../storage/readings/%s/", date('Ym'));
-        if (!file_exists($dir)) {
-            mkdir($dir);
-        }
-        file_put_contents($dir . $filename, json_encode($readings));
+        $readingsService = new ReadingsService($this->pdo, $contract);
+        $readingsService->publishReadings($readings);
         return $this->respondWithData(['message' => 'данные приняты на обработку']);
     }
 }

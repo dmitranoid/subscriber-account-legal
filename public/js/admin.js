@@ -1,7 +1,6 @@
 // on startup
 
-
-$('.clickable-row').on('click', clickableRowOnClick);
+$('clickable-row').on('click', clickableRowOnClick);
 
 //   functions
 
@@ -18,6 +17,6 @@ function hideModal() {
 }
 
 function clickableRowOnClick(){
-    window.location = $(this).data('href');
+    window.location = $(this).find("a").first().attr("href");
     return false;
 }

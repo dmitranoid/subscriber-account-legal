@@ -15,7 +15,7 @@
         </thead>
         <tbody>
     {% for item in customersList %}
-        <tr>
+        <tr class="clickable-row">
             <td><a href="/admin/user/{{ item.login }}">{{ item.login }}</a></td>
             <td>{{ item.code_contract }}</td>
             <td>{{ item.code_group }}</td>

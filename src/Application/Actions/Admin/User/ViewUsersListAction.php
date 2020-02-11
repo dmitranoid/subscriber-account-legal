@@ -25,7 +25,7 @@ class ViewUsersListAction extends UserAction
             'admin/user/index.twig',
             [
                 'title' => 'Список пользователей',
-                'customersList' => $customersList,
+                'customersList' => $customersList ?? [],
             ]
         );
     }
