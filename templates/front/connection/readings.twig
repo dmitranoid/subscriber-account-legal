@@ -5,7 +5,7 @@
 {% block content %}
 
     {% if contract.npp1 %}
-        {% set orgName = contract.npp1+" "+contract.npp2 %}
+        {% set orgName = contract.npp1 ~ " " ~ contract.npp2 %}
     {% else %}
         {% set orgName = contract.np1 %}
     {% endif %}
@@ -46,7 +46,7 @@
         <td>{{ conn.naim }}</td>
         <td>{{ conn.ppok }}</td>
         <td>{{ conn.mrasp }}</td>
-        <td><input type="number" class="input-inline" {{ disabledReadings }} name = "{{ cntname }}" value="{{ attribute(readings, cntname) }}"></td>
+        <td><input type="text" class="input-inline" {{ disabledReadings }} name = "{{ cntname }}" value="{{ attribute(readings, cntname) }}"></td>
     </tr>
     {% endfor %}
     {% endfor %}

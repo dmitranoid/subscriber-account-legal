@@ -9,6 +9,7 @@ return function (ContainerBuilder $containerBuilder) {
     // Global Settings Object
     $containerBuilder->addDefinitions([
         'settings' => [
+//            'urlPrefix' =>route 'lkprom/',
             'displayErrorDetails' => true, // Should be set to false in production
             'logger' => [
                 'name' => 'lkprom',

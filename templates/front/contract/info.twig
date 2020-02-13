@@ -4,7 +4,7 @@
 
 {% block content %}
     {% if contract.npp1 %}
-        {% set orgName = contract.npp1+" "+contract.npp2 %}
+        {% set orgName = contract.npp1 ~ " " ~ contract.npp2 %}
     {% else %}
         {% set orgName = contract.np1 %}
     {% endif %}
