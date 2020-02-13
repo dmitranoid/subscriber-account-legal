@@ -38,19 +38,21 @@ class ViewConnectionsListAction extends Action
         });
 
         /* combine abonents and connections */
-        usort($abonentsList, function($a, $b){return $a['nab'] - $b['nab'];});
-        usort($connectionsList, function($a, $b){
+        usort($abonentsList, function ($a, $b) {
+            return $a['nab'] - $b['nab'];
+        });
+        usort($connectionsList, function ($a, $b) {
             return $a['nab'] - $b['nab'];
         });
 
         reset($connectionsList);
-        array_walk($abonentsList, function (&$abonent) use (&$connectionsList){
-            while ($abonent['nab'] == current($connectionsList)['nab']??'') {
-               $abonent['connections'][] = array_shift($connectionsList);
+        array_walk($abonentsList, function (&$abonent) use (&$connectionsList) {
+            while ($abonent['nab'] == (current($connectionsList)['nab'] ?? '')) {
+                $abonent['connections'][] = array_shift($connectionsList);
             }
         });
 
-        return $this->view->render($this->response, 'front/connection/connections.twig', ['contract'=>$contract, 'abonentsList'=>$abonentsList]);
+        return $this->view->render($this->response, 'front/connection/connections.twig', ['contract' => $contract, 'abonentsList' => $abonentsList]);
 
     }
 

@@ -5,9 +5,9 @@ $('.clickable-row').on('click', clickableRowOnClick);
 
 //   functions
 
-function sendreadings(saveonly=false) {
+function sendreadings(saveonly = false) {
     let readings = {};
-    $(".table-readings input").each(function(index, el){
+    $(".table-readings input").each(function (index, el) {
         $(el).attr("disabled", true);
         readings[$(el).attr("name")] = $(el).val();
     });
@@ -20,13 +20,13 @@ function sendreadings(saveonly=false) {
     if (saveonly) {
         urlPost = '/savereadings'
     } else {
-        urlPost ='/sendreadings'
+        urlPost = '/sendreadings'
     }
     $.ajax({
         method: "post",
         url: urlPost,
         data: readings,
-    }).done(function(data) {
+    }).done(function (data) {
         if (saveonly) {
             showModal('Сохранение показаний', 'Данные были сохранены.');
             $(".table-readings input").removeAttr("disabled");
@@ -35,8 +35,9 @@ function sendreadings(saveonly=false) {
         } else {
             showModal('Передача показаний', 'Данные были переданы на обработку. Копия данных отправлена на указанный в настройках электронный ящик.');
         }
-    }).fail(function (jqXHR, textStatus ) {
-      alert("ошибка: " + textStatus);
+    }).fail(function (jqXHR, textStatus) {
+        alert("ошибка: " + textStatus);
+        $(".table-readings input").removeAttr("disabled");
     }).always(function () {
         $(".btn.sendreadings").removeClass("loading");
         $(".btn.sendreadings i").show();
@@ -45,8 +46,7 @@ function sendreadings(saveonly=false) {
     });
 }
 
-function showModal(title, content)
-{
+function showModal(title, content) {
     $('#modalTemplate-Title').text(title);
     $('#modalTemplate-Body').text(content);
     $('#modalTemplate').modal('show');
@@ -58,7 +58,7 @@ function hideModal() {
     $('#modalTemplate-Body').text('');
 }
 
-function clickableRowOnClick(){
+function clickableRowOnClick() {
     window.location = $(this).data('href');
     return false;
 }
