@@ -31,7 +31,8 @@ return function (App $app) {
     /** @var ContainerInterface $container */
     $container = $app->getContainer();
     $settings = $container->get('settings');
-    $routePrefix = '/lkprom';
+    $routePrefix = '';
+    //$routePrefix = '/lkprom';
     $app->group($routePrefix, function (Group $group) use ($container, $app) {
         $group->get('/', function (Request $request, Response $response) use ($container, $app) {
             // перебрасываем из корня в зависимости от группы
