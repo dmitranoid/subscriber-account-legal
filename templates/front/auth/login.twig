@@ -1,17 +1,23 @@
 {% extends 'front/blank.twig' %}
 {% block title %}Личный кабинет - Авторизация{% endblock %}
 
-{% set showTestWarning = true  %}
+{% set showTestWarning = true %}
 
 {% block body %}
-<div class="row h-100 justify-content-center align-items-center">
+    <div class="row h-100 justify-content-center align-items-center">
     <div class="col-6 col-md-6 col-sm-8 align-self-lg-auto ">
         <form class="border border-light p-5" method="post" action="/login" role="form">
             <p class="h4 mb-4 text-center">Вход в личный кабинет</p>
+            {% if flash.error('login') %}
+                <div class="alert alert-danger" role="alert">
+                    {{ flash.error('login') }}
+                </div>
+            {% endif %}
             <label for="loginName">Логин</label>
-            <input type="text" id="loginName" class="form-control mb-4" name="login" placeholder="">
+            <input type="text" id="loginName" class="form-control mb-4" name="login" placeholder="" required
+                   value="{{ flash.old('login', '') }}">
             <label for="loginPass">Пароль</label>
-            <input type="password" id="loginPass" class="form-control mb-4" name="password" placeholder="">
+            <input type="password" id="loginPass" class="form-control mb-4" name="password" placeholder="" required>
 
             <div class="d-flex justify-content-between">
                 <div>
@@ -30,10 +36,10 @@
     </div>
     {% if (showTestWarning) %}
         <div class="" style="width: 100%;margin-top: 3rem"></div>
-    <div class="row alert alert-warning" role="alert">
-       Система находится в тестовой эксплуатации<br>
-       Обслуживаются абоненты Барановичского региона<br>
-       Для регистрации обратитесь в отдел договоров Барановичских ЭС (0163)67-24-60
-    </div>
-    {%  endif %}
+        <div class="row alert alert-warning" role="alert">
+            Система находится в тестовой эксплуатации<br>
+            Обслуживаются абоненты Барановичского региона<br>
+            Для регистрации обратитесь в отдел договоров Барановичских ЭС (0163)67-24-60
+        </div>
+    {% endif %}
 {% endblock %}

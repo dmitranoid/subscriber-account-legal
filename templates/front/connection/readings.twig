@@ -16,7 +16,7 @@
     <h5>Ввод показаний за период: {{ "now-5 days"|date('m.Y') }}</h5>
 </div>
 
-<div class="info-block">
+<div class="alert alert-warning" role="alert">
     Показания вносятся с 25 по 05 числа месяца !!!
     {% if (readings is not empty) and (not isSavedReadings) %}<p class="text-error">Вы уже внесли показания в текущем месяце !</p> {% endif %}
 </div>

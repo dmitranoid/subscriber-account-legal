@@ -66,6 +66,9 @@ register_shutdown_function($shutdownHandler);
 // Add Routing Middleware
 $app->addRoutingMiddleware();
 
+// init uriHelper
+App\Application\Helpers\UriHelper::setRouteParser($app->getRouteCollector()->getRouteParser());
+
 // Add Error Middleware
 $errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, false, false);
 $errorMiddleware->setDefaultErrorHandler($errorHandler);

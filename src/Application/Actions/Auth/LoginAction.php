@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Actions\Auth;
 
 
+use App\Application\Helpers\UriHelper;
 use App\Application\Middleware\SessionMiddleware;
 use App\Application\Service\Auth\UserAuthService;
 use App\Domain\Contract\ContractNotFoundException;
@@ -29,7 +30,9 @@ class LoginAction extends AuthAction
             $this->request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE, [])
         );
         if (!$authService->doLogin($login, $password)) {
-            return $this->response->withHeader('Location', '/login');
+            $this->setFormOldData(['login'=>$login]);
+            $this->setFormErrors(['login'=>['неправильные имя пользователя или пароль']]);
+            return $this->withRedirect(UriHelper::urlFor('login'));
         }
 
 //        $contract = (new SqlContractRepository($this->pdo))->getById($contractNom);
@@ -39,13 +42,13 @@ class LoginAction extends AuthAction
 //        $_SESSION['contract'] = $contractNom;
         $redirectUrl = '/';
         if ($authService->isCustomer()) {
-            $redirectUrl = '/contract';
+            $redirectUrl = UriHelper::urlFor('front.contract');
         }
         if ($authService->isManager()) {
-            $redirectUrl = '/admin/users';
+            $redirectUrl = UriHelper::urlFor('admin.users');
         }
 
-        return $this->response->withHeader('Location', $redirectUrl);
+        return $this->withRedirect($redirectUrl);
     }
 
 }
