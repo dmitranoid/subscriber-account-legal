@@ -6,6 +6,7 @@ namespace App\Application\Service\Readings;
 
 
 use App\Application\Exceptions\AppException;
+use App\Infrastructure\Persistence\User\InMemoryManagerRepository;
 use App\Infrastructure\Service\Email\PhpMailerEmailSender;
 use DateTime;
 use Exception;
@@ -24,19 +25,20 @@ class ReadingsService
         $this->customer = $customer;
     }
 
-    public function publishReadings(array $readingsData)
+    public function publishReadings(array $contract, array $abonentsList, array $connectionsList, array $readings)
     {
         $publishers = [
-            [$this, 'emailToCustomer'],
             [$this, 'saveToFileJson'],
             [$this, 'saveToFileCsv'],
+            [$this, 'emailToCustomer'],
+            [$this, 'emailToManager'],
             [$this, 'logToManager'],
         ];
 
         try {
             foreach ($publishers as $publisher) {
-                //todo $publisher->publish($readingsData);
-                $publisher($readingsData);
+                //todo переделать в $publisher->publish($readingsData);
+                $publisher($contract, $abonentsList, $connectionsList, $readings);
             }
         } catch (Exception $e) {
             throw new AppException($e->getMessage(), 0, $e);
@@ -116,7 +118,7 @@ class ReadingsService
         return $readingsData;
     }
 
-    private function saveToFileJson(array $readingsData)
+    private function saveToFileJson(array $contract, array $abonentsList, array $connectionsList, array $readings)
     {
         // load settings
         $filename = sprintf("%s-%s.json", $this->customer['code_contract'], date('Ym'));
@@ -126,10 +128,10 @@ class ReadingsService
 //                $this->logger->error('Directory {dir} was not created', ['dir' => $dir]);
             throw new RuntimeException(sprintf('Directory "%s" was not created', $dir));
         }
-        file_put_contents($dir . $filename, json_encode($readingsData));
+        file_put_contents($dir . $filename, json_encode($readings));
     }
 
-    private function saveToFileCsv(array $readingsData)
+    private function saveToFileCsv(array $contract, array $abonentsList, array $connectionsList, array $readings)
     {
         // load settings
         $filename = sprintf("%s-%s.txt", $this->customer['code_contract'], date('Ym'));
@@ -140,27 +142,22 @@ class ReadingsService
         }
         // для теста попробуем сохранить по другому
         $csvFileHandler = fopen($dir . $filename, 'w');
-        foreach ($readingsData as $counterNo => $reading) {
-            fputs($csvFileHandler, $counterNo . '~' . $reading . PHP_EOL);
+        foreach ($readings as $counterNo => $reading) {
+            fwrite($csvFileHandler, $counterNo . '~' . $reading . PHP_EOL);
         }
         fclose($csvFileHandler);
     }
 
-    private function emailToCustomer(array $readingsData)
+    private function emailToCustomer(array $contract, array $abonentsList, array $connectionsList, array $readings)
     {
         // load settings
         // customer
         $recipientEmail = $this->customer['email'] ?? null;
         if (empty($recipientEmail)) {
-            exit;
+            return;
         }
         $subject = sprintf('показания за потребленную электроэнергию от %s', (new DateTime('now'))->format('mm Y'));
-        // format readings
-        $readingsTxt = '';
-        foreach ($readingsData as $counterNo => $reading) {
-            $readingsTxt .= sprintf("%s\t%s", $counterNo, $reading) . PHP_EOL;
-        }
-        $body = 'Вами переданы следующие показания за потребленную электроэнергию: ' . PHP_EOL . $readingsTxt;
+        $body = $this->composeReadingsEmail($contract, $abonentsList, $connectionsList, $readings);
         try {
             (new PhpMailerEmailSender)->send($recipientEmail, $subject, $body);
         } catch (AppException $e) {
@@ -168,26 +165,61 @@ class ReadingsService
         }
     }
 
-    private function emailToManager(array $readingsData)
+    private function emailToManager(array $contract, array $abonentsList, array $connectionsList, array $readings)
     {
         // load settings
-        // customer
-        $recipientEmail = $this->customer['email'] ?? null;
-        if (empty($recipientEmail)) {
+        // manager
+        $managerAmperPassword = $contract['pw'];
+        $recipient = (new InMemoryManagerRepository())->findByPwd($managerAmperPassword);
+        if (empty($recipient) && $recipient['email'] ?? false) {
             exit;
         }
-        $subject = sprintf('показания за потребленную электроэнергию от %s', (new DateTime('now'))->format('mm Y'));
-        // format readings
-        $readingsTxt = '';
-        foreach ($readingsData as $counterNo => $reading) {
-            $readingsTxt .= sprintf("%s\t%s", $counterNo, $reading) . PHP_EOL;
-        }
-        $body = 'Вами переданы следующие показания за потребленную электроэнергию: ' . PHP_EOL . $readingsTxt;
+        $subject = sprintf('[lkprom] %s - %s от %s', $contract['kp'], $contract['np1'], (new DateTime('now'))->format('mm Y'));
+        $body = $this->composeReadingsEmail($contract, $abonentsList, $connectionsList, $readings);
         try {
-            (new PhpMailerEmailSender)->send($recipientEmail, $subject, $body);
+            (new PhpMailerEmailSender)->send($recipient['email'], $subject, $body);
         } catch (AppException $e) {
             throw $e;
         }
+    }
+
+    private function composeReadingsEmail(array $contract, array $abonentsList, array $connectionsList, array $readings): string
+    {
+        $readingsTxt = [];
+        $readingsTxt[] = sprintf('Показания по договору %s - %s', $contract['kp'], $contract['np1']);
+        $readingsTxt[] = sprintf('Дата и время предоставления данных: %s', (new DateTime('now'))->format('d.m.Y H:i'));
+        $readingsTxt[] = '';
+
+        /* combine abonents and connections */
+        usort($abonentsList, function ($a, $b) {
+            return $a['nab'] - $b['nab'];
+        });
+        usort($connectionsList, function ($a, $b) {
+            return $a['nab'] - $b['nab'];
+        });
+
+        reset($connectionsList);
+        array_walk($abonentsList, function (&$abonent) use (&$connectionsList) {
+            while ($abonent['nab'] === (current($connectionsList)['nab'] ?? '')) {
+                $abonent['connections'][] = array_shift($connectionsList);
+            }
+        });
+        foreach ($abonentsList as $abonent) {
+            $readingsTxt[] = sprintf('абонент %s - %s', $abonent['nab'], $abonent['naim']);
+            foreach ($abonent['connections'] as $connection) {
+                // приводим счетчик к тому же виду что и при заполнении (readings.twig)
+                $counterNo = str_replace('.', '_', 'cnt-' . $abonent['kp'] . '-' . $abonent['nab'] . '-' . $connection['nst']);
+                $reading = array_filter($readings, function ($cntNo) use ($counterNo) {
+                    return ($cntNo === $counterNo);
+                }, ARRAY_FILTER_USE_KEY);
+                $readingsTxt[] = sprintf("  т.у. %s - %s \t\t%s", $connection['naim'], $connection['nst'], $reading[$counterNo]);
+            }
+        }
+        $readingsTxt[] = '';
+        $readingsTxt[] = 'Данные переданы посредством личного кабинета www.brestenergo.by';
+
+//        file_put_contents('d:\mailtest.txt', implode(PHP_EOL, $readingsTxt));
+        return implode(PHP_EOL, $readingsTxt);
     }
 
     private function logToManager(array $readingsData)

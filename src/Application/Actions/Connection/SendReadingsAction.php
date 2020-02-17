@@ -33,12 +33,12 @@ class SendReadingsAction extends Action
         $abonentsRepository = new SqlAbonentRepository($this->pdo);
 
         $contract = (new ContractInfoService($this->pdo))->getContractInfo($contractNom);
-        $connectionsList = $connectionsRepository->getByContract($contractNom);
         $abonentsList = $abonentsRepository->getByContract($contractNom);
+        $connectionsList = $connectionsRepository->getByContract($contractNom);
 
         $readingsService = new ReadingsService($this->pdo, $auth->getUser());
         try {
-            $readingsService->publishReadings($readings);
+            $readingsService->publishReadings($contract, $abonentsList, $connectionsList, $readings);
         } catch (AppException $e) {
             return $this->respondWithData(['message' => 'ошибка обработки данных, свяжитесь со своим менеджером']);
         }

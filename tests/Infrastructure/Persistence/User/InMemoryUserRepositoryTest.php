@@ -5,7 +5,7 @@ namespace Tests\Infrastructure\Persistence\User;
 
 use App\Domain\User\User;
 use App\Domain\User\UserNotFoundException;
-use App\Infrastructure\Persistence\User\InMemoryUserRepository;
+use App\Infrastructure\Persistence\User\InMemoryManagerRepository;
 use Tests\TestCase;
 
 class InMemoryUserRepositoryTest extends TestCase
@@ -14,7 +14,7 @@ class InMemoryUserRepositoryTest extends TestCase
     {
         $user = new User(1, 'bill.gates', 'Bill', 'Gates');
 
-        $userRepository = new InMemoryUserRepository([1 => $user]);
+        $userRepository = new InMemoryManagerRepository([1 => $user]);
 
         $this->assertEquals([$user], $userRepository->findAll());
     }
@@ -23,7 +23,7 @@ class InMemoryUserRepositoryTest extends TestCase
     {
         $user = new User(1, 'bill.gates', 'Bill', 'Gates');
 
-        $userRepository = new InMemoryUserRepository([1 => $user]);
+        $userRepository = new InMemoryManagerRepository([1 => $user]);
 
         $this->assertEquals($user, $userRepository->findUserOfId(1));
     }
@@ -33,7 +33,7 @@ class InMemoryUserRepositoryTest extends TestCase
      */
     public function testFindUserOfIdThrowsNotFoundException()
     {
-        $userRepository = new InMemoryUserRepository([]);
+        $userRepository = new InMemoryManagerRepository([]);
         $userRepository->findUserOfId(1);
     }
 }

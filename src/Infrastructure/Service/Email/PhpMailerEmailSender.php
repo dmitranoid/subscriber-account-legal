@@ -24,14 +24,14 @@ class PhpMailerEmailSender implements EmailSenderInterface
             $mail->setFrom('bares.informer@brestenergo.by', 'Оповещатель Брестэнерго');
             $mail->addAddress($to);
             // Content
-            $mail->isHTML(true);
+            $mail->isHTML(false);
             $mail->Subject = $subject;
             $mail->Body = $body;
             $mail->AltBody = ''; //This is the body in plain text for non-HTML mail clients
 
             $mail->send();
         } catch (Exception $e) {
-            throw new AppException("письмо не отправлено, ошибка отправщика: {$mail->ErrorInfo}", 0, $e);
+            throw new AppException("письмо не отправлено, ошибка при отправке: {$mail->ErrorInfo}", 0, $e);
         }
     }
 
@@ -40,11 +40,12 @@ class PhpMailerEmailSender implements EmailSenderInterface
         $mail = new PHPMailer(true);
         $mail->setLanguage('ru');
         $mail->isSMTP();                                            // Send using SMTP
-        $mail->Host = 'mail.brest.energo.net';                // Set the SMTP server to send through
-        $mail->SMTPAuth = true;                                   // Enable SMTP authentication
-        $mail->Username = 'bares.informer';                       // SMTP username
-        $mail->Password = 'v39BVY';                               // SMTP password
-        $mail->Port = 25;                                     // TCP port to connect to
+        $mail->Host = 'mail.brest.energo.net';                      // Set the SMTP server to send through
+        $mail->SMTPAuth = true;                                     // Enable SMTP authentication
+        $mail->Username = 'bares.informer';                         // SMTP username
+        $mail->Password = 'v39BVY';                                 // SMTP password
+        $mail->Port = 25;                                           // TCP port to connect to
+        return $mail;
     }
 
 }

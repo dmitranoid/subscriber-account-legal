@@ -31,9 +31,7 @@ class ViewConnectionsListAction extends Action
 
         array_walk($connectionsList, function (&$item) {
             $tuUrl = $item['naim'];
-            $tuUrl = str_replace('.', 'dot', $tuUrl);
-            $tuUrl = str_replace('/', 'slashr', $tuUrl);
-            $tuUrl = str_replace('\\', 'slashl', $tuUrl);
+            $tuUrl = str_replace(['.', '/', '\\'], ['dot', 'slashr', 'slashl'], $tuUrl);
             $item['naim_url'] = $tuUrl;
         });
 
@@ -47,13 +45,11 @@ class ViewConnectionsListAction extends Action
 
         reset($connectionsList);
         array_walk($abonentsList, function (&$abonent) use (&$connectionsList) {
-            while ($abonent['nab'] == (current($connectionsList)['nab'] ?? '')) {
+            while ($abonent['nab'] === (current($connectionsList)['nab'] ?? '')) {
                 $abonent['connections'][] = array_shift($connectionsList);
             }
         });
-
         return $this->view->render($this->response, 'front/connection/connections.twig', ['contract' => $contract, 'abonentsList' => $abonentsList]);
-
     }
 
 }

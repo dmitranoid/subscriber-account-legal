@@ -29,16 +29,13 @@ class SaveReadingsAction extends Action
         }
         $readings = $this->request->getParsedBody();
 
-        $connectionsRepository = new SqlConnectionRepository($this->pdo);
-        $abonentsRepository = new SqlAbonentRepository($this->pdo);
-
-        $contract = (new ContractInfoService($this->pdo))->getContractInfo($contractNom);
-        $connectionsList = $connectionsRepository->getByContract($contractNom);
-        $abonentsList = $abonentsRepository->getByContract($contractNom);
-
         $readingsService = new ReadingsService($this->pdo, $auth->getUser());
-        $readingsService->saveTmpReadings($readings);
-
+        try {
+            $readingsService->saveTmpReadings($readings);
+        } catch (AppException $e) {
+            $this->logger->error($e->getMessage());
+            return $this->respondWithData(['error' => 'ошибка сохранения данных']);
+        }
         return $this->respondWithData(['message' => 'данные сохранены']);
     }
 }

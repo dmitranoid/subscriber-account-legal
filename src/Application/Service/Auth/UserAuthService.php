@@ -33,6 +33,7 @@ class UserAuthService
     {
         // TODO переделать на DI session manager
         if (empty($user)) {
+            // todo нужно чтобы работал один unser
             unset($_SESSION['user']);
             unset($this->session['user']);
         } else {
