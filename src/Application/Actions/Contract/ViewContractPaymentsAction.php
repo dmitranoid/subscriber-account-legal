@@ -10,6 +10,7 @@ use App\Application\Service\Auth\UserAuthService;
 use App\Application\Service\Contract\ContractInfoService;
 use App\Application\Service\Contract\ContractPaymentsService;
 use App\Domain\DomainException\DomainRecordNotFoundException;
+use DateTime;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class ViewContractPaymentsAction extends Action
@@ -26,7 +27,12 @@ class ViewContractPaymentsAction extends Action
 
         $contractInfo = (new ContractInfoService($this->pdo))->getContractInfo($contractNom);
         $contractPaymentsService = new ContractPaymentsService($this->pdo);
-        $debtInfo = $contractPaymentsService->getDebt($contractNom, \DateTime::createFromFormat('Ymd', '20190101'), \DateTime::createFromFormat('Ymd', '20191231'));
+        $date = new DateTime('now');
+        $debtInfo = [
+            'date' => new DateTime('first day of this month'),
+            'sum'=>$contractInfo['dolg01'],
+        ];
+        // $contractPaymentsService->getDebt($contractNom, \DateTime::createFromFormat('Ymd', '20190101'), \DateTime::createFromFormat('Ymd', '20191231'));
         $docList = $contractPaymentsService->getPaymentsAndInvoicesList($contractNom);
         return $this->view->render(
             $this->response,

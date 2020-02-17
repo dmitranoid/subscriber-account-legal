@@ -48,10 +48,10 @@
                     <td>{{ conn.naim }}</td>
                     <td>{{ conn.ppok }}</td>
                     <td>{{ conn.mrasp }}</td>
-                    <td><input type="text" class="input-inline" {{ disabledReadings }} name="{{ cntname }}"
-                               value="{{ attribute(readings, cntname) }}" data-prevr="{{ conn.ppok }}" data-pras="{{ conn.mrasp }}"
-                               onblur="readingInputOnExit(this);">
-                        <i class="icon icon-flag" style="visibility: hidden;"></i>
+                    <td><input type="text" class="input-inline readings-value" {{ disabledReadings }} name="{{ cntname }}"
+                               value="{{ attribute(readings, cntname) }}" data-prevr="{{ conn.ppok }}"
+                               data-pras="{{ conn.mrasp }}">
+                        <i class="fas fa-exclamation-triangle" style="visibility: hidden;"></i>
                     </td>
                 </tr>
             {% endfor %}
@@ -76,20 +76,42 @@
 {% endblock %}
 
 {% block js_code %}
-<script>
-    function readingInputOnExit(el) {
-        prevr = el.dataset.prevr;
-        pras = el.dataset.pras;
-        curr = el.value;
-        if (curr - prevr > pras*2) {
-            icon = el.nextSibling;
-            console.log(icon);
-            if (icon !== 'NaN') {icon.show().css('color:yellow;')};
-        } else {
-            icon = el.nextSibling;
-            console.log(icon);
-            if (icon !== 'NaN') {icon.show().css('color:green;')};
+    <script>
+
+        list = document.querySelectorAll(".readings-value");
+        for (var i = 0; i < list.length; i++) {
+            list[i].addEventListener("blur", readingInputOnExit);
         }
-    }
-</script>
+
+        function readingInputOnExit(event) {
+            let el = event.target;
+            prevr = el.dataset.prevr;
+            pras = el.dataset.pras;
+            curr = el.value;
+            // console.log(prevr, pras, curr);
+            icon = el.parentElement.querySelector('i');
+            icon.style.visibility = 'visible';
+
+            // не заполнено
+            if (el.value.length === 0) {
+                icon.style.color = 'orange';
+                icon.classList.add("fa-exclamation-triangle");
+                icon.classList.remove("fa-check");
+                icon.title="обязательно для заполнения"
+                return;
+            }
+            // отмечаем если показания отличаются больше чем в 2 раза в любую сторону
+            if ((curr - prevr > pras * 2)||(curr - prevr < pras / 2)) {
+                icon.style.color = 'orange';
+                icon.classList.add("fa-exclamation-triangle");
+                icon.classList.remove("fa-check");
+                icon.title="показания потребления предыдущего месяца отличаются более чем в 2 раза"
+            } else {
+                icon.style.color = 'green';
+                icon.classList.remove("fa-exclamation-triangle");
+                icon.classList.add("fa-check");
+                icon.title="показания в пределах прошлого месяца"
+            }
+        }
+    </script>
 {% endblock %}

@@ -38,7 +38,8 @@ class ViewContractDocsAction extends Action
         }
         $contractInfo = (new ContractInfoService($this->pdo))->getContractInfo($contractNom);
         // TODO брать путь к документам из настроек
-        $documentsStorageRoot = 'F:/lkprom-docs/';  // под windows буква диска с большой буквы !!!
+        //$documentsStorageRoot = 'F:/lkprom-docs/';  // под windows буква диска с большой буквы !!!
+        $documentsStorageRoot = 'D:/work/legal-docs/';  // под windows буква диска с большой буквы !!!
         $docsService = new ContractDocsService(
             new DocumentFinder($documentsStorageRoot),
             $documentsStorageRoot

@@ -8,14 +8,15 @@ namespace App\Application\Service\Contract;
 use App\Infrastructure\Persistence\Invoice\SqlInvoiceRepository;
 use App\Infrastructure\Persistence\Payment\SqlPaymentRepository;
 use DateTime;
+use PDO;
 
 final class ContractPaymentsService
 {
 
-    /** @var \PDO */
+    /** @var PDO */
     protected $pdo;
 
-    public function __construct(\PDO $pdo)
+    public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
     }

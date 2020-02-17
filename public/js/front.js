@@ -2,8 +2,6 @@
 
 $('.clickable-row').on('click', clickableRowOnClick);
 
-
-
 //   functions
 
 function savereadings() {
@@ -39,12 +37,28 @@ function savereadings() {
     });
 }
 
-function sendreadings(saveonly = false) {
+function sendreadings() {
     let readings = {};
-    $(".table-readings input").each(function (index, el) {
+
+    let readingsList = $(".table-readings input");
+
+    let isAllDataFilled = true;
+    readingsList.each(function (index, el) {
+        if (el.value.length === 0) {
+            isAllDataFilled = false;
+        }
+    });
+
+    if (!isAllDataFilled) {
+        showModal('Передача показаний', 'Для отправки данных заполните все показания приборов, либо сохраните их для того чтобы отправить позднее');
+        return;
+    }
+
+    readingsList.each(function (index, el) {
         $(el).attr("disabled", true);
         readings[$(el).attr("name")] = $(el).val();
     });
+
     let btnSend = $(".btn.sendreadings");
     let btnSave = $(".btn.savereadings");
     btnSend.addClass("loading");

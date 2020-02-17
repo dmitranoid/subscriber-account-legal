@@ -13,7 +13,8 @@
         <h5>Договор  №{{ contract.kp }}, {{ orgName }}</h5>
     </div>
 <div class="alert alert-warning" role="alert">
-    <p>Задолженность на {{ 'now'|date('d.m.Y') }} : <span class="text-bold" style="margin-left: 3rem;">{{ debtInfo.invoicesSum.sumTotal - debtInfo.paymentsSum.sumTotal }} руб.</span></p>
+{#    <p>Задолженность на {{ 'now'|date('d.m.Y') }} : <span class="text-bold" style="margin-left: 3rem;">{{ debtInfo.invoicesSum.sumTotal - debtInfo.paymentsSum.sumTotal }} руб.</span></p>#}
+    <p>Состояние расчетов на {{ debtInfo.date|date('d.m.Y') }}:<span class="text-bold" style="margin-left: 1rem;">{% if debtInfo >0 %}задолженность {% else %}переплата{% endif %}{{ debtInfo.sum }} руб.</span></p>
 </div>
     <table class="table contract-paydocs">
     <thead>
