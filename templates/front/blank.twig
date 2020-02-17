@@ -2,7 +2,7 @@
 <html class="no-js" lang="">
 
 <head>
-{#    <base href="https://www.brestenergo.by/lkadmin/">#}
+    {#    <base href="https://www.brestenergo.by/lkadmin/">#}
     <meta charset="utf-8">
     <title>{% block title %}page title{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,11 +19,11 @@
 </head>
 
 <body>
-{% block body %}
-
-{% endblock %}
+{% block body %}{% endblock %}
 
 {% include 'front/partial/modal-template.twig' %}
+
+{% block js_code %}{% endblock %}
 
 </body>
 

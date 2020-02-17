@@ -10,60 +10,85 @@
         {% set orgName = contract.np1 %}
     {% endif %}
 
-<div class="contract">
-    <h5>Договор  №{{ contract.kp }}, {{ orgName }}</h5>
-    <br>
-    <h5>Ввод показаний за период: {{ "now-5 days"|date('m.Y') }}</h5>
-</div>
+    <div class="contract">
+        <h5>Договор №{{ contract.kp }}, {{ orgName }}</h5>
+        <br>
+        <h5>Ввод показаний за период: {{ "now-5 days"|date('M.Y') }}</h5>
+    </div>
 
-<div class="alert alert-warning" role="alert">
-    Показания вносятся с 25 по 05 числа месяца !!!
-    {% if (readings is not empty) and (not isSavedReadings) %}<p class="text-error">Вы уже внесли показания в текущем месяце !</p> {% endif %}
-</div>
+    <div class="alert alert-warning" role="alert">
+        Показания вносятся с 25 по 05 числа месяца.<br>
+        Все показания должны быть заполнены, даже если по прибору учета не было расхода.
+        {% if (readings is not empty) and (not isSavedReadings) %}<p class="text-error">Вы уже внесли показания в
+            текущем месяце !</p> {% endif %}
+    </div>
 
-{% set disabledReadings = ((readings|length) and (not isSavedReadings)) ? 'disabled':'' %}
-<script>console.log('disabledReadings:{{ disabledReadings }}'); </script>
+    {% set disabledReadings = ((readings|length) and (not isSavedReadings)) ? 'disabled':'' %}
 
-<table class="table abonents table-readings">
-    <thead>
-    <tr>
-        <th>номер прибора учета</th>
-        <th>наименование</th>
-        <th>предыдущее<br> показание</th>
-        <th>расход за<br> предыдущий месяц</th>
-        <th>текущее<br> показание</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for ab in abonentsList %}
-    <tr class="abonent">
-        <td colspan="5">абонент: {{ ab.nab }} {{ ab.naim }} {{ ab.address }}</td>
-    </tr>
-    {% for conn in ab.connections %}
-    {% set cntname = 'cnt-' ~ ab.kp ~ '-' ~ ab.nab ~ '-' ~ conn.nst | replace({'.':'_'}) %}
-    <tr class="connection">
-        <td>{{ conn.nst }}</td>
-        <td>{{ conn.naim }}</td>
-        <td>{{ conn.ppok }}</td>
-        <td>{{ conn.mrasp }}</td>
-        <td><input type="text" class="input-inline" {{ disabledReadings }} name = "{{ cntname }}" value="{{ attribute(readings, cntname) }}"></td>
-    </tr>
-    {% endfor %}
-    {% endfor %}
-    </tbody>
-</table>
-<div style="margin:1rem 0;">
-    <div class="divider"></div>
-    <button class="btn btn-primary btn-lg half-width savereadings " {{ disabledReadings }} onclick="sendreadings(true)" title="Сохранить данные и продолжить их ввод позднее">
-        <i class="icon icon-time"></i>
-        Сохранить
-    </button>
+    <table class="table abonents table-readings">
+        <thead>
+        <tr>
+            <th>номер прибора учета</th>
+            <th>наименование</th>
+            <th>предыдущее<br> показание</th>
+            <th>расход за<br> предыдущий месяц</th>
+            <th>текущее<br> показание</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for ab in abonentsList %}
+            <tr class="abonent">
+                <td colspan="5">абонент: {{ ab.nab }} {{ ab.naim }} {{ ab.address }}</td>
+            </tr>
+            {% for conn in ab.connections %}
+                {% set cntname = 'cnt-' ~ ab.kp ~ '-' ~ ab.nab ~ '-' ~ conn.nst | replace({'.':'_'}) %}
+                <tr class="connection">
+                    <td>{{ conn.nst }}</td>
+                    <td>{{ conn.naim }}</td>
+                    <td>{{ conn.ppok }}</td>
+                    <td>{{ conn.mrasp }}</td>
+                    <td><input type="text" class="input-inline" {{ disabledReadings }} name="{{ cntname }}"
+                               value="{{ attribute(readings, cntname) }}" data-prevr="{{ conn.ppok }}" data-pras="{{ conn.mrasp }}"
+                               onblur="readingInputOnExit(this);">
+                        <i class="icon icon-flag" style="visibility: hidden;"></i>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+    <div style="margin:1rem 0;">
+        <div class="divider"></div>
+        <button class="btn btn-primary btn-lg half-width savereadings " {{ disabledReadings }} onclick="savereadings()"
+                title="Сохранить данные и продолжить их ввод позднее">
+            <i class="icon icon-time"></i>
+            Сохранить
+        </button>
 
-    <button class="btn btn-primary btn-lg half-width sendreadings " {{ disabledReadings }} onclick="sendreadings()" title="Подписать и отправить данные для принятия к расчету">
-        <i class="icon icon-share"></i>
-        Подписать и передать показания
-    </button>
-</div>
+        <button class="btn btn-primary btn-lg half-width sendreadings " {{ disabledReadings }} onclick="sendreadings()"
+                title="Подписать и отправить данные для принятия к расчету">
+            <i class="icon icon-share"></i>
+            Подписать и передать показания
+        </button>
+    </div>
 
+{% endblock %}
 
+{% block js_code %}
+<script>
+    function readingInputOnExit(el) {
+        prevr = el.dataset.prevr;
+        pras = el.dataset.pras;
+        curr = el.value;
+        if (curr - prevr > pras*2) {
+            icon = el.nextSibling;
+            console.log(icon);
+            if (icon !== 'NaN') {icon.show().css('color:yellow;')};
+        } else {
+            icon = el.nextSibling;
+            console.log(icon);
+            if (icon !== 'NaN') {icon.show().css('color:green;')};
+        }
+    }
+</script>
 {% endblock %}

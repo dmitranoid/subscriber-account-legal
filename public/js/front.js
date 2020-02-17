@@ -1,9 +1,43 @@
 // on startup
 
-
 $('.clickable-row').on('click', clickableRowOnClick);
 
+
+
 //   functions
+
+function savereadings() {
+    let readings = {};
+    $(".table-readings input").each(function (index, el) {
+        $(el).attr("disabled", true);
+        readings[$(el).attr("name")] = $(el).val();
+    });
+    let btnSend = $(".btn.sendreadings");
+    let btnSave = $(".btn.savereadings");
+    btnSend.addClass("loading");
+    btnSend.find('i').hide();
+    btnSend.attr("disabled", true);
+    btnSave.attr("disabled", true);
+
+    $.ajax({
+        method: "post",
+        url: "/savereadings",
+        data: readings,
+    }).done(function (data) {
+        showModal('Сохранение показаний', 'Данные были сохранены.');
+        $(".table-readings input").removeAttr("disabled");
+        btnSend.removeAttr("disabled");
+        btnSave.removeAttr("disabled");
+    }).fail(function (jqXHR, textStatus) {
+        alert("ошибка сохранения данных: " + textStatus);
+        $(".table-readings input").removeAttr("disabled");
+    }).always(function () {
+        btnSend.removeClass("loading");
+        btnSend.find('i').show();
+        btnSend.removeAttr("disabled");
+        btnSave.removeAttr("disabled");
+    });
+}
 
 function sendreadings(saveonly = false) {
     let readings = {};
@@ -11,38 +45,27 @@ function sendreadings(saveonly = false) {
         $(el).attr("disabled", true);
         readings[$(el).attr("name")] = $(el).val();
     });
+    let btnSend = $(".btn.sendreadings");
+    let btnSave = $(".btn.savereadings");
+    btnSend.addClass("loading");
+    btnSend.find('i').hide();
+    btnSend.attr("disabled", true);
+    btnSave.attr("disabled", true);
 
-    $(".btn.sendreadings").addClass("loading");
-    $(".btn.sendreadings i").hide();
-    $(".btn.sendreadings").attr("disabled", true);
-    $(".btn.savereadings").attr("disabled", true);
-
-    if (saveonly) {
-        urlPost = '/savereadings'
-    } else {
-        urlPost = '/sendreadings'
-    }
     $.ajax({
         method: "post",
-        url: urlPost,
+        url: "/sendreadings",
         data: readings,
     }).done(function (data) {
-        if (saveonly) {
-            showModal('Сохранение показаний', 'Данные были сохранены.');
-            $(".table-readings input").removeAttr("disabled");
-            $(".btn.sendreadings").removeAttr("disabled");
-            $(".btn.savereadings").removeAttr("disabled");
-        } else {
-            showModal('Передача показаний', 'Данные были переданы на обработку. Копия данных отправлена на указанный в настройках электронный ящик.');
-        }
+        showModal('Передача показаний', 'Данные были переданы на обработку. Копия данных отправлена на указанный в настройках электронный ящик.');
     }).fail(function (jqXHR, textStatus) {
-        alert("ошибка: " + textStatus);
+        alert("техническая ошибка сохранения данных: " + textStatus);
         $(".table-readings input").removeAttr("disabled");
+        btnSend.removeAttr("disabled");
+        btnSave.removeAttr("disabled");
     }).always(function () {
-        $(".btn.sendreadings").removeClass("loading");
-        $(".btn.sendreadings i").show();
-        $(".btn.sendreadings").removeAttr("disabled");
-        $(".btn.savereadings").removeAttr("disabled");
+        btnSend.removeClass("loading");
+        btnSend.find('i').show();
     });
 }
 
