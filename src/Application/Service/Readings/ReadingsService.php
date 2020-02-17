@@ -6,6 +6,7 @@ namespace App\Application\Service\Readings;
 
 
 use App\Application\Exceptions\AppException;
+use App\Infrastructure\Service\Email\PhpMailerEmailSender;
 use DateTime;
 use Exception;
 use PDO;
@@ -150,6 +151,9 @@ class ReadingsService
         // load settings
         // customer
         $recipientEmail = $this->customer['email'] ?? null;
+        if (empty($recipientEmail)) {
+            exit;
+        }
         $subject = sprintf('показания за потребленную электроэнергию от %s', (new DateTime('now'))->format('mm Y'));
         // format readings
         $readingsTxt = '';
@@ -157,8 +161,33 @@ class ReadingsService
             $readingsTxt .= sprintf("%s\t%s", $counterNo, $reading) . PHP_EOL;
         }
         $body = 'Вами переданы следующие показания за потребленную электроэнергию: ' . PHP_EOL . $readingsTxt;
-//        $sendMailResult = mail($recipientEmail, $subject, $body);
+        try {
+            (new PhpMailerEmailSender)->send($recipientEmail, $subject, $body);
+        } catch (AppException $e) {
+            throw $e;
+        }
+    }
 
+    private function emailToManager(array $readingsData)
+    {
+        // load settings
+        // customer
+        $recipientEmail = $this->customer['email'] ?? null;
+        if (empty($recipientEmail)) {
+            exit;
+        }
+        $subject = sprintf('показания за потребленную электроэнергию от %s', (new DateTime('now'))->format('mm Y'));
+        // format readings
+        $readingsTxt = '';
+        foreach ($readingsData as $counterNo => $reading) {
+            $readingsTxt .= sprintf("%s\t%s", $counterNo, $reading) . PHP_EOL;
+        }
+        $body = 'Вами переданы следующие показания за потребленную электроэнергию: ' . PHP_EOL . $readingsTxt;
+        try {
+            (new PhpMailerEmailSender)->send($recipientEmail, $subject, $body);
+        } catch (AppException $e) {
+            throw $e;
+        }
     }
 
     private function logToManager(array $readingsData)

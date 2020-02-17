@@ -22,7 +22,7 @@ class LoginAction extends AuthAction
         $login = $form['login'] ?? '';
         $password = $form['password'] ?? '';
         if ((empty($login) || empty($password))) {
-            return $this->response->withHeader('Location', '/login');
+            return $this->withRedirect(UriHelper::urlFor('login'));
         }
         $authService = new UserAuthService(
             $this->logger,
@@ -35,11 +35,6 @@ class LoginAction extends AuthAction
             return $this->withRedirect(UriHelper::urlFor('login'));
         }
 
-//        $contract = (new SqlContractRepository($this->pdo))->getById($contractNom);
-//        if (empty($contract)) {
-//            return $this->response->withHeader('Location', '/login');
-//        }
-//        $_SESSION['contract'] = $contractNom;
         $redirectUrl = '/';
         if ($authService->isCustomer()) {
             $redirectUrl = UriHelper::urlFor('front.contract');

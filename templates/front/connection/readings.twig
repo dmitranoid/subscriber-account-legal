@@ -13,14 +13,15 @@
     <div class="contract">
         <h5>Договор №{{ contract.kp }}, {{ orgName }}</h5>
         <br>
-        <h5>Ввод показаний за период: {{ "now-5 days"|date('M.Y') }}</h5>
+        <h5>Ввод показаний за период: {{ "now-5 days"|date('m.Y') }}</h5>
     </div>
 
     <div class="alert alert-warning" role="alert">
         Показания вносятся с 25 по 05 числа месяца.<br>
         Все показания должны быть заполнены, даже если по прибору учета не было расхода.
         {% if (readings is not empty) and (not isSavedReadings) %}<p class="text-error">Вы уже внесли показания в
-            текущем месяце !</p> {% endif %}
+            текущем месяце !</p>
+        {% endif %}
     </div>
 
     {% set disabledReadings = ((readings|length) and (not isSavedReadings)) ? 'disabled':'' %}

@@ -7,6 +7,7 @@ namespace App\Application\Service\Contract;
 
 use App\Infrastructure\Persistence\Invoice\SqlInvoiceRepository;
 use App\Infrastructure\Persistence\Payment\SqlPaymentRepository;
+use DateTime;
 
 final class ContractPaymentsService
 {
@@ -19,7 +20,7 @@ final class ContractPaymentsService
         $this->pdo = $pdo;
     }
 
-    public function getDebt($contractNo, \DateTime $periodStart, \DateTime $periodEnd):array
+    public function getDebt($contractNo, DateTime $periodStart, DateTime $periodEnd):array
     {
         $paymentsSum = (new SqlPaymentRepository($this->pdo))->getSumByContract($contractNo, $periodStart, $periodEnd);
         $invoicesSum = (new SqlInvoiceRepository($this->pdo))->getSumByContract($contractNo, $periodStart, $periodEnd);
@@ -36,7 +37,7 @@ final class ContractPaymentsService
         $docList = [];
         foreach ($invoicesList as $invoice) {
             $paydocs[] = [
-                'date' => \DateTime::createFromFormat(DATE_RFC2822, $invoice['data']),
+                'date' => DateTime::createFromFormat(DATE_RFC2822, $invoice['data']),
                 'period_y' => '20' . substr($invoice['rp'], 1,2),
                 'period_m' => substr($invoice['rp'], 3,2),
                 'doctype' => $invoiceDocTypes[$invoice['vpt']]??'?',
@@ -48,7 +49,7 @@ final class ContractPaymentsService
 
         foreach ($paymentsList as $payment) {
             $paydocs[] = [
-                'date' => \DateTime::createFromFormat(DATE_RFC2822, $payment['data']),
+                'date' => DateTime::createFromFormat(DATE_RFC2822, $payment['data']),
                 'period_y' => '20' . substr($payment['rp'], 1,2),
                 'period_m' => substr($invoice['rp'], 3,2),
                 'doctype' => $paymentDocTypes[$payment['vids']]??'?',

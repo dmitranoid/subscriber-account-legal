@@ -6,6 +6,7 @@ namespace App\Infrastructure\Persistence\Invoice;
 
 
 use App\Infrastructure\Persistence\GenericSqlRepository;
+use DateTime;
 
 final class SqlInvoiceRepository extends GenericSqlRepository
 {
@@ -19,22 +20,22 @@ final class SqlInvoiceRepository extends GenericSqlRepository
         return $this->getAllSql()
             ->select('kp, rp, data, akt_nomer, sum(`sum`) sumTotal')
             ->where('kp', $contractNom)
-//           ->where('vpt', ['A', 'R'])
-            ->where('protkaz', '')
-            ->where('rp like \'119%\'')
+//           ->where('vpt', ['A', 'R'])     // виды платежных требований
+            ->where('protkaz', '')          // если не пустое, то отказная платежка
+            ->where('(rp like \'119%\' or rp like \'120%\')')
             ->group('kp, rp, data, akt_nomer')
             ->order('data, rp')
             ->fetchAll();
     }
 
-    public function getSumByContract($contractNom, \DateTime $periodStart, \DateTime $periodEnd)
+    public function getSumByContract($contractNom, DateTime $periodStart, DateTime $periodEnd)
     {
         //TODO переделать проверку на период
         return $this->getAllSql()
             ->select('kp, sum(`sum`) sumTotal', true)
             ->where('kp', $contractNom)
             ->where('protkaz', '')
-            ->where('rp like \'119%\'')
+            ->where('(rp like \'119%\' or rp like \'120%\')')
             ->group('kp')
             ->order('rp')
             ->fetch();
