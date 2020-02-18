@@ -4,6 +4,8 @@ ini_set('max_execution_time', '600');
 
 ini_set('error_log',  __DIR__ . '/../storage/logs/php_errors.log');
 
+ini_set("date.timezone","Europe/Minsk");
+
 use App\Application\Handlers\HttpErrorHandler;
 use App\Application\Handlers\ShutdownHandler;
 use App\Application\ResponseEmitter\ResponseEmitter;

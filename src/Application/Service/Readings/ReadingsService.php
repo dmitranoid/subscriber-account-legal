@@ -156,7 +156,7 @@ class ReadingsService
         if (empty($recipientEmail)) {
             return;
         }
-        $subject = sprintf('показания за потребленную электроэнергию от %s', (new DateTime('now'))->format('mm Y'));
+        $subject = sprintf('показания за потребленную электроэнергию за %s', (new DateTime('now'))->format('m.Y'));
         $body = $this->composeReadingsEmail($contract, $abonentsList, $connectionsList, $readings);
         try {
             (new PhpMailerEmailSender)->send($recipientEmail, $subject, $body);
@@ -174,7 +174,7 @@ class ReadingsService
         if (empty($recipient) && $recipient['email'] ?? false) {
             exit;
         }
-        $subject = sprintf('[lkprom] %s - %s от %s', $contract['kp'], $contract['np1'], (new DateTime('now'))->format('mm Y'));
+        $subject = sprintf('[lkprom] %s - %s за %s', $contract['kp'], $contract['np1'], (new DateTime('now'))->format('m.Y'));
         $body = $this->composeReadingsEmail($contract, $abonentsList, $connectionsList, $readings);
         try {
             (new PhpMailerEmailSender)->send($recipient['email'], $subject, $body);

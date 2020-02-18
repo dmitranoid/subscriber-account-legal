@@ -38,6 +38,8 @@ class PhpMailerEmailSender implements EmailSenderInterface
     private function initMailer(): PHPMailer
     {
         $mail = new PHPMailer(true);
+        $mail->CharSet = PHPMailer::CHARSET_UTF8;
+        $mail->Encoding = PHPMailer::ENCODING_BASE64;
         $mail->setLanguage('ru');
         $mail->isSMTP();                                            // Send using SMTP
         $mail->Host = 'mail.brest.energo.net';                      // Set the SMTP server to send through

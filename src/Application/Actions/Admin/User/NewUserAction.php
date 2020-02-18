@@ -9,7 +9,6 @@ use App\Application\Exceptions\AppException;
 use App\Application\Helpers\ArrayHelper;
 use App\Application\Service\User\UserService;
 use App\Application\Validators\Input\ValitronInputValidator;
-use App\Infrastructure\Persistence\User\SqlUserRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class NewUserAction extends UserAction
