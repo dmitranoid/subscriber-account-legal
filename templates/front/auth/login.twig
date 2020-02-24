@@ -4,42 +4,59 @@
 {% set showTestWarning = true %}
 
 {% block body %}
-    <div class="row h-100 justify-content-center align-items-center">
-    <div class="col-6 col-md-6 col-sm-8 align-self-lg-auto ">
-        <form class="border border-light p-5" method="post" action="/login" role="form">
-            <p class="h4 mb-4 text-center">Вход в личный кабинет</p>
+
+
+<div class="container">
+
+{% if (showTestWarning) %} 
+   <div class="row mt-5">
+        <div class="col-12 col-md-8 mx-auto">
+            <div class="alert alert-warning" role="alert">
+                Система находится в тестовой эксплуатации!<br>
+                Обслуживаются абоненты Барановичского региона<br>
+                Для регистрации обратитесь в отдел договоров Барановичских ЭС (0163)67-24-60
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<div class="row mt-5">
+    <div class="col-12 col-md-8 col-lg-7 col-xl-6 mx-auto">
+      <div class="card">
+        <div class="card-body py-5">
+
+          <form class="text-center " method="post" action="/login" role="form">
+            <h3 class="mb-4 pb-2 text-center dark-grey-text">
+                <i class="fas fa-user mr-2"></i>
+                Вход в личный кабинет
+            </h3>
             {% if flash.error('login') %}
                 <div class="alert alert-danger" role="alert">
                     {{ flash.error('login') }}
                 </div>
             {% endif %}
-            <label for="loginName">Логин</label>
-            <input type="text" id="loginName" class="form-control mb-4" name="login" placeholder="" required
+            <!-- Name -->
+            <input class="form-control mb-4" placeholder="Логин" type="text" id="loginName" name="login" required
                    value="{{ flash.old('login', '') }}">
-            <label for="loginPass">Пароль</label>
-            <input type="password" id="loginPass" class="form-control mb-4" name="password" placeholder="" required>
-
-            <div class="d-flex justify-content-between">
-                <div>
-{#                    <div class="custom-control custom-checkbox">#}
-{#                        <input type="checkbox" class="custom-control-input" id="defaultLoginFormRemember">#}
-{#                        <label class="custom-control-label" for="defaultLoginFormRemember">Запомнить меня</label>#}
-{#                    </div>#}
-                </div>
-                <div>
-                    <a href="">Забыли пароль?</a>
-                </div>
+            <!-- Email -->
+            <input class="form-control" placeholder="Пароль" type="password" id="loginPass" name="password" required>
+            <div>
+                <button type="submit" class="btn btn-block btn-lg primary btn-rounded text-white mt-4">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Войти
+                </button>
             </div>
+          </form>
 
-            <button class="btn btn-info btn-block my-4" type="submit">Войти</button>
-        </form>
-    </div>
-    {% if (showTestWarning) %}
-        <div class="" style="width: 100%;margin-top: 3rem"></div>
-        <div class="row alert alert-warning" role="alert">
-            Система находится в тестовой эксплуатации<br>
-            Обслуживаются абоненты Барановичского региона<br>
-            Для регистрации обратитесь в отдел договоров Барановичских ЭС (0163)67-24-60
         </div>
-    {% endif %}
+      </div>
+    </div>
+  </div> 
+</div>
+  
+
+
+
+
+
+    
 {% endblock %}

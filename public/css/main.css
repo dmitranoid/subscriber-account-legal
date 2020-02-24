@@ -1,3 +1,7 @@
+@font-face {
+  font-family: Compact-Italic;
+  src: url('/font/compact-italic.ttf'); /* Путь к файлу со шрифтом */
+}
 
 .color-list {
   /* https://coolors.co/007fe9-de466f-414656-aeafb2-e8ebe4 */
@@ -18,18 +22,6 @@
   }
 }
 
-html{
-  position: relative;
-  min-height: 100%;
-}
-body {
-  margin-bottom: 60px; /* Margin bottom by footer height */
-}
-
-.container {
-
-}
-
 .full-height {
   height: 100vh;
 }
@@ -37,18 +29,6 @@ body {
 .half-width {
   width: 45%;
   margin:0 2%
-}
-
-
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  /* Set the fixed height of the footer here */
-  height: 50px;
-  line-height: 50px; /* Vertically center the text there */
-  background-color: #f5f5f5;
-  margin-top: 10px;
 }
 
 .monotype-text {
@@ -79,7 +59,7 @@ header {
 
 img.logo{
   width: 100%;
-  max-width: 50px;
+  max-width: 1.5em;
 }
 
 header .site-caption {
@@ -154,3 +134,49 @@ margin-top: 100px ;
   border: solid 1px #414656 ;
 }
 
+
+
+
+
+
+
+/*_______________________________________________________________________________*/
+.primary{
+  background-color: #3B465E !important;
+}
+
+
+.brestenergofontlogo{
+  font-family: Compact, 'Times New Roman', Times, serif;
+  font-size: 1.5em;
+  font-style: italic;
+  text-shadow: black 1px 1px 0, black -1px -1px 0,
+  black -1px 1px 0, black 1px -1px 0;
+  letter-spacing: 0px;
+}
+
+body {
+  background-image: url(/img/main.jpg);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-color: #59698d;
+}
+
+#wrap{
+  min-height: 100vh;
+}
+
+.title{
+  font-family: roboto;
+  font-weight: 300;
+}
+
+th{
+  vertical-align: middle!important;
+}
+
+.hover-link:hover{
+  text-decoration: underline!important;
+}

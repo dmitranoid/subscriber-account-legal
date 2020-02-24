@@ -10,117 +10,78 @@
     {% else %}
         {% set orgName = contract.np1 %}
     {% endif %}
-    <div class="contract">
-        <h5>Договор №{{ contract.kp }}, {{ orgName }}</h5>
-    </div>
-    <div class="content">
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label">абонент</label>
-        <div class="col-sm-4">
-            <input
-                    class="form-control"
-                    id="contract_no"
-                    name="contract_no"
-                    readonly
-                    value="{{ abonent.naim }}"
-            >
-        </div>
-        <label class="col-sm-2 col-form-label">наименование ТУ</label>
-        <div class="col-sm-4">
-            <input
-                    class="form-control"
-                    id="connection[naim]"
-                    name="connection[naim]"
-                    readonly
-                    value="{{ connection.naim }}"
-            >
-        </div>
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label" for="conn[calc_method]">способ расчетов</label>
-        <div class="col-sm-4">
-            <input
-                    class="form-control"
-                    id="conn[calc_method]"
-                    name="conn[calc_method]"
-                    readonly
-                    value="{{ connectionTypes[connection.sr] }}"
-            >
-        </div>
-        <label class="col-sm-2 col-form-label" for="conn[calc_method]">тариф</label>
-        <div class="col-sm-4">
-            <input
-                    class="form-control"
-                    id="conn[tariff]"
-                    name="conn[tariff]"
-                    readonly
-                    value="{{ connection.tarnaim }}"
-            >
-        </div>
-    </div>
 
-    <div class="clearfix"></div>
-    <div><h4>Прибор учета</h4></div>
 
-    <div class="form-group row">
-        <label class="col-sm-3 col-form-label" for="conn[tsch]">тип прибора</label>
-        <div class="col-sm-3">
-            <input
-                    class="form-control"
-                    id="conn[tsch]"
-                    name="conn[tsch]"
-                    readonly
-                    value="{{ connection.tsch }}"
-            >
-        </div>
 
-        <label class="col-sm-3 col-form-label" for="conn[nst]">заводской номер</label>
-        <div class="col-sm-3">
-            <input
-                    class="form-control"
-                    id="conn[nst]"
-                    name="conn[nst]"
-                    readonly
-                    value="{{ connection.nst }}"
-            >
-        </div>
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-3 col-form-label" for="conn[datu]">дата установки</label>
-        <div class="col-sm-3">
-            <input
-                    class="form-control"
-                    id="conn[datu]"
-                    name="conn[datu]"
-                    readonly
-                    value="{{ connection.datu ? connection.datu|date('d.m.Y') : '-' }}"
-            >
-        </div>
-
-        <label class="col-sm-3 col-form-label" for="conn[ktt]">коэфф. трансформации</label>
-        <div class="col-sm-3">
-            <input
-                    class="form-control"
-                    id="conn[ktt]"
-                    name="conn[ktt]"
-                    readonly
-                    value="{{ connection.ktt }}"
-            >
-        </div>
-    </div>
-
-    <div><h4>История показаний</h4></div>
-    <table class="table readings-history">
-        <thead>
-        <tr>
-            <th>период</th>
-            <th>показание</th>
-            <th>потребление</th>
-        </tr>
-        </thead>
+<h4 class="underline"><b>Договор <u>№{{ contract.kp }}</u></b></h4>
+<h5>{{ orgName }}</h5>
+<div class="table-responsive">
+    <table class="table table-hover table-bordered">
         <tbody>
+            <tr>
+                <th>Абонент</th>
+                <td>{{ abonent.naim }}</td>
+            </tr>
+            <tr>
+                <th>Наименование ТУ</th>
+                <td>{{ connection.naim }}</td>
+            </tr>
+            <tr>
+                <th>Способ расчетов</th>
+                <td>{{ connectionTypes[connection.sr] }}</td>
+            </tr>
+            <tr>
+                <th>Тариф</th>
+                <td>{{ connection.tarnaim }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+
+<h4 class="underline"><b>Прибор учета</b></h4>
+<div class="table-responsive">
+    <table class="table table-hover table-bordered">
+        <tbody>
+            <tr>
+                <th>Тип прибора</th>
+                <td>{{ connection.tsch }}</td>
+            </tr>
+            <tr>
+                <th>Заводской номер</th>
+                <td>{{ connection.nst }}</td>
+            </tr>
+            <tr>
+                <th>Дата установки</th>
+                <td>{{ connection.datu ? connection.datu|date('d.m.Y') : '-' }}</td>
+            </tr>
+            <tr>
+                <th>Коэфф. трансформации</th>
+                <td>{{ connection.ktt }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<h4 class="underline"><b>История показаний</b></h4>
+<div class="table-responsive ">
+    <table class="table table-hover  table-sm">
+        <thead class="text-center thead-light">
+            <tr>
+                <th>Период</th>
+                <th>Показание</th>
+                <th>Потребление</th>
+            </tr>
+        </thead>
+        <tbody class="text-center">
         {% for rd in readingsHistory %}
-            <tr class="reading">
+            <tr>
                 <td>{{ rd.rp_part_m }}.20{{ rd.rp_part_y }}</td>
                 <td>{{ rd.tpok }}</td>
                 <td>{{ rd.consumption }}</td>
@@ -128,5 +89,8 @@
         {% endfor %}
         </tbody>
     </table>
+</div>
+
+
 
 {% endblock %}

@@ -1,30 +1,51 @@
 {% extends 'front/blank.twig' %}
 
 {% block body %}
-<div class="container">
-<nav class="navbar fixed-top navbar-expand navbar-light scrolling-navbar navbarhover">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="https://brestenergo.by" >
-            <img src="/img/brenergo-logo-small.png" class="d-inline-block align-center logo" alt="">
-            Брестэнерго
-        </a>
-        <div class="collapse navbar-collapse">
-            {% include 'front/partial/nav-top-items.twig' %}
-        </div>
-    </div>
+
+<div id="wrap" class="d-flex flex-column">
+
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top scrolling-navbar primary">
+    <a class="navbar-brand brestenergofontlogo" href="https://brestenergo.by">
+        <img src="/img/brenergo-logo-small.png" class="d-inline-block align-center logo" alt="">
+        Брестэнерго
+    </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
+    aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="basicExampleNav">
+    {% include 'front/partial/nav-top-items.twig' %}
+  </div>
 </nav>
-<main role="main" class="columns">
-    <div class="column col-12 page-content">
-        <h1>{{ block('title') }}</h1>
-        {% block content %}
-            content here
-        {% endblock %}
+
+
+
+
+
+<main role="main">
+    <div class="container py-5">
+       <div class="text-white pt-5">
+           <h1 class="title text-uppercase">{{ block('title') }}</h1>
+       </div>
+       <div class="white my-5 p-4 rounded">
+           {% block content %}
+                content here
+            {% endblock %}
+       </div>
     </div>
 </main>
-</div>
-<footer class="full-width footer">
-    <div class="text-center">
+
+
+
+
+
+<footer class="page-footer primary mt-auto">
+  <div class="footer-copyright text-center py-3">
     {% include 'front/partial/footer-content.twig' %}
-    </div>
+  </div>
 </footer>
+
+
+</div>
+
 {%  endblock %}

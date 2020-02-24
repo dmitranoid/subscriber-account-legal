@@ -10,6 +10,77 @@
     {% else %}
         {% set orgName = contract.np1 %}
     {% endif %}
+
+
+<h4 class="underline"><b>Договор <u>№{{ contract.kp }}</u></b></h4>
+<h5>{{ orgName }}</h5>
+
+<div class="table-responsive mt-3">
+    <table class="table table-hover table-bordered table-sm">
+        <thead class="text-center thead-light">
+            <tr>
+                <th>№</th>
+                <th>Наименование</th>
+                <th>Заводской №</th>
+                <th>Дата установки</th>
+                <th>Способ расчета</th>
+                <th>Коэфф. трансф.</th>
+                <th>Дата поверки</th>
+                <th>Показания</th>
+                <th><i class="fas fa-info"></i></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for ab in abonentsList %}
+            {% set address = ab.tip_np ~ ab.name_np ~ ', ' ~ ab.tip_ul ~ ab.name_ul ~ ', ' ~ (ab.dom ? 'д. ') ~ ab.dom ~ ' ' ~ ab.korpus %}
+            <tr class="mdb-color lighten-5">
+                <th class="text-center"><b>{{ ab.nab }}</b></th>
+                <td><b>{{ ab.naim }}</b></td>
+                <td colspan="7"> 
+                    <div class="d-flex">
+                        <b>{{ address }}</b>
+    
+                        <a class="hover-link ml-auto mr-2" href="https://maps.google.com/?q={{ address }}" target="_blank" title="Посмотреть на карте">
+                            На карте<i class="fas fa-map-marked-alt ml-2"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+
+            {% for conn in ab.connections %}
+            <tr>
+                <td></td>
+                <td>{{ conn.naim }}</td>
+                <td>{{ conn.nst }}</td>
+                <td>{{ conn.datu ? conn.datu|date("d.m.Y") : '' }}</td>
+                <td>{{ connectionTypes[conn.sr] }}</td>
+                <td>{{ conn.ktt==1 ? '' :  conn.ktt }}</td>
+                <td>{{ conn.kvpov }} {{ conn.kvpov ? 'кв.' : '' }} {{ conn.godpov }}</td>
+                <td>{{ conn.ppok ? conn.ppok : '' }}</td>
+                <td>
+                    <a class="hover-link" href="/connection/{{ ab.nab }}-{{ conn.naim_url }}" title="Подробнее о точке учета">
+                        Подробнее<i class="fas fa-angle-double-right ml-2"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<!-- 
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+
+
 <div class="contract">
     <h5>Договор  №{{ contract.kp }}, {{ orgName }}</h5>
 </div>
@@ -52,5 +123,5 @@
     {% endfor %}
     </tbody>
 </table>
-
-{% endblock %}
+-->
+{% endblock %} 
