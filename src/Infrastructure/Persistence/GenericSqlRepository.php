@@ -8,6 +8,7 @@ namespace App\Infrastructure\Persistence;
 use App\Application\Exceptions\AppDbException;
 use App\Application\Helpers\ArrayHelper;
 use Envms\FluentPDO\Exception as FpdoException;
+use Envms\FluentPDO\Queries\Select;
 use Envms\FluentPDO\Query;
 use \PDO;
 use phpDocumentor\Reflection\Types\Integer;
@@ -36,7 +37,7 @@ class GenericSqlRepository
         return $this->tableName;
     }
 
-    protected function getAllSql()
+    protected function getAllSql():Select
     {
         return $this->fpdo
             ->from($this->getTableName())

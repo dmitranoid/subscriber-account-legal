@@ -11,6 +11,7 @@ use App\Application\Service\Connection\ConnectionService;
 use App\Application\Service\Contract\ContractInfoService;
 use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
 use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
+use PDO;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpBadRequestException;
 
@@ -34,7 +35,7 @@ class ViewConnectionAction extends Action
     {
         $contractNom = $_SESSION['user']['code_contract'] ?? null;
         // историю показаний можно собрать только из архивной базы
-        $archPdo = new \PDO('sqlite:'. realpath($_SERVER['DOCUMENT_ROOT'] . '\..\data\sqlite\legal-arch.sqlite3'));
+        $archPdo = new PDO('sqlite:'. realpath($_SERVER['DOCUMENT_ROOT'] . '/../data/sqlite/legal-arch.sqlite3'));
 
         list($abonentNom, $tuName)= $this->extractAbTu($this->request->getAttribute('abtu', ''));
 
@@ -42,7 +43,6 @@ class ViewConnectionAction extends Action
         $connectionService = new ConnectionService($this->pdo);
 
         $abonentsRepository = new SqlAbonentRepository($this->pdo);
-
 
         $contract = (new ContractInfoService($this->pdo))->getContractInfo($contractNom);
         $abonent = $abonentsRepository->getByNom($contractNom, $abonentNom);

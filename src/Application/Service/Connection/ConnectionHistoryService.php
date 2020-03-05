@@ -6,13 +6,14 @@ namespace App\Application\Service\Connection;
 
 
 use App\Infrastructure\Persistence\Connection\SqlConnectionArchRepository;
+use PDO;
 
 final class ConnectionHistoryService
 {
-    /** @var \PDO */
+    /** @var PDO */
     protected $pdo;
 
-    public function __construct(\PDO $pdo)
+    public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
     }
