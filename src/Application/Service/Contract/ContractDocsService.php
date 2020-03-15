@@ -27,7 +27,7 @@ final class ContractDocsService
         $docList = [];
         foreach ($docFilesList as $docFile) {
 
-            $periodData = explode('-', $docFile['datePath']); // 01-2019
+            $periodData = explode('-', $docFile['datePath']); // пример 01-2019
             $docName = strpos($docFile['filename'], 'ндс') ? 'сч/ф Энергия' : 'приложение к сч/ф';
             $docList[] = [
                 'date' => $docFile['modifyDate'],

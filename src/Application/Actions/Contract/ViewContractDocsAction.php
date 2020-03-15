@@ -13,6 +13,7 @@ use App\Application\Service\Contract\ContractInfoService;
 use App\Application\View\TwigFash;
 use App\Infrastructure\Service\DocumentFinder\DocumentFinder;
 use DateTime;
+use DateTimeImmutable;
 use PDO;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
@@ -38,8 +39,9 @@ class ViewContractDocsAction extends Action
         }
         $contractInfo = (new ContractInfoService($this->pdo))->getContractInfo($contractNom);
         // TODO брать путь к документам из настроек
-        //$documentsStorageRoot = 'F:/lkprom-docs/';  // под windows буква диска с большой буквы !!!
-        $documentsStorageRoot = 'D:/work/legal-docs/';  // под windows буква диска с большой буквы !!!
+        $documentsStorageRoot = 'F:/lkprom-docs/';  // под windows буква диска с большой буквы !!!
+        //$documentsStorageRoot = 'D:/work/legal-docs/';  // под windows буква диска с большой буквы !!!
+
         $docsService = new ContractDocsService(
             new DocumentFinder($documentsStorageRoot),
             $documentsStorageRoot
@@ -47,8 +49,8 @@ class ViewContractDocsAction extends Action
 
         $docList = $docsService->getDocumentsByContract(
             $contractNom,
-            DateTime::createFromFormat('dmY', '20190101'),
-            DateTime::createFromFormat('dmY', '20201231')
+            DateTime::createFromFormat('Ymd', '20190101'),
+            new DateTime('now')
         );
 
         return $this->view->render(

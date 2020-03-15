@@ -24,7 +24,11 @@ class ViewListReadingsAction extends Action
         $auth = new UserAuthService($this->logger, $this->pdo, $session);
         $contractNom = $auth->getUser()['code_contract'] ?? null;
         if (empty($contractNom)) {
-            $this->logger->error('не найден договор');
+            $this->logger->error(
+                'не найден договор {contractNom}, пользователь {login}',
+                [
+                    'contractNom'=> $contractNom,
+                    'login' => $auth->getUser()['login']]);
             throw new AppException('не найден договор');
         }
 
@@ -43,7 +47,6 @@ class ViewListReadingsAction extends Action
             return $a['nab'] - $b['nab'];
         });
 
-
         reset($connectionsList);
         array_walk($abonentsList, function (&$abonent) use (&$connectionsList) {
             while ($abonent['nab'] == (current($connectionsList)['nab'] ?? '')) {
@@ -52,11 +55,11 @@ class ViewListReadingsAction extends Action
         });
         // check file with sended readings
         $readingsService = new ReadingsService($this->pdo, $auth->getUser());
-        $readings = $readingsService->loadPeriodReadings(new DateTime());
-        if($readings) {
+        $savedReadings = $readingsService->loadPeriodReadings(new DateTime('now'));
+        if($savedReadings) {
             $isSavedReadings = false;
         } else {
-            $readings = $readingsService->loadTmpReadings();
+            $savedReadings = $readingsService->loadTmpReadings();
             $isSavedReadings = true;
         }
 
@@ -66,7 +69,7 @@ class ViewListReadingsAction extends Action
             [
                 'contract' => $contract,
                 'abonentsList' => $abonentsList,
-                'readings' => $readings ?? [],
+                'readings' => $savedReadings ?? [],
                 'isSavedReadings' => $isSavedReadings,
             ]
         );

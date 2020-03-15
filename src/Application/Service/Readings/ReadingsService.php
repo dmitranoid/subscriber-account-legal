@@ -9,6 +9,7 @@ use App\Application\Exceptions\AppException;
 use App\Infrastructure\Persistence\User\InMemoryManagerRepository;
 use App\Infrastructure\Service\Email\PhpMailerEmailSender;
 use DateTime;
+use DateTimeImmutable;
 use Exception;
 use PDO;
 use RuntimeException;
@@ -18,6 +19,11 @@ class ReadingsService
     /** @var PDO */
     protected $pdo;
     private $customer;
+    /** @var int день месяца когда начинается передача показаний */
+    private $readingsPeriodFirstDay = 25;
+    /** @var int день месяца когда заканчивается передача показаний */
+    private $readingsPeriodLastDay = 5;
+
 
     public function __construct(PDO $pdo, $customer)
     {
@@ -37,7 +43,7 @@ class ReadingsService
 
         try {
             foreach ($publishers as $publisher) {
-                //todo переделать в $publisher->publish($readingsData);
+                //todo сделать dispatcher и передавать как то вроде $publisher->publish($readingsData);
                 $publisher($contract, $abonentsList, $connectionsList, $readings);
             }
         } catch (Exception $e) {
@@ -59,8 +65,9 @@ class ReadingsService
     public function loadPeriodReadings(DateTime $onDate): ?array
     {
         // load settings
-        $filename = sprintf("%s-%s.json", $this->customer['code_contract'], date('Ym'));
-        $dir = $_SERVER['DOCUMENT_ROOT'] . sprintf("/../storage/readings/%s/", date('Ym'));
+        $readingsPeriod = $this->getPeriodForReadings(DateTimeImmutable::createFromMutable($onDate));
+        $filename = sprintf("%s-%s.json", $this->customer['code_contract'], $readingsPeriod->format('Ym'));
+        $dir = $_SERVER['DOCUMENT_ROOT'] . sprintf("/../storage/readings/%s/", $readingsPeriod->format('Ym'));
 
         // load
         if (!file_exists($dir . $filename)) {
@@ -79,6 +86,32 @@ class ReadingsService
             return null;
         }
         return $readingsData;
+    }
+
+    /**
+     * возвращает последений день месяца за который вносятся показания либо null если переданная дата не попадает в период
+     * @param $date
+     * @return DateTimeImmutable|null
+     */
+    private function getPeriodForReadings(DateTimeImmutable $date): ?DateTimeImmutable
+    {
+        /** @var bool $crossMonth признак перехода через месяц */
+        $crossMonth = ($this->readingsPeriodFirstDay > $this->readingsPeriodLastDay);
+        $day = (int)$date->format('d');
+        // если лимиты дат передачи показаний в разных месяцах
+        if ($day > $this->readingsPeriodFirstDay && $crossMonth) {
+            // текущий месяц
+            return $date->modify('last day of this month');
+        }
+        if ($day < $this->readingsPeriodLastDay && $crossMonth) {
+            // прошлый месяц
+            return $date->modify('last day of last month');
+        }
+        // если лимиты дат передачи показаний в одном месяце
+        if ($day > $this->readingsPeriodFirstDay && $day < $this->readingsPeriodLastDay && !$crossMonth) {
+            return $date->modify('last day of this month');
+        }
+        return null;
     }
 
     public function saveTmpReadings(array $readingsData)
@@ -121,8 +154,10 @@ class ReadingsService
     private function saveToFileJson(array $contract, array $abonentsList, array $connectionsList, array $readings)
     {
         // load settings
-        $filename = sprintf("%s-%s.json", $this->customer['code_contract'], date('Ym'));
-        $dir = $_SERVER['DOCUMENT_ROOT'] . sprintf("/../storage/readings/%s/", date('Ym'));
+        /** @var DateTimeImmutable $readingsPeriod */
+        $readingsPeriod = $this->getPeriodForReadings(new DateTimeImmutable('now'));
+        $filename = sprintf("%s-%s.json", $this->customer['code_contract'], $readingsPeriod->format('Ym'));
+        $dir = $_SERVER['DOCUMENT_ROOT'] . sprintf("/../storage/readings/%s/", $readingsPeriod->format('Ym'));
         // save
         if (!is_dir($dir) && !mkdir($dir) && !is_dir($dir)) {
 //                $this->logger->error('Directory {dir} was not created', ['dir' => $dir]);
@@ -134,13 +169,15 @@ class ReadingsService
     private function saveToFileCsv(array $contract, array $abonentsList, array $connectionsList, array $readings)
     {
         // load settings
-        $filename = sprintf("%s-%s.txt", $this->customer['code_contract'], date('Ym'));
-        $dir = $_SERVER['DOCUMENT_ROOT'] . sprintf("/../storage/readings-csv/%s/", date('Ym'));
+        /** @var DateTimeImmutable $readingsPeriod */
+        $readingsPeriod = $this->getPeriodForReadings(new DateTimeImmutable('now'));
+
+        $filename = sprintf("%s-%s.txt", $this->customer['code_contract'], $readingsPeriod->format('Ym'));
+        $dir = $_SERVER['DOCUMENT_ROOT'] . sprintf("/../storage/readings-csv/%s/", $readingsPeriod->format('Ym'));
         if (!is_dir($dir) && !mkdir($dir) && !is_dir($dir)) {
 //                $this->logger->error('Directory {dir} was not created', ['dir' => $dir]);
             throw new RuntimeException(sprintf('Directory "%s" was not created', $dir));
         }
-        // для теста попробуем сохранить по другому
         $csvFileHandler = fopen($dir . $filename, 'w');
         foreach ($readings as $counterNo => $reading) {
             fwrite($csvFileHandler, $counterNo . '~' . $reading . PHP_EOL);
@@ -151,33 +188,17 @@ class ReadingsService
     private function emailToCustomer(array $contract, array $abonentsList, array $connectionsList, array $readings)
     {
         // load settings
+        /** @var DateTimeImmutable $readingsPeriod */
+        $readingsPeriod = $this->getPeriodForReadings(new DateTimeImmutable('now'));
         // customer
         $recipientEmail = $this->customer['email'] ?? null;
         if (empty($recipientEmail)) {
             return;
         }
-        $subject = sprintf('показания за потребленную электроэнергию за %s', (new DateTime('now'))->format('m.Y'));
+        $subject = sprintf('показания за потребленную электроэнергию за %s', $readingsPeriod->format('m.Y'));
         $body = $this->composeReadingsEmail($contract, $abonentsList, $connectionsList, $readings);
         try {
             (new PhpMailerEmailSender)->send($recipientEmail, $subject, $body);
-        } catch (AppException $e) {
-            throw $e;
-        }
-    }
-
-    private function emailToManager(array $contract, array $abonentsList, array $connectionsList, array $readings)
-    {
-        // load settings
-        // manager
-        $managerAmperPassword = $contract['pw'];
-        $recipient = (new InMemoryManagerRepository())->findByPwd($managerAmperPassword);
-        if (empty($recipient) && $recipient['email'] ?? false) {
-            exit;
-        }
-        $subject = sprintf('[lkprom] %s - %s за %s', $contract['kp'], $contract['np1'], (new DateTime('now'))->format('m.Y'));
-        $body = $this->composeReadingsEmail($contract, $abonentsList, $connectionsList, $readings);
-        try {
-            (new PhpMailerEmailSender)->send($recipient['email'], $subject, $body);
         } catch (AppException $e) {
             throw $e;
         }
@@ -222,6 +243,24 @@ class ReadingsService
         return implode(PHP_EOL, $readingsTxt);
     }
 
+    private function emailToManager(array $contract, array $abonentsList, array $connectionsList, array $readings)
+    {
+        // load settings
+        // manager
+        $managerAmperPassword = $contract['pw'];
+        $recipient = (new InMemoryManagerRepository())->findByPwd($managerAmperPassword);
+        if (empty($recipient) && $recipient['email'] ?? false) {
+            exit;
+        }
+        $subject = sprintf('[lkprom] %s - %s за %s', $contract['kp'], $contract['np1'], $this->getPeriodForReadings(new DateTimeImmutable('now'))->format('m.Y'));
+        $body = $this->composeReadingsEmail($contract, $abonentsList, $connectionsList, $readings);
+        try {
+            (new PhpMailerEmailSender)->send($recipient['email'], $subject, $body);
+        } catch (AppException $e) {
+            throw $e;
+        }
+    }
+
     private function logToManager(array $readingsData)
     {
 //        $customersLogRepository = new CustomersLogRepository($this->pdo);
@@ -233,5 +272,10 @@ class ReadingsService
 //                'message' => 'переданы показания',
 //            ]
 //        );
+    }
+
+    private function sendToFtp(array $contract, array $abonentsList, array $connectionsList, array $readings)
+    {
+
     }
 }
