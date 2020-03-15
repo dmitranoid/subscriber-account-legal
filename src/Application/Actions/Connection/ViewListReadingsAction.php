@@ -10,7 +10,6 @@ use App\Application\Exceptions\AppException;
 use App\Application\Service\Auth\UserAuthService;
 use App\Application\Service\Contract\ContractInfoService;
 use App\Application\Service\Readings\ReadingsService;
-use App\Domain\DomainException\DomainRecordNotFoundException;
 use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
 use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
 use DateTime;
@@ -49,11 +48,11 @@ class ViewListReadingsAction extends Action
 
         reset($connectionsList);
         array_walk($abonentsList, function (&$abonent) use (&$connectionsList) {
-            while ($abonent['nab'] == (current($connectionsList)['nab'] ?? '')) {
+            while ($abonent['nab'] === (current($connectionsList)['nab'] ?? '')) {
                 $abonent['connections'][] = array_shift($connectionsList);
             }
         });
-        // check file with sended readings
+        // проверить, есть ли сохраненные показания
         $readingsService = new ReadingsService($this->pdo, $auth->getUser());
         $savedReadings = $readingsService->loadPeriodReadings(new DateTime('now'));
         if($savedReadings) {
