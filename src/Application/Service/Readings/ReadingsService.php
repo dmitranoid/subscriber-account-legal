@@ -32,7 +32,16 @@ class ReadingsService
         $this->customer = $customer;
     }
 
-    public function publishReadings(array $contract, array $abonentsList, array $connectionsList, array $readings)
+    /**
+     * Публикация показаний
+     *
+     * @param array $contract номер договора
+     * @param array $abonentsList список абонентов
+     * @param array $connectionsList список точек учета
+     * @param array $readings показания
+     * @throws AppException
+     */
+    public function publishReadings(array $contract, array $abonentsList, array $connectionsList, array $readings): void
     {
         $publishers = [
             [$this, 'saveToFileJson'],
@@ -50,7 +59,7 @@ class ReadingsService
         } catch (Exception $e) {
             throw new AppException($e->getMessage(), 0, $e);
         }
-        // remove saved readings
+        // если все обработалось хорошо, удаляем временные показания
         $this->removeTmpReadings();
     }
 
@@ -66,6 +75,7 @@ class ReadingsService
     public function loadPeriodReadings(DateTime $onDate): ?array
     {
         // load settings
+        /** @var DateTimeImmutable $readingsPeriod */
         $readingsPeriod = $this->getPeriodForReadings(DateTimeImmutable::createFromMutable($onDate));
         $filename = sprintf('%s-%s.json', $this->customer['code_contract'], $readingsPeriod->format('Ym'));
         $dir = $_SERVER['DOCUMENT_ROOT'] . sprintf('/../storage/readings/%s/', $readingsPeriod->format('Ym'));
@@ -76,13 +86,15 @@ class ReadingsService
         }
         $readingsText = file_get_contents($dir . $filename);
         try {
-            // $readingsData = json_decode($readingsText, true, 512, JSON_THROW_ON_ERROR);
+            //  JSON_THROW_ON_ERROR @since 7.3
+            //$readingsData = json_decode($readingsText, true, 512, JSON_THROW_ON_ERROR);
             $readingsData = json_decode($readingsText, true);
             if (json_last_error() !== JSON_ERROR_NONE) {
                 // $this->logger->error(json_last_error_msg());
                 return null;
             }
         } catch (JsonException $e) {
+            //  JSON_THROW_ON_ERROR @since 7.3
             $this->logger->error($e->getMessage);
             return null;
         }
@@ -92,11 +104,11 @@ class ReadingsService
     /**
      * возвращает последений день месяца за который вносятся показания либо null если переданная дата не попадает в период
      * @param $date
-     * @return DateTimeImmutable|null
+     * @return DateTimeImmutable
      */
     private function getPeriodForReadings(DateTimeImmutable $date): DateTimeImmutable
     {
-        /** @var bool $crossMonth признак перехода через месяц */
+        /** @var bool признак перехода через месяц */
         $crossMonth = ($this->readingsPeriodFirstDay > $this->readingsPeriodLastDay);
         $day = (int)$date->format('d');
         // если лимиты дат передачи показаний в разных месяцах
@@ -114,12 +126,11 @@ class ReadingsService
         }
         //todo непонятно, правильно ли вовращать текущий месяц если ничего не подошло
         return $date->modify('last day of this month');
-
     }
 
     private function isPeriodOpenedOnDate(DateTimeImmutable $date): bool
     {
-        /** @var bool $crossMonth признак перехода через месяц */
+        /** @var bool признак перехода через месяц */
         $crossMonth = ($this->readingsPeriodFirstDay > $this->readingsPeriodLastDay);
         $day = (int)$date->format('d');
         // если лимиты дат передачи показаний в разных месяцах
@@ -133,6 +144,11 @@ class ReadingsService
         return false;
     }
 
+    /**
+     * Сохранить временные показания
+     * @param array $readingsData
+     * @throws AppException
+     */
     public function saveTmpReadings(array $readingsData)
     {
         // load settings
@@ -146,10 +162,15 @@ class ReadingsService
         }
     }
 
+    /**
+     * Загрузить временные показания
+     * @return array|null
+     */
     public function loadTmpReadings(): ?array
     {
         // load settings
         $filename = sprintf('%s.json', $this->customer['code_contract']);
+        // todo взять путь из настроек
         $dir = $_SERVER['DOCUMENT_ROOT'] . '/../storage/readings-tmp/';
         // load
         if (!file_exists($dir . $filename)) {
@@ -173,7 +194,7 @@ class ReadingsService
     private function saveToFileJson(array $contract, array $abonentsList, array $connectionsList, array $readings)
     {
         // load settings
-        /** @var DateTimeImmutable $readingsPeriod */
+        /** @var DateTimeImmutable */
         $readingsPeriod = $this->getPeriodForReadings(new DateTimeImmutable('now'));
         $filename = sprintf('%s-%s.json', $this->customer['code_contract'], $readingsPeriod->format('Ym'));
         $dir = $_SERVER['DOCUMENT_ROOT'] . sprintf('/../storage/readings/%s/', $readingsPeriod->format('Ym'));
@@ -188,7 +209,7 @@ class ReadingsService
     private function saveToFileCsv(array $contract, array $abonentsList, array $connectionsList, array $readings)
     {
         // load settings
-        /** @var DateTimeImmutable $readingsPeriod */
+        /** @var DateTimeImmutable */
         $readingsPeriod = $this->getPeriodForReadings(new DateTimeImmutable('now'));
 
         $filename = sprintf('%s-%s.txt', $this->customer['code_contract'], $readingsPeriod->format('Ym'));
@@ -207,7 +228,6 @@ class ReadingsService
     private function emailToCustomer(array $contract, array $abonentsList, array $connectionsList, array $readings)
     {
         // load settings
-        /** @var DateTimeImmutable $readingsPeriod */
         $readingsPeriod = $this->getPeriodForReadings(new DateTimeImmutable('now'));
         // customer
         $recipientEmail = $this->customer['email'] ?? '';
