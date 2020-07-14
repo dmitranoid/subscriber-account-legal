@@ -1,18 +1,21 @@
 {
     "name": "bretenergo/lkprom",
-    "description": "Личный кабинет пользователя (юридические лица)",
-    "keywords": ["brestenergo", "web"],
+    "description": "\u041b\u0438\u0447\u043d\u044b\u0439 \u043a\u0430\u0431\u0438\u043d\u0435\u0442 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f (\u044e\u0440\u0438\u0434\u0438\u0447\u0435\u0441\u043a\u0438\u0435 \u043b\u0438\u0446\u0430)",
+    "keywords": [
+        "brestenergo",
+        "web"
+    ],
     "homepage": "http://www.brestenergo.by/lkprom",
     "license": "MIT",
     "authors": [
         {
-            "name": "Шляхтич Дмитрий",
+            "name": "\u0428\u043b\u044f\u0445\u0442\u0438\u0447 \u0414\u043c\u0438\u0442\u0440\u0438\u0439",
             "email": "dvshlyahtich@brestenergo.by",
             "homepage": "http://www.brestenergo.by"
         }
     ],
     "require": {
-        "php": ">=7.1",
+        "php": ">=7.3",
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-pdo": "*",
@@ -27,11 +30,13 @@
         "slim/twig-view": "^3",
         "symfony/finder": "^5.0",
         "twig/twig": "^3.0",
-        "vlucas/valitron": "v1.4.7"
+        "vlucas/valitron": "^1.4"
     },
     "require-dev": {
+        "codeception/codeception": "^4.1",
         "roave/security-advisories": "dev-master",
-        "phpunit/phpunit": "^7.5"
+        "codeception/module-phpbrowser": "^1.0.0",
+        "codeception/module-asserts": "^1.0.0"
     },
     "autoload": {
         "psr-4": {
