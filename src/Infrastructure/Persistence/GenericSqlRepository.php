@@ -10,8 +10,7 @@ use App\Application\Helpers\ArrayHelper;
 use Envms\FluentPDO\Exception as FpdoException;
 use Envms\FluentPDO\Queries\Select;
 use Envms\FluentPDO\Query;
-use \PDO;
-use phpDocumentor\Reflection\Types\Integer;
+use PDO;
 
 class GenericSqlRepository
 {
@@ -89,7 +88,7 @@ class GenericSqlRepository
         unset($data[$this->identity]);
         $data = ArrayHelper::filterArrayKeys($data, $this->getAllowedFields());
         try {
-            $this->fpdo->update($this->tableName, $data, $data['login'])->execute();
+            $this->fpdo->update($this->tableName, $data, (int)$id)->execute();
         } catch (FpdoException $e) {
             throw new AppDbException('Ошибка обновления данных в ' . $this->tableName, $e);
         }

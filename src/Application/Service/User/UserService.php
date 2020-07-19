@@ -117,9 +117,12 @@ class UserService
      * @param array $data
      * @throws AppException
      */
-    public function edit(array $data)
+    public function update(array $data): void
     {
-        // todo validation
+        if (!isset($data['id'])) {
+            $user = $this->getByLogin($data['login']);
+            $data['id'] = $user['id'];
+        }
         try {
             $this->userRepository->update($data);
         } catch (AppDbException $e) {

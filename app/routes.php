@@ -2,20 +2,21 @@
 declare(strict_types=1);
 
 use App\Application\Actions\Admin\User\DeleteUserAction;
+use App\Application\Actions\Admin\User\EditUserAction;
 use App\Application\Actions\Admin\User\NewUserAction;
-use App\Application\Actions\Admin\User\ViewUsersListAction;
 use App\Application\Actions\Admin\User\ViewUserAction;
+use App\Application\Actions\Admin\User\ViewUsersListAction;
 use App\Application\Actions\Auth\LoginAction;
 use App\Application\Actions\Auth\LogoutAction;
 use App\Application\Actions\Auth\ShowLoginAction;
 use App\Application\Actions\Connection\SaveReadingsAction;
 use App\Application\Actions\Connection\SendReadingsAction;
-use App\Application\Actions\Contract\ViewContractDocsAction;
-use App\Application\Actions\Contract\ViewContractPaymentsAction;
-use App\Application\Actions\Contract\ViewContractInfoAction;
-use App\Application\Actions\Connection\ViewConnectionsListAction;
 use App\Application\Actions\Connection\ViewConnectionAction;
+use App\Application\Actions\Connection\ViewConnectionsListAction;
 use App\Application\Actions\Connection\ViewListReadingsAction;
+use App\Application\Actions\Contract\ViewContractDocsAction;
+use App\Application\Actions\Contract\ViewContractInfoAction;
+use App\Application\Actions\Contract\ViewContractPaymentsAction;
 use App\Application\Actions\Contract\ViewDocAction;
 use App\Application\Middleware\CustomerGuardedMiddleware;
 use App\Application\Middleware\ManagerGuardedMiddleware;
@@ -73,7 +74,8 @@ return function (App $app) {
         $group->group('/admin', function (Group $group) use ($container) {
             $group->get('/users', ViewUsersListAction::class)->setName('admin.users');
             $group->get('/user[/{login}]', ViewUserAction::class)->setName('admin.user.show');
-            $group->post('/user[/{login}]', NewUserAction::class);
+            $group->post('/user/{login}', EditUserAction::class)->setName('admin.user.edit');
+            $group->post('/user', NewUserAction::class)->setName('admin.user.create');
             //fixme delete -> post only !!!!
             $group->any('/user/{login}/delete', DeleteUserAction::class)->setName('admin.user.delete');
 //        $group->post('/user/{login}', DoEditUserAction::class);

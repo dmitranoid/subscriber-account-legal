@@ -10,16 +10,18 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-{#    {{ dump(flash) }}#}
+
+    {#    debug:{{ dump(user, flash) }}#}
     {% set action = "/admin/user" . empty(user['login']) ? "" : "/" . user['login'] %}
     <form class="form col-8" role="form" method="post" action="{{ action }}">
-        {{ forms.selectGroup("Категория", "code_group", flash.old('code_group', 'customer'), groupOptions) }}
-        {{ forms.inputGroup("Логин", "login", flash.old('login', '') , "required", "", flash.error('login')) }}
+        {{ forms.selectGroup("Категория", "code_group", user.code_group, groupOptions) }}
+        {#        {{ forms.selectGroup("Категория", "code_group", flash.old('code_group', 'customer'), groupOptions) }}#}
+        {{ forms.inputGroup("Логин", "login", user.login , "required", "", flash.error('login')) }}
         {{ forms.inputGroup("Пароль", "password", "", "", "password", flash.error('password')) }}
         {{ forms.inputGroup("Повторите пароль", "repassword", "", "", "password") }}
-        {{ forms.inputGroup("Номер договора", "code_contract", flash.old('code_contract', ''), "", "", flash.error('code_contract')) }}
-        {{ forms.inputGroup("Email", "email", flash.old('email', ''), "required", "email", flash.error('email')) }}
-        {{ forms.inputGroup("Телефон", "phones", flash.old('phones', ''), "", "tel", flash.error('phones')) }}
+        {{ forms.inputGroup("Номер договора", "code_contract", user.code_contract, "", "", flash.error('code_contract')) }}
+        {{ forms.inputGroup("Email", "email", user.email, "required", "email", flash.error('email')) }}
+        {{ forms.inputGroup("Телефон", "phones", user.phones, "", "tel", flash.error('phones')) }}
 
         {{ forms.saveGroup("Записать", "Отменить", "/admin/users") }}
     </form>
