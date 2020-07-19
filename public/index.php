@@ -2,10 +2,12 @@
 declare(strict_types=1);
 ini_set('max_execution_time', '600');
 
-ini_set('error_log',  __DIR__ . '/../storage/logs/php_errors.log');
+ini_set('error_log', __DIR__ . '/../storage/logs/php_errors.log');
 
-ini_set("date.timezone","Europe/Minsk");
+ini_set("date.timezone", "Europe/Minsk");
 
+use App\Application\Exceptions\AppException;
+use App\Application\Handlers\AppExceptionHandler;
 use App\Application\Handlers\HttpErrorHandler;
 use App\Application\Handlers\ShutdownHandler;
 use App\Application\ResponseEmitter\ResponseEmitter;
@@ -19,7 +21,7 @@ require __DIR__ . '/../vendor/autoload.php';
 $containerBuilder = new ContainerBuilder();
 
 if (false) { // Should be set to true in production
-	$containerBuilder->enableCompilation(__DIR__ . '/../storage/cache/php-di/');
+    $containerBuilder->enableCompilation(__DIR__ . '/../storage/cache/php-di/');
 }
 
 // Set up settings
@@ -74,6 +76,10 @@ App\Application\Helpers\UriHelper::setRouteParser($app->getRouteCollector()->get
 // Add Error Middleware
 $errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, false, false);
 $errorMiddleware->setDefaultErrorHandler($errorHandler);
+$errorMiddleware->setErrorHandler(
+    AppException::class,
+    new AppExceptionHandler($callableResolver, $responseFactory)
+);
 
 // Run App & Emit Response
 $response = $app->handle($request);

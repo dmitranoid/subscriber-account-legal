@@ -24,7 +24,7 @@ return function (ContainerBuilder $containerBuilder) {
             ],
             'db' => [
                 'dbf' => [
-                     'dir' => realpath(__DIR__ . '/../data/dbf'),
+                    'dir' => __DIR__ . '/data/dbf',
                 ],
                 'operational' => [
                     'driver' => 'sqlite',
