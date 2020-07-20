@@ -5,6 +5,7 @@ namespace App\Application\Actions;
 
 use App\Application\View\ViewInterface;
 use App\Domain\DomainException\DomainRecordNotFoundException;
+use PDO;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
@@ -12,7 +13,6 @@ use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Flash\Messages;
 use Slim\Views\Twig;
-use PDO;
 
 abstract class Action
 {
@@ -110,9 +110,7 @@ abstract class Action
      */
     protected function getFormData()
     {
-        $input = ($this->request->getParsedBody());
-
-        return $input;
+        return ($this->request->getParsedBody());
     }
 
 

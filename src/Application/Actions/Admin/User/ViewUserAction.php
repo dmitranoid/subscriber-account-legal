@@ -25,7 +25,6 @@ class ViewUserAction extends UserAction
             ];
             $title = 'Новый пользователь';
         } else {
-//            $user = $userService->getUserByLogin($userLogin);
             $user = $userService->getByLogin($userLogin);
             $title = 'Редактирование пользователя';
 
