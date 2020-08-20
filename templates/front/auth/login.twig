@@ -35,6 +35,14 @@
                     {{ flash.error('login') }}
                 </div>
             {% endif %}
+            <!-- Region -->
+            <select class="form-control mb-4" placeholder="Регион" type="text" id="region" name="region" required
+                 value="{{ flash.old('region', '') }}">
+                <option selected disabled value="">Выберите обслуживающую организацию</option>
+                {% for code, region in regions %}
+                <option value={{ code }} >{{ region }}</option>
+                {% endfor %}
+            </select>
             <!-- Name -->
             <input class="form-control mb-4" placeholder="Логин" type="text" id="loginName" name="login" required
                    value="{{ flash.old('login', '') }}">

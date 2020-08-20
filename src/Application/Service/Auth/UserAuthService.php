@@ -11,16 +11,11 @@ use Psr\Log\LoggerInterface;
 
 class UserAuthService
 {
-    /**
-     * @var PDO
-     */
-    private $pdo;
+    private \PDO $pdo;
 
-    private $session;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private array $session;
+
+    private LoggerInterface $logger;
 
     public function __construct(LoggerInterface $logger, PDO $pdo, $session)
     {
@@ -68,27 +63,28 @@ class UserAuthService
     }
 
 
-    public function doLogin(string $login, string $password): bool
+    public function doLogin(string $region, string $login, string $password): bool
     {
         $userRepository = new SqlUserRepository($this->pdo);
-        $user = $userRepository->getByLogin($login);
+        $user = $userRepository->getByLoginForRegion($region, $login);
         if (empty($user)) {
-            $this->logger->alert('login {login} not found', ['login' => $login]);
+            $this->logger->alert('login {region}-{login} not found', ['region'=>$region, 'login' => $login]);
             return false;
         }
         if (password_verify($password, $user['password'])) {
-            $this->logger->info('user {login} logged in', ['login' => $login]);
+            $this->logger->info('user {region}-{login} logged in',['region'=>$user['region'], 'login' => $user['login']]);
             $this->saveToSession($user);
             return true;
         }
-        $this->logger->alert('login {login} password error', ['login' => $login]);
+        $this->logger->alert('login {region}-{login} password error', ['region'=>$region, 'login' => $login]);
         return false;
     }
 
     public function doLogout()
     {
         $login = $this->session['user']['login'] ?? 'EMPTY_USER';
-        $this->logger->info('user {login} logged out', ['login' => $login]);
+        $region = $this->session['user']['region'] ?? 'EMPTY_REGION';
+        $this->logger->info('user {region}-{login} logged out', ['region'=> $region, 'login' => $login]);
         $this->saveToSession(null);
     }
 }

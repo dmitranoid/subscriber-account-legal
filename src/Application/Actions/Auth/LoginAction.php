@@ -19,6 +19,7 @@ class LoginAction extends AuthAction
     protected function action(): Response
     {
         $form = $this->request->getParsedBody();
+        $region = $form['region'] ?? 'bar';
         $login = $form['login'] ?? '';
         $password = $form['password'] ?? '';
         if ((empty($login) || empty($password))) {
@@ -29,7 +30,7 @@ class LoginAction extends AuthAction
             $this->pdo,
             $this->request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE, [])
         );
-        if (!$authService->doLogin($login, $password)) {
+        if (!$authService->doLogin($region, $login, $password)) {
             $this->setFormOldData(['login'=>$login]);
             $this->setFormErrors(['login'=>['неправильные имя пользователя или пароль']]);
             return $this->withRedirect(UriHelper::urlFor('login'));

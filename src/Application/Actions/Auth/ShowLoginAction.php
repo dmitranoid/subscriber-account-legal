@@ -20,7 +20,13 @@ class ShowLoginAction extends AuthAction
             return $this->response->withHeader('Location', '/contract');
         }
 
-        return $this->view->render($this->response, 'front/auth/login.twig');
+        $regions = [
+            'bar' => 'Барановичские электрические сети',
+            'bre' => 'Брестские электрические сети',
+            'pin' => 'Пинские электрические сети',
+            'pru' => 'Пружанские электрические сети',
+        ];
+        return $this->view->render($this->response, 'front/auth/login.twig', ['regions'=>$regions]);
     }
 
 }
