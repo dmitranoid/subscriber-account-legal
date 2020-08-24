@@ -11,8 +11,9 @@ use App\Infrastructure\Service\Email\PhpMailerEmailSender;
 use DateTime;
 use DateTimeImmutable;
 use Exception;
-use JsonException;
+use \JsonException;
 use PDO;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 class ReadingsService
@@ -24,12 +25,15 @@ class ReadingsService
     private $readingsPeriodFirstDay = 25;
     /** @var int день месяца когда заканчивается передача показаний */
     private $readingsPeriodLastDay = 5;
+    /** @var LoggerInterface */
+    private $logger;
 
 
-    public function __construct(PDO $pdo, $customer)
+    public function __construct(PDO $pdo, $customer, LoggerInterface $logger)
     {
         $this->pdo = $pdo;
         $this->customer = $customer;
+        $this->logger = $logger;
     }
 
     /**

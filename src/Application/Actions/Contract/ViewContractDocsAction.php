@@ -12,6 +12,7 @@ use App\Application\Service\Contract\ContractDocsService;
 use App\Application\Service\Contract\ContractInfoService;
 use App\Application\View\TwigFash;
 use App\Infrastructure\Service\DocumentFinder\DocumentFinder;
+use App\Infrastructure\Service\Session\Session;
 use DateTime;
 use DateTimeImmutable;
 use PDO;
@@ -30,8 +31,7 @@ class ViewContractDocsAction extends Action
 
     protected function action(): Response
     {
-        $session = $this->request->getAttribute('session', []);
-        $auth = new UserAuthService($this->logger, $this->pdo, $session);
+        $auth = new UserAuthService($this->logger, $this->pdo, new Session());
         $contractNom = $auth->getUser()['code_contract'] ?? null;
         if (empty($contractNom)) {
             $this->logger->error('не найден договор');

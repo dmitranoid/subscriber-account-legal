@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Infrastructure\Service\Session\SessionInterface;
 use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -9,6 +10,7 @@ use Monolog\Processor\UidProcessor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Slim\Views\Twig;
+use Twig\Extension\DebugExtension;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -26,6 +28,9 @@ return function (ContainerBuilder $containerBuilder) {
 
             return $logger;
         },
+        SessionInterface::class => function (ContainerInterface $c) {
+            return new App\Infrastructure\Service\Session\Session();
+        },
         Twig::class => function (ContainerInterface $c) {
             $settings = $c->get('settings');
             $twigSettings = $settings['twig'];
@@ -35,7 +40,7 @@ return function (ContainerBuilder $containerBuilder) {
                     'debug' => true,
                     'cache' => $twigSettings['cachePath']
                 ]);
-            $twig->addExtension(new \Twig\Extension\DebugExtension());
+            $twig->addExtension(new DebugExtension());
             return $twig;
         },
         PDO::class => function (ContainerInterface $c) {
@@ -47,7 +52,7 @@ return function (ContainerBuilder $containerBuilder) {
             try {
                 $pdo = new PDO($dsn);
                 $pdo->exec('ATTACH  \'' . $dbOperational['db'] . '\' as operational');
-                $pdo->exec('ATTACH  \'' . $dbArchive['db'] .'\' as archive');
+                $pdo->exec('ATTACH  \'' . $dbArchive['db'] . '\' as archive');
             } catch (Exception $e) {
                 die('database open error');
             }

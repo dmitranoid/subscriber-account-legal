@@ -10,6 +10,12 @@ use JsonSerializable;
 class Contract implements JsonSerializable
 {
     private $nom;
+    private $nomAdd;
+    private $date;
+    private $orgName;
+    private $fio;
+    private $phone;
+
 
     /**
      * @return mixed
@@ -58,16 +64,6 @@ class Contract implements JsonSerializable
     {
         return $this->phone;
     }
-
-    private $nomAdd;
-
-    private $date;
-
-    private $orgName;
-
-    private $fio;
-
-    private $phone;
 
     public function __construct($nom, $nomAdd, $date, $orgName, $fio, $phone)
     {

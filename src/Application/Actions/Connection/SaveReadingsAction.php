@@ -14,6 +14,7 @@ use App\Domain\DomainException\DomainRecordNotFoundException;
 use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
 use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
 use App\Infrastructure\Persistence\Contract\SqlContractRepository;
+use App\Infrastructure\Service\Session\Session;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class SaveReadingsAction extends Action
@@ -21,7 +22,7 @@ class SaveReadingsAction extends Action
     protected function action(): Response
     {
         $session = $this->request->getAttribute('session', []);
-        $auth = new UserAuthService($this->logger, $this->pdo, $session);
+        $auth = new UserAuthService($this->logger, $this->pdo, new Session());
         $contractNom = $auth->getUser()['code_contract'] ?? null;
         if (empty($contractNom)) {
             $this->logger->error('не найден договор');
@@ -29,7 +30,7 @@ class SaveReadingsAction extends Action
         }
         $readings = $this->request->getParsedBody();
 
-        $readingsService = new ReadingsService($this->pdo, $auth->getUser());
+        $readingsService = new ReadingsService($this->pdo, $auth->getUser(), $this->logger);
         try {
             $readingsService->saveTmpReadings($readings);
         } catch (AppException $e) {

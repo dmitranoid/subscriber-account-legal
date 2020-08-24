@@ -12,6 +12,7 @@ use App\Domain\Contract\ContractNotFoundException;
 use App\Domain\DomainException\DomainRecordNotFoundException;
 use App\Infrastructure\Persistence\Contract\FoxproContractRepository;
 use App\Infrastructure\Persistence\Contract\SqlContractRepository;
+use App\Infrastructure\Service\Session\Session;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class LoginAction extends AuthAction
@@ -28,7 +29,7 @@ class LoginAction extends AuthAction
         $authService = new UserAuthService(
             $this->logger,
             $this->pdo,
-            $this->request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE, [])
+            new Session()
         );
         if (!$authService->doLogin($region, $login, $password)) {
             $this->setFormOldData(['login'=>$login]);

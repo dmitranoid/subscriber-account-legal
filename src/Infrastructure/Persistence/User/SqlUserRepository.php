@@ -12,7 +12,7 @@ use Exception;
 
 class SqlUserRepository extends GenericSqlRepository
 {
-    protected string $tableName = 'user';
+    protected $tableName = 'user';
 
     public function getByLoginForRegion($region, $login): ?array
     {

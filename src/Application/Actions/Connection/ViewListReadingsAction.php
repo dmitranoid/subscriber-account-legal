@@ -12,6 +12,7 @@ use App\Application\Service\Contract\ContractInfoService;
 use App\Application\Service\Readings\ReadingsService;
 use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
 use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
+use App\Infrastructure\Service\Session\Session;
 use DateTime;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -19,8 +20,7 @@ class ViewListReadingsAction extends Action
 {
     protected function action(): Response
     {
-        $session = $this->request->getAttribute('session', []);
-        $auth = new UserAuthService($this->logger, $this->pdo, $session);
+        $auth = new UserAuthService($this->logger, $this->pdo, new Session());
         $contractNom = $auth->getUser()['code_contract'] ?? null;
         if (empty($contractNom)) {
             $this->logger->error(
@@ -53,7 +53,7 @@ class ViewListReadingsAction extends Action
             }
         });
         // проверить, есть ли сохраненные показания
-        $readingsService = new ReadingsService($this->pdo, $auth->getUser());
+        $readingsService = new ReadingsService($this->pdo, $auth->getUser(), $this->logger);
         $savedReadings = $readingsService->loadPeriodReadings(new DateTime('now'));
         if($savedReadings) {
             $isSavedReadings = false;
