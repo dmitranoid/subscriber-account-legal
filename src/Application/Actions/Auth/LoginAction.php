@@ -14,6 +14,7 @@ use App\Infrastructure\Persistence\Contract\FoxproContractRepository;
 use App\Infrastructure\Persistence\Contract\SqlContractRepository;
 use App\Infrastructure\Service\Session\Session;
 use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Psr7\Cookies;
 
 class LoginAction extends AuthAction
 {
@@ -38,6 +39,10 @@ class LoginAction extends AuthAction
         }
 
         $redirectUrl = '/';
+        $cookies = new Cookies($this->request->getCookieParams());
+        $cookies->set('login', $login);
+        $cookies->set('region', $region);
+
         if ($authService->isCustomer()) {
             $redirectUrl = UriHelper::urlFor('front.contract');
         }
@@ -45,7 +50,7 @@ class LoginAction extends AuthAction
             $redirectUrl = UriHelper::urlFor('admin.users');
         }
 
-        return $this->withRedirect($redirectUrl);
+        return $this->withRedirect($redirectUrl)->withHeader('Set-Cookie', $cookies->toHeaders());
     }
 
 }

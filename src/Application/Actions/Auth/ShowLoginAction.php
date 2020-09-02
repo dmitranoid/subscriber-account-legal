@@ -16,7 +16,9 @@ class ShowLoginAction extends AuthAction
 
     protected function action(): Response
     {
-        $authService = new UserAuthService($this->logger, $this->pdo, new Session());
+        $session = new Session();
+        $cookies = $this->request->getCookieParams();
+        $authService = new UserAuthService($this->logger, $this->pdo, $session);
         if ($authService->isUserAuthenticated()) {
             return $this->response->withHeader('Location', '/contract');
         }
@@ -27,7 +29,13 @@ class ShowLoginAction extends AuthAction
             'pin' => 'Пинские электрические сети',
             'pru' => 'Пружанские электрические сети',
         ];
-        return $this->view->render($this->response, 'front/auth/login.twig', ['regions'=>$regions]);
+
+        $this->setFormOldData([
+            'login' => $cookies['login'] ?? '',
+            'region' => $cookies['region'] ?? ''
+            ]
+        );
+        return $this->view->render($this->response, 'front/auth/login.twig', compact('regions'));
     }
 
 }
