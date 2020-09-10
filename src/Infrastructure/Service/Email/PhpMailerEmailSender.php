@@ -9,18 +9,19 @@ use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class PhpMailerEmailSender implements EmailSenderInterface
+
 {
-    /**
-     * @param string $to
-     * @param string $subject
-     * @param string $body
-     * @throws AppException
-     */
+    private EmailServiceSettings $mailerSettings;
+
+    public function __construct(EmailServiceSettings $settings)
+    {
+        $this->mailerSettings = $settings;
+    }
+
     public function send(string $to, string $subject, string $body): void
     {
         try {
-            /** @var PHPMailer $mail */
-            $mail = $this->initMailer();
+            $mail = $this->initMailer($this->mailerSettings);
             $mail->setFrom('bares.informer@brestenergo.by', 'Оповещатель Брестэнерго');
             $mail->addAddress($to);
             // Content
@@ -31,22 +32,22 @@ class PhpMailerEmailSender implements EmailSenderInterface
 
             $mail->send();
         } catch (Exception $e) {
-            throw new AppException("письмо не отправлено, ошибка при отправке: {$mail->ErrorInfo}", 0, $e);
+            throw new AppException("письмо не отправлено, ошибка при отправке: {$e->errorMessage()}", 0, $e);
         }
     }
 
-    private function initMailer(): PHPMailer
+    private function initMailer(EmailServiceSettings $settings): PHPMailer
     {
         $mail = new PHPMailer(true);
         $mail->CharSet = PHPMailer::CHARSET_UTF8;
         $mail->Encoding = PHPMailer::ENCODING_BASE64;
         $mail->setLanguage('ru');
-        $mail->isSMTP();                                            // Send using SMTP
-        $mail->Host = 'mail.brest.energo.net';                      // Set the SMTP server to send through
-        $mail->SMTPAuth = true;                                     // Enable SMTP authentication
-        $mail->Username = 'bares.informer';                         // SMTP username
-        $mail->Password = 'v39BVY';                                 // SMTP password
-        $mail->Port = 25;                                           // TCP port to connect to
+        $mail->isSMTP();
+        $mail->Host = $settings->host;
+        $mail->SMTPAuth = $settings->SMTPAuth;
+        $mail->Username = $settings->username;
+        $mail->Password = $settings->password;
+        $mail->Port = $settings->port;
         return $mail;
     }
 

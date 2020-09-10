@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Application\View\ViewInterface;
 use App\Infrastructure\Service\Session\SessionInterface;
 use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
@@ -43,6 +44,9 @@ return function (ContainerBuilder $containerBuilder) {
             $twig->addExtension(new DebugExtension());
             return $twig;
         },
+        ViewInterface::class => function (ContainerInterface $c) {
+            return new \App\Application\View\TwigView($c->get(Twig::class));
+        },
         PDO::class => function (ContainerInterface $c) {
             $dbSettings = $c->get('settings')['db'];
             $dbOperational = $dbSettings['operational'];
@@ -61,6 +65,6 @@ return function (ContainerBuilder $containerBuilder) {
         },
         Slim\Flash\Messages::class => function (ContainerInterface $c) {
             return new Slim\Flash\Messages();
-        }
+        },
     ]);
 };

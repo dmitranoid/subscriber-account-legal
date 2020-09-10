@@ -16,60 +16,29 @@ use Slim\Views\Twig;
 
 abstract class Action
 {
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
+    protected LoggerInterface $logger;
 
-    /**
-     * @var ViewInterface
-     */
-    protected $view;
+    protected ViewInterface $view;
 
-    /**
-     * @var Request
-     */
-    protected $request;
+    protected Request $request;
 
-    /**
-     * @var Response
-     */
-    protected $response;
+    protected Response $response;
 
-    /**
-     * @var array
-     */
-    protected $args;
+    protected array $args;
 
-    /** @var PDO */
-    protected $pdo;
+    protected Messages $flash;
 
-    /** @var Messages */
-    protected $flash;
+    protected PDO $pdo;
 
-    /**
-     * @param LoggerInterface $logger
-     * @param Twig $view
-     * @param PDO|null $pdo
-     * @param Messages $flash
-     */
-    public function __construct(LoggerInterface $logger,  Twig $view, PDO $pdo, Messages $flash)
+    public function __construct(LoggerInterface $logger,  ViewInterface $view, PDO $pdo, Messages $flash)
     {
         $this->logger = $logger;
         $this->view = $view;
-        $this->pdo = $pdo;
         $this->flash = $flash;
+        $this->pdo = $pdo;
     }
 
-    /**
-     * @param Request  $request
-     * @param Response $response
-     * @param array    $args
-     * @return Response
-     * @throws HttpNotFoundException
-     * @throws HttpBadRequestException
-     */
-    public function __invoke(Request $request, Response $response, $args): Response
+    public function __invoke(Request $request, Response $response, array $args): Response
     {
         $this->request = $request;
         $this->response = $response;
@@ -79,6 +48,9 @@ abstract class Action
             return $this->action();
         } catch (DomainRecordNotFoundException $e) {
             throw new HttpNotFoundException($this->request, $e->getMessage());
+        } catch (HttpBadRequestException $e) {
+            //TODO обработать правильно, пока пробрасываем наверх
+            throw $e;
         }
     }
 

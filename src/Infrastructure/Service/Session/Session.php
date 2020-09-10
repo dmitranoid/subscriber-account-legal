@@ -25,18 +25,19 @@ class Session implements SessionInterface
             'secure' => isset($_SERVER['HTTPS']),
             'httponly' => true
         ];
-
-        // Определяет, будет ли модуль использовать cookies для хранения идентификатора сессии на стороне клиента
-        ini_set('session.use_cookies', '1');
-        // Определяет, будет ли модуль использовать только cookies для хранения идентификатора сессии на стороне клиента
-        ini_set('session.use_only_cookies', '1');
-        session_set_cookie_params(
-            $this->cookie['lifetime'],
-            $this->cookie['path'],
-            $this->cookie['domain'],
-            $this->cookie['secure'],
-            $this->cookie['httponly']
-        );
+        if (!headers_sent()) {
+            // Определяет, будет ли модуль использовать cookies для хранения идентификатора сессии на стороне клиента
+            ini_set('session.use_cookies', '1');
+            // Определяет, будет ли модуль использовать только cookies для хранения идентификатора сессии на стороне клиента
+            ini_set('session.use_only_cookies', '1');
+            session_set_cookie_params(
+                $this->cookie['lifetime'],
+                $this->cookie['path'],
+                $this->cookie['domain'],
+                $this->cookie['secure'],
+                $this->cookie['httponly']
+            );
+        }
     }
 
     /**
@@ -149,14 +150,6 @@ class Session implements SessionInterface
     {
         if ($this->isActive()) {
             $this->deleteAll();
-//            setcookie(
-//                $this->name,
-//                time() - 42000,
-//                $this->cookie['path'],
-//                $this->cookie['domain'],
-//                $this->cookie['secure'],
-//                $this->cookie['httponly']
-//            );
         }
     }
 

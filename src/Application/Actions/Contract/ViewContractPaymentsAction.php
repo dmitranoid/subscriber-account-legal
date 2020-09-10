@@ -30,7 +30,7 @@ class ViewContractPaymentsAction extends Action
         $date = new DateTime('now');
         $debtInfo = [
             'date' => new DateTime('first day of this month'),
-            'sum'=>$contractInfo['dolg01'],
+            'sum' => $contractInfo['dolg01'],
         ];
         // $contractPaymentsService->getDebt($contractNom, \DateTime::createFromFormat('Ymd', '20190101'), \DateTime::createFromFormat('Ymd', '20191231'));
         $docList = $contractPaymentsService->getPaymentsAndInvoicesList($contractNom);
@@ -39,7 +39,7 @@ class ViewContractPaymentsAction extends Action
             'front/contract/payments.twig',
             [
                 'contract' => $contractInfo,
-                'debtInfo'=>$debtInfo,
+                'debtInfo' => $debtInfo,
                 'docList' => $docList
             ]
         );

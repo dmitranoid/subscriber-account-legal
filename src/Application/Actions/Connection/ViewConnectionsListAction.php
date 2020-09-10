@@ -11,6 +11,7 @@ use App\Application\Service\Contract\ContractInfoService;
 use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
 use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
 use App\Infrastructure\Persistence\Contract\SqlContractRepository;
+use App\Infrastructure\Service\Session\Session;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpBadRequestException;
 
@@ -18,8 +19,7 @@ class ViewConnectionsListAction extends Action
 {
     protected function action(): Response
     {
-        $session = $this->request->getAttribute('session', []);
-        $auth = new UserAuthService($this->logger, $this->pdo, $session);
+        $auth = new UserAuthService($this->logger, $this->pdo, new Session());
         $contractNom = $auth->getUser()['code_contract'] ?? null;
 
         $connectionsRepository = new SqlConnectionRepository($this->pdo);

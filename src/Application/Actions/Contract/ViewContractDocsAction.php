@@ -11,6 +11,7 @@ use App\Application\Service\Auth\UserAuthService;
 use App\Application\Service\Contract\ContractDocsService;
 use App\Application\Service\Contract\ContractInfoService;
 use App\Application\View\TwigFash;
+use App\Application\View\ViewInterface;
 use App\Infrastructure\Service\DocumentFinder\DocumentFinder;
 use App\Infrastructure\Service\Session\Session;
 use DateTime;
@@ -23,7 +24,7 @@ use Slim\Views\Twig;
 
 class ViewContractDocsAction extends Action
 {
-    public function __construct(LoggerInterface $logger, Twig $view, PDO $pdo, Messages $flash)
+    public function __construct(LoggerInterface $logger, ViewInterface $view, PDO $pdo, Messages $flash)
     {
         parent::__construct($logger, $view, $pdo, $flash);
     }
