@@ -11,7 +11,9 @@ use App\Application\Service\Auth\UserAuthService;
 use App\Application\Service\Contract\ContractDocsService;
 use App\Application\Service\Contract\ContractInfoService;
 use App\Application\View\TwigFash;
+use App\Application\View\ViewInterface;
 use App\Infrastructure\Service\DocumentFinder\DocumentFinder;
+use App\Infrastructure\Service\Session\Session;
 use DateTime;
 use DateTimeImmutable;
 use PDO;
@@ -22,7 +24,7 @@ use Slim\Views\Twig;
 
 class ViewContractDocsAction extends Action
 {
-    public function __construct(LoggerInterface $logger, Twig $view, PDO $pdo, Messages $flash)
+    public function __construct(LoggerInterface $logger, ViewInterface $view, PDO $pdo, Messages $flash)
     {
         parent::__construct($logger, $view, $pdo, $flash);
     }
@@ -30,8 +32,7 @@ class ViewContractDocsAction extends Action
 
     protected function action(): Response
     {
-        $session = $this->request->getAttribute('session', []);
-        $auth = new UserAuthService($this->logger, $this->pdo, $session);
+        $auth = new UserAuthService($this->logger, $this->pdo, new Session());
         $contractNom = $auth->getUser()['code_contract'] ?? null;
         if (empty($contractNom)) {
             $this->logger->error('не найден договор');

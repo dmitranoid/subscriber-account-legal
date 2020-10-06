@@ -14,12 +14,13 @@ class SqlUserRepository extends GenericSqlRepository
 {
     protected $tableName = 'user';
 
-    public function getByLogin($login): ?array
+    public function getByLoginForRegion($region, $login): ?array
     {
         try {
             $user = $this->fpdo
                 ->from($this->tableName)
                 ->where('login', $login)
+                ->where('region', $region)
                 ->fetch();
         } catch (Exception $e) {
             new Exception('db error', 0, $e);

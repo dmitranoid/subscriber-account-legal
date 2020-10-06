@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\Domain\User;
+namespace Tests\acceptance\front;
 
 use App\Domain\User\User;
 use Tests\TestCase;

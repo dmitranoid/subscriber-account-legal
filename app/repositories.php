@@ -12,5 +12,6 @@ return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
         UserRepository::class => DI\autowire(InMemoryManagerRepository::class),
         ContractRepository::class => DI\autowire(SqlContractRepository::class),
+
     ]);
 };

@@ -10,6 +10,7 @@ use App\Application\Service\Auth\UserAuthService;
 use App\Application\Service\Contract\ContractInfoService;
 use App\Application\Service\Contract\ContractPaymentsService;
 use App\Domain\DomainException\DomainRecordNotFoundException;
+use App\Infrastructure\Service\Session\Session;
 use DateTime;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -17,8 +18,7 @@ class ViewContractPaymentsAction extends Action
 {
     protected function action(): Response
     {
-        $session = $this->request->getAttribute('session', []);
-        $auth = new UserAuthService($this->logger, $this->pdo, $session);
+        $auth = new UserAuthService($this->logger, $this->pdo, new Session());
         $contractNom = $auth->getUser()['code_contract'] ?? null;
         if (empty($contractNom)) {
             $this->logger->error('не найден договор');
@@ -30,7 +30,7 @@ class ViewContractPaymentsAction extends Action
         $date = new DateTime('now');
         $debtInfo = [
             'date' => new DateTime('first day of this month'),
-            'sum'=>$contractInfo['dolg01'],
+            'sum' => $contractInfo['dolg01'],
         ];
         // $contractPaymentsService->getDebt($contractNom, \DateTime::createFromFormat('Ymd', '20190101'), \DateTime::createFromFormat('Ymd', '20191231'));
         $docList = $contractPaymentsService->getPaymentsAndInvoicesList($contractNom);
@@ -39,7 +39,7 @@ class ViewContractPaymentsAction extends Action
             'front/contract/payments.twig',
             [
                 'contract' => $contractInfo,
-                'debtInfo'=>$debtInfo,
+                'debtInfo' => $debtInfo,
                 'docList' => $docList
             ]
         );

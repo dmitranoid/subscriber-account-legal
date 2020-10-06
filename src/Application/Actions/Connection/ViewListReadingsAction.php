@@ -10,9 +10,9 @@ use App\Application\Exceptions\AppException;
 use App\Application\Service\Auth\UserAuthService;
 use App\Application\Service\Contract\ContractInfoService;
 use App\Application\Service\Readings\ReadingsService;
-use App\Domain\DomainException\DomainRecordNotFoundException;
 use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
 use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
+use App\Infrastructure\Service\Session\Session;
 use DateTime;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -20,8 +20,7 @@ class ViewListReadingsAction extends Action
 {
     protected function action(): Response
     {
-        $session = $this->request->getAttribute('session', []);
-        $auth = new UserAuthService($this->logger, $this->pdo, $session);
+        $auth = new UserAuthService($this->logger, $this->pdo, new Session());
         $contractNom = $auth->getUser()['code_contract'] ?? null;
         if (empty($contractNom)) {
             $this->logger->error(
@@ -49,12 +48,12 @@ class ViewListReadingsAction extends Action
 
         reset($connectionsList);
         array_walk($abonentsList, function (&$abonent) use (&$connectionsList) {
-            while ($abonent['nab'] == (current($connectionsList)['nab'] ?? '')) {
+            while ($abonent['nab'] === (current($connectionsList)['nab'] ?? '')) {
                 $abonent['connections'][] = array_shift($connectionsList);
             }
         });
-        // check file with sended readings
-        $readingsService = new ReadingsService($this->pdo, $auth->getUser());
+        // проверить, есть ли сохраненные показания
+        $readingsService = new ReadingsService($this->pdo, $auth->getUser(), $this->logger);
         $savedReadings = $readingsService->loadPeriodReadings(new DateTime('now'));
         if($savedReadings) {
             $isSavedReadings = false;

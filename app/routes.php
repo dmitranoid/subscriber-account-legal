@@ -21,6 +21,7 @@ use App\Application\Actions\Contract\ViewDocAction;
 use App\Application\Middleware\CustomerGuardedMiddleware;
 use App\Application\Middleware\ManagerGuardedMiddleware;
 use App\Application\Service\Auth\UserAuthService;
+use App\Infrastructure\Service\Session\SessionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -33,14 +34,14 @@ return function (App $app) {
     $container = $app->getContainer();
     $settings = $container->get('settings');
     $routePrefix = '';
-    //$routePrefix = '/lkprom';
-    $app->group($routePrefix, function (Group $group) use ($container, $app) {
-        $group->get('/', function (Request $request, Response $response) use ($container, $app) {
+    $session = $container->get(SessionInterface::class);
+    $app->group($routePrefix, function (Group $group) use ($container, $app, $session) {
+        $group->get('/', function (Request $request, Response $response) use ($container, $app, $session) {
             // перебрасываем из корня в зависимости от группы
             $authService = new UserAuthService(
                 $container->get(LoggerInterface::class),
                 $container->get(PDO::class),
-                $request->getAttribute('session', [])
+                $session
             );
             if (!$authService->isUserAuthenticated()) {
                 return $response->withHeader('Location', '/login');

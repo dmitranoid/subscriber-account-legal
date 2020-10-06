@@ -6,89 +6,95 @@ namespace App\Application\Service\Auth;
 
 
 use App\Infrastructure\Persistence\User\SqlUserRepository;
+use App\Infrastructure\Service\Session\SessionInterface;
 use PDO;
 use Psr\Log\LoggerInterface;
 
 class UserAuthService
 {
-    /**
-     * @var PDO
-     */
-    private $pdo;
+    private PDO $pdo;
 
-    private $session;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private SessionInterface $session;
 
-    public function __construct(LoggerInterface $logger, PDO $pdo, $session)
+    private LoggerInterface $logger;
+
+    public function __construct(LoggerInterface $logger, PDO $pdo, SessionInterface $session)
     {
         $this->pdo = $pdo;
         $this->session = $session;
         $this->logger = $logger;
     }
 
-    private function saveToSession($user)
-    {
-        // TODO переделать на DI session manager
-        if (empty($user)) {
-            // todo нужно чтобы работал один unset
-            unset($_SESSION['user']);
-            unset($this->session['user']);
-        } else {
-            $_SESSION['user'] = $user;
-            $this->session['user'] =$user;
-        }
-    }
-
     public function isUserAuthenticated(): bool
     {
-        return isset($this->session['user']);
-    }
-
-    public function getUser(): array
-    {
-        return $this->session['user'] ?? [];
+        $user = $this->session->get('user');
+        return !empty($user);
     }
 
     public function isCustomer()
     {
-        return ('customer' == ($this->session['user']['code_group'] ?? ''));
+        $user = $this->getUser();
+        if (empty($user)) {
+            return false;
+        }
+        return ('customer' == ($user['code_group'] ?? ''));
+    }
+
+    public function getUser(): array
+    {
+        return $this->session->get('user') ?? [];
     }
 
     public function isManager()
     {
-        return ('manager' == $this->session['user']['code_group'] ?? '');
+        $user = $this->getUser();
+        if (empty($user)) {
+            return false;
+        }
+        return ('manager' == ($user['code_group'] ?? ''));
     }
 
     public function isAdmin()
     {
-        return ('admin' == $this->session['user']['code_group'] ?? '');
+        $user = $this->getUser();
+        if (empty($user)) {
+            return false;
+        }
+        return ('admin' == ($user['code_group'] ?? ''));
     }
 
-
-    public function doLogin(string $login, string $password): bool
+    public function doLogin(string $region, string $login, string $password): bool
     {
         $userRepository = new SqlUserRepository($this->pdo);
-        $user = $userRepository->getByLogin($login);
+        $user = $userRepository->getByLoginForRegion($region, $login);
         if (empty($user)) {
-            $this->logger->alert('login {login} not found', ['login' => $login]);
+            $this->logger->alert('login not found', ['region' => $region, 'login' => $login]);
             return false;
         }
         if (password_verify($password, $user['password'])) {
-            $this->logger->info('user {login} logged in', ['login' => $login]);
+            $this->logger->info('user logged in', ['region' => $user['region'], 'login' => $user['login']]);
             $this->saveToSession($user);
             return true;
         }
-        $this->logger->alert('login {login} password error', ['login' => $login]);
+        $this->logger->alert('login password error', ['region' => $region, 'login' => $login]);
         return false;
+    }
+
+    private function saveToSession($user)
+    {
+        if (empty($user)) {
+            $this->session->destroy();
+        } else {
+            $this->session->set('user', $user);
+        }
     }
 
     public function doLogout()
     {
-        $login = $this->session['user']['login'] ?? 'EMPTY_USER';
-        $this->logger->info('user {login} logged out', ['login' => $login]);
+        $user = $this->getUser();
+        $login = $user['login'] ?? 'EMPTY_USER';
+        $region = $user['region'] ?? 'EMPTY_REGION';
+        $this->logger->info('user {login}({region}) logged out', ['region' => $region, 'login' => $login]);
         $this->saveToSession(null);
     }
 }
