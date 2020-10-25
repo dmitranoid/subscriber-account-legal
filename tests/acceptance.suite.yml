@@ -5,9 +5,16 @@
 # If you need both WebDriver and PHPBrowser tests - create a separate suite.
 
 actor: AcceptanceTester
+extentions:
+  enabled:
+    - Codeception\Extentions\RunProcess:
+        0: php -S localhost:802 -t ../public
+        delay: 3
 modules:
   enabled:
     - PhpBrowser:
         url: http://localhost:802
+        curl:
+          CURLOPT_PROXY: ''
     - \Helper\Acceptance
   step_decorators: ~
