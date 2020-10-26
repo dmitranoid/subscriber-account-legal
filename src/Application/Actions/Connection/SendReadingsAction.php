@@ -8,12 +8,10 @@ namespace App\Application\Actions\Connection;
 use App\Application\Actions\Action;
 use App\Application\Exceptions\AppException;
 use App\Application\Service\Auth\UserAuthService;
-use App\Application\Service\Contract\ContractInfoService;
+use App\Application\Service\Contract\ContractInfoServiceInterface;
 use App\Application\Service\Readings\ReadingsService;
-use App\Domain\DomainException\DomainRecordNotFoundException;
 use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
 use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
-use App\Infrastructure\Persistence\Contract\SqlContractRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class SendReadingsAction extends Action
@@ -32,7 +30,7 @@ class SendReadingsAction extends Action
         $connectionsRepository = new SqlConnectionRepository($this->pdo);
         $abonentsRepository = new SqlAbonentRepository($this->pdo);
 
-        $contract = (new ContractInfoService($this->pdo))->getContractInfo($contractNom);
+        $contract = (new ContractInfoServiceInterface($this->pdo))->getContractInfo($contractNom);
         $abonentsList = $abonentsRepository->getByContract($contractNom);
         $connectionsList = $connectionsRepository->getByContract($contractNom);
 

@@ -6,8 +6,7 @@ namespace App\Application\Actions\Chat;
 
 
 use App\Application\Actions\Action;
-use App\Application\Service\Contract\ContractInfoService;
-use App\Domain\DomainException\DomainRecordNotFoundException;
+use App\Application\Service\Contract\ContractInfoServiceInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use Slim\Views\Twig;
@@ -24,7 +23,7 @@ class ViewChatAction extends Action
     protected function action(): Response
     {
         $contractNo = $_SESSION['contract'];
-        $contractInfo = (new ContractInfoService($this->pdo))->getContractInfo($contractNo);
+        $contractInfo = (new ContractInfoServiceInterface($this->pdo))->getContractInfo($contractNo);
 
         return $this->view->render($this->response, 'chat/index.twig', ['contract'=>$contractInfo]);
     }

@@ -3,34 +3,33 @@
 {% block title %}Данные о договоре{% endblock %}
 
 {% block content %}
-{% if contract.npp1 %}
-{% set orgName = contract.npp1 ~ " " ~ contract.npp2 %}
-{% else %}
-{% set orgName = contract.np1 %}
-{% endif %}
 
-<div class="table-responsive">
-    <table class="table table-hover table-bordered">
-        <tbody>
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+            <tbody>
             <tr>
                 <th>Договор №</th>
-                <td>{{ contract.kp }}</td>
+                <td>{{ contract.nom }}</td>
             </tr>
             <tr>
                 <th>Дата заключения</th>
-                <td>{{ contract.datd|date('d.m.Y') }}</td>
+                <td>{{ contract.date|date('d.m.Y') }}</td>
             </tr>
             <tr>
                 <th>УНП:</th>
-                <td>{{ contract.kodni }}</td>
+                <td>{{ contract.unp }}</td>
             </tr>
             <tr>
                 <th>Название организации</th>
-                <td>{{ orgName }}</td>
+                <td>{{ contract.name }}</td>
             </tr>
             <tr>
                 <th>Юридический адрес</th>
-                <td>{{ contract.tip_np }} {{ contract.adres2 }} {{ contract.tip_ul }} {{ contract.adres3 }} {{ contract.tip_kv }} {{ contract.adres4 }}</td>
+                <td>{{ contract.addressLegal }}</td>
+            </tr>
+            <tr>
+                <th>Расчетный счёт</th>
+                <td>{{ contract.rs }}</td>
             </tr>
             <tr>
                 <th>Руководитель</th>
@@ -40,8 +39,13 @@
                 <th>Ответственный за электрохозяйство</th>
                 <td>{{ contract.fio }}</td>
             </tr>
-        </tbody>
-    </table>
-</div>
+            <tr>
+                <th>Менеджер от электросетей</th>
+                <td>{{ contract.manager }}</td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
 
 {% endblock %}

@@ -6,7 +6,6 @@ namespace App\Infrastructure\Persistence\Abonent;
 
 
 use App\Infrastructure\Persistence\GenericSqlRepository;
-use Envms\FluentPDO\Query;
 
 final class SqlAbonentRepository extends GenericSqlRepository
 {

@@ -1,29 +1,45 @@
 {
-    "name": "brestenergo/lkprom",
-    "description": "\u041b\u0438\u0447\u043d\u044b\u0439 \u043a\u0430\u0431\u0438\u043d\u0435\u0442 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f (\u044e\u0440\u0438\u0434\u0438\u0447\u0435\u0441\u043a\u0438\u0435 \u043b\u0438\u0446\u0430)",
-    "keywords": [
-        "brestenergo",
-        "web"
-    ],
-    "homepage": "http://www.brestenergo.by/lkprom",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Шляхтич Дмитрий",
-            "email": "dvshlyahtich@brestenergo.by",
-            "homepage": "https://www.brestenergo.by"
-        }
-    ],
-    "require": {
-        "php": ">=7.4",
-        "ext-iconv": "*",
-        "ext-json": "*",
-        "ext-pdo": "*",
-        "envms/fluentpdo": "^2.0",
-        "hisamu/php-xbase": "1.0.5",
-        "monolog/monolog": "^1.24",
-        "php-di/php-di": "^6.0",
-        "phpmailer/phpmailer": "^6.0",
+  "authors": [
+    {
+      "name": "Шляхтич Дмитрий",
+      "email": "dvshlyahtich@brestenergo.by",
+      "homepage": "https://www.brestenergo.by"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "process-timeout": 0,
+    "sort-packages": true
+  },
+  "description": "\u041b\u0438\u0447\u043d\u044b\u0439 \u043a\u0430\u0431\u0438\u043d\u0435\u0442 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f (\u044e\u0440\u0438\u0434\u0438\u0447\u0435\u0441\u043a\u0438\u0435 \u043b\u0438\u0446\u0430)",
+  "homepage": "http://www.brestenergo.by/lkprom",
+  "keywords": [
+    "brestenergo",
+    "web"
+  ],
+  "license": "MIT",
+  "minimum-stability": "dev",
+  "name": "brestenergo/lkprom",
+  "prefer-stable": true,
+  "require": {
+    "php": ">=7.4",
+    "ext-iconv": "*",
+    "ext-json": "*",
+    "ext-pdo": "*",
+    "envms/fluentpdo": "^2.0",
+    "hisamu/php-xbase": "1.0.5",
+    "monolog/monolog": "^1.24",
+    "php-di/php-di": "^6.0",
+    "phpmailer/phpmailer": "^6.0",
         "slim/flash": "^0.4.0",
         "slim/psr7": "^0.5",
         "slim/slim": "^4.1",
@@ -33,29 +49,12 @@
         "vlucas/valitron": "^1.4"
     },
     "require-dev": {
-        "codeception/codeception": "^4.1",
-        "roave/security-advisories": "dev-master",
-        "codeception/module-phpbrowser": "^1.0.0",
-        "codeception/module-asserts": "^1.0.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "App\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
-        }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "config": {
-        "process-timeout": 0,
-        "sort-packages": true
+      "roave/security-advisories": "dev-master",
+      "codeception/codeception": "^4.1",
+      "codeception/module-phpbrowser": "^1.0.0",
+      "codeception/module-asserts": "^1.0.0"
     },
     "scripts": {
-        "start": "php -S localhost:80 -t public",
-        "test": "phpunit"
+      "start": "php -S localhost:80 -t public"
     }
 }

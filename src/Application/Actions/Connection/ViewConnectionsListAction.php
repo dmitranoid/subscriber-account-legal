@@ -7,13 +7,11 @@ namespace App\Application\Actions\Connection;
 
 use App\Application\Actions\Action;
 use App\Application\Service\Auth\UserAuthService;
-use App\Application\Service\Contract\ContractInfoService;
+use App\Application\Service\Contract\ContractInfoServiceInterface;
 use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
 use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
-use App\Infrastructure\Persistence\Contract\SqlContractRepository;
 use App\Infrastructure\Service\Session\Session;
 use Psr\Http\Message\ResponseInterface as Response;
-use Slim\Exception\HttpBadRequestException;
 
 class ViewConnectionsListAction extends Action
 {
@@ -25,7 +23,7 @@ class ViewConnectionsListAction extends Action
         $connectionsRepository = new SqlConnectionRepository($this->pdo);
         $abonentsRepository = new SqlAbonentRepository($this->pdo);
 
-        $contract = (new ContractInfoService($this->pdo))->getContractInfo($contractNom);
+        $contract = (new ContractInfoServiceInterface($this->pdo))->getContractInfo($contractNom);
         $connectionsList = $connectionsRepository->getByContract($contractNom);
         $abonentsList = $abonentsRepository->getByContract($contractNom);
 

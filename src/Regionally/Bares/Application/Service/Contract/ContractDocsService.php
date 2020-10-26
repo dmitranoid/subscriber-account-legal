@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace App\Application\Service\Contract;
+namespace App\Regionally\Bares\Application\Service\Contract;
 
 
 use App\Infrastructure\Service\DocumentFinder\DocumentFinder;
@@ -10,10 +10,8 @@ use DateTime;
 
 final class ContractDocsService
 {
-    /** @var DocumentFinder */
-    private $documentFinderService;
-    /** @var string */
-    private $docStorageRoot;
+    private DocumentFinder $documentFinderService;
+    private string $docStorageRoot;
 
     public function __construct(DocumentFinder $documentFinderService, string $docStorageRoot)
     {

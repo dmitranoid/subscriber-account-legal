@@ -9,18 +9,15 @@ use App\Application\Actions\Action;
 use App\Application\Exceptions\AppException;
 use App\Application\Service\Auth\UserAuthService;
 use App\Application\Service\Contract\ContractDocsService;
-use App\Application\Service\Contract\ContractInfoService;
-use App\Application\View\TwigFash;
+use App\Application\Service\Contract\ContractInfoServiceInterface;
 use App\Application\View\ViewInterface;
 use App\Infrastructure\Service\DocumentFinder\DocumentFinder;
 use App\Infrastructure\Service\Session\Session;
 use DateTime;
-use DateTimeImmutable;
 use PDO;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use Slim\Flash\Messages;
-use Slim\Views\Twig;
 
 class ViewContractDocsAction extends Action
 {
@@ -38,7 +35,7 @@ class ViewContractDocsAction extends Action
             $this->logger->error('не найден договор');
             throw new AppException('не найден договор');
         }
-        $contractInfo = (new ContractInfoService($this->pdo))->getContractInfo($contractNom);
+        $contractInfo = (new ContractInfoServiceInterface($this->pdo))->getContractInfo($contractNom);
         // TODO брать путь к документам из настроек
         $documentsStorageRoot = 'F:/lkprom-docs/';  // под windows буква диска с большой буквы !!!
         //$documentsStorageRoot = 'D:/work/legal-docs/';  // под windows буква диска с большой буквы !!!

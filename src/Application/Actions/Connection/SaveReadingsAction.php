@@ -8,12 +8,7 @@ namespace App\Application\Actions\Connection;
 use App\Application\Actions\Action;
 use App\Application\Exceptions\AppException;
 use App\Application\Service\Auth\UserAuthService;
-use App\Application\Service\Contract\ContractInfoService;
 use App\Application\Service\Readings\ReadingsService;
-use App\Domain\DomainException\DomainRecordNotFoundException;
-use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
-use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
-use App\Infrastructure\Persistence\Contract\SqlContractRepository;
 use App\Infrastructure\Service\Session\Session;
 use Psr\Http\Message\ResponseInterface as Response;
 

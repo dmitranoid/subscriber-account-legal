@@ -7,9 +7,8 @@ namespace App\Application\Actions\Contract;
 use App\Application\Actions\Action;
 use App\Application\Exceptions\AppException;
 use App\Application\Service\Auth\UserAuthService;
-use App\Application\Service\Contract\ContractInfoService;
+use App\Application\Service\Contract\ContractInfoServiceInterface;
 use App\Application\Service\Contract\ContractPaymentsService;
-use App\Domain\DomainException\DomainRecordNotFoundException;
 use App\Infrastructure\Service\Session\Session;
 use DateTime;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -25,7 +24,7 @@ class ViewContractPaymentsAction extends Action
             throw new AppException('не найден договор');
         }
 
-        $contractInfo = (new ContractInfoService($this->pdo))->getContractInfo($contractNom);
+        $contractInfo = (new ContractInfoServiceInterface($this->pdo))->getContractInfo($contractNom);
         $contractPaymentsService = new ContractPaymentsService($this->pdo);
         $date = new DateTime('now');
         $debtInfo = [

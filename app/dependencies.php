@@ -13,7 +13,7 @@ use Psr\Log\LoggerInterface;
 use Slim\Views\Twig;
 use Twig\Extension\DebugExtension;
 
-return function (ContainerBuilder $containerBuilder) {
+return static function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
         LoggerInterface::class => function (ContainerInterface $c) {
             $settings = $c->get('settings');

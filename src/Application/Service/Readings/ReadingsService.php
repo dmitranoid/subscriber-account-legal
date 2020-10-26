@@ -11,7 +11,7 @@ use App\Infrastructure\Service\Email\PhpMailerEmailSender;
 use DateTime;
 use DateTimeImmutable;
 use Exception;
-use \JsonException;
+use JsonException;
 use PDO;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -153,7 +153,7 @@ class ReadingsService
      * @param array $readingsData
      * @throws AppException
      */
-    public function saveTmpReadings(array $readingsData)
+    public function saveTmpReadings(array $readingsData): void
     {
         // load settings
         $filename = sprintf('%s.json', $this->customer['code_contract']);
