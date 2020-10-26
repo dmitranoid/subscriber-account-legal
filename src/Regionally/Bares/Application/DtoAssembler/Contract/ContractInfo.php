@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Regionally\Bares\Application\DtoAssembler\Contract;
 
 
-use App\Application\DTO\Contract\ContractInfoDto;
+use App\Application\DTO\Contract\ContractDto;
 
 class ContractInfo
 {
-    public static function transform($data): ContractInfoDto
+    public static function transform($data): ContractDto
     {
-        return new ContractInfoDto(
+        return new ContractDto(
             $data['kp'],
             $data['dop'],
             new \DateTime($data['datd']),

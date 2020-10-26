@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Service\Contract;
 
 
-use App\Application\DTO\Contract\ContractInfoDto;
+use App\Application\DTO\Contract\ContractDto;
 use App\Infrastructure\Persistence\Contract\SqlContractRepository;
 use App\Regionally\Bares\Application\DtoAssembler\Contract\ContractInfo as ContractInfoDtoAssembler;
 use PDO;
@@ -20,7 +20,7 @@ final class ContractInfoService implements ContractInfoServiceInterface
         $this->pdo = $pdo;
     }
 
-    public function getContractInfo($contractNo): ContractInfoDto
+    public function getContractInfo($contractNo): ContractDto
     {
         $contractRepository = new SqlContractRepository($this->pdo);
         return ContractInfoDtoAssembler::transform($contractRepository->getById($contractNo));

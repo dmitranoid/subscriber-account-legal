@@ -5,16 +5,10 @@
 {% set connectionTypes= {'1':'показания', '2':'расчет по индексам', '3':'мощность', '4':'сумматор'} %}
 
 {% block content %}
-    {% if contract.npp1 %}
-        {% set orgName = contract.npp1 ~ " " ~ contract.npp2 %}
-    {% else %}
-        {% set orgName = contract.np1 %}
-    {% endif %}
 
 
-
-<h4 class="underline"><b>Договор <u>№{{ contract.kp }}</u></b></h4>
-<h5>{{ orgName }}</h5>
+<h4 class="underline"><b>Договор <u>№{{ contract.nom }}</u></b></h4>
+<h5>{{ contract.name }}</h5>
 <div class="table-responsive">
     <table class="table table-hover table-bordered">
         <tbody>
@@ -24,7 +18,7 @@
             </tr>
             <tr>
                 <th>Наименование ТУ</th>
-                <td>{{ connection.naim }}</td>
+                <td>{{ connection.name }}</td>
             </tr>
             <tr>
                 <th>Способ расчетов</th>
@@ -46,19 +40,19 @@
         <tbody>
             <tr>
                 <th>Тип прибора</th>
-                <td>{{ connection.tsch }}</td>
+                <td>{{ connection.counterModel }}</td>
             </tr>
             <tr>
                 <th>Заводской номер</th>
-                <td>{{ connection.nst }}</td>
+                <td>{{ connection.counterNo }}</td>
             </tr>
             <tr>
                 <th>Дата установки</th>
-                <td>{{ connection.datu ? connection.datu|date('d.m.Y') : '-' }}</td>
+                <td>{{ connection.counterInstallDate ? connection.counterInstallDate|date('d.m.Y') : '-' }}</td>
             </tr>
             <tr>
                 <th>Коэфф. трансформации</th>
-                <td>{{ connection.ktt }}</td>
+                <td>{{ connection.counterTrKoeff }}</td>
             </tr>
         </tbody>
     </table>

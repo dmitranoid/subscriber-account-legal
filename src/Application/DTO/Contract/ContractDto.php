@@ -6,7 +6,7 @@ namespace App\Application\DTO\Contract;
 
 use DateTime;
 
-final class ContractInfoDto
+final class ContractDto
 {
     public string $nom;
     public string $nomAdd;
