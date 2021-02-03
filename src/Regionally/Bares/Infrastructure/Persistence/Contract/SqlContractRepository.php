@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace App\Infrastructure\Persistence\Contract;
+namespace App\Regionally\Bares\Infrastructure\Persistence\Contract;
 
 
 use App\Domain\Contract\ContractRepository;

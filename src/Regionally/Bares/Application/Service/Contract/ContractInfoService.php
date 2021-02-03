@@ -2,12 +2,13 @@
 declare(strict_types=1);
 
 
-namespace App\Application\Service\Contract;
+namespace App\Regionally\Bares\Application\Service\Contract;
 
 
 use App\Application\DTO\Contract\ContractDto;
-use App\Infrastructure\Persistence\Contract\SqlContractRepository;
+use App\Application\Service\Contract\ContractInfoServiceInterface;
 use App\Regionally\Bares\Application\DtoAssembler\Contract\ContractInfo as ContractInfoDtoAssembler;
+use App\Regionally\Bares\Infrastructure\Persistence\Contract\SqlContractRepository;
 use PDO;
 
 final class ContractInfoService implements ContractInfoServiceInterface

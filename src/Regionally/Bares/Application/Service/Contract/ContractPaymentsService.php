@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace App\Application\Service\Contract;
+namespace App\Regionally\Bares\Application\Service\Contract;
 
 
 use App\Infrastructure\Persistence\Invoice\SqlInvoiceRepository;

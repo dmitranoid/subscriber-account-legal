@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace App\Infrastructure\Persistence;
+namespace App\Regionally\Bares\Infrastructure\Persistence;
 
 
 use App\Application\Exceptions\AppDbException;

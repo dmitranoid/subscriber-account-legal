@@ -2,11 +2,11 @@
 declare(strict_types=1);
 
 
-namespace App\Infrastructure\Persistence\Connection;
+namespace App\Regionally\Bares\Infrastructure\Persistence\Connection;
 
 
-use App\Infrastructure\Persistence\ArchiveTableTrait;
-use App\Infrastructure\Persistence\GenericSqlRepository;
+use App\Regionally\Bares\Infrastructure\Persistence\ArchiveTableTrait;
+use App\Regionally\Bares\Infrastructure\Persistence\GenericSqlRepository;
 
 final class SqlConnectionArchRepository extends GenericSqlRepository
 {

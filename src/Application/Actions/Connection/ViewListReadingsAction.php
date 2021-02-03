@@ -7,7 +7,10 @@ namespace App\Application\Actions\Connection;
 
 use App\Application\Actions\Action;
 use App\Application\Exceptions\AppException;
+use App\Application\Helpers\AppHelper;
+use App\Application\Service\Abonent\AbonentServiceInterface;
 use App\Application\Service\Auth\UserAuthService;
+use App\Application\Service\Connection\ConnectionServiceInterface;
 use App\Application\Service\Contract\ContractInfoServiceInterface;
 use App\Application\Service\Readings\ReadingsService;
 use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
@@ -26,17 +29,14 @@ class ViewListReadingsAction extends Action
             $this->logger->error(
                 'не найден договор {contractNom}, пользователь {login}',
                 [
-                    'contractNom'=> $contractNom,
+                    'contractNom' => $contractNom,
                     'login' => $auth->getUser()['login']]);
             throw new AppException('не найден договор');
         }
 
-        $connectionsRepository = new SqlConnectionRepository($this->pdo);
-        $abonentsRepository = new SqlAbonentRepository($this->pdo);
-
-        $contract = (new ContractInfoServiceInterface($this->pdo))->getContractInfo($contractNom);
-        $connectionsList = $connectionsRepository->getByContract($contractNom);
-        $abonentsList = $abonentsRepository->getByContract($contractNom);
+        $contract = AppHelper::container()->get(ContractInfoServiceInterface::class)->getContractInfo($contractNom);
+        $connectionsList = AppHelper::container()->get(ConnectionServiceInterface::class)->getByContract($contractNom);
+        $abonentsList = AppHelper::container()->get(AbonentServiceInterface::class)->getByContract($contractNom);
 
         /* combine abonents and connections */
         usort($abonentsList, function ($a, $b) {

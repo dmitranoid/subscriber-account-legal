@@ -2,10 +2,10 @@
 declare(strict_types=1);
 
 
-namespace App\Infrastructure\Persistence\Credit;
+namespace App\Regionally\Bares\Infrastructure\Persistence\Credit;
 
 
-use App\Infrastructure\Persistence\GenericSqlRepository;
+use App\Regionally\Bares\Infrastructure\Persistence\GenericSqlRepository;
 
 final class SqlCreditRepository extends GenericSqlRepository
 {

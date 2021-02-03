@@ -6,7 +6,10 @@ namespace App\Application\Actions\Connection;
 
 
 use App\Application\Actions\Action;
+use App\Application\Helpers\AppHelper;
+use App\Application\Service\Abonent\AbonentServiceInterface;
 use App\Application\Service\Auth\UserAuthService;
+use App\Application\Service\Connection\ConnectionServiceInterface;
 use App\Application\Service\Contract\ContractInfoServiceInterface;
 use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
 use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
@@ -20,12 +23,14 @@ class ViewConnectionsListAction extends Action
         $auth = new UserAuthService($this->logger, $this->pdo, new Session());
         $contractNom = $auth->getUser()['code_contract'] ?? null;
 
-        $connectionsRepository = new SqlConnectionRepository($this->pdo);
-        $abonentsRepository = new SqlAbonentRepository($this->pdo);
+        /** @var ConnectionServiceInterface $connectionService */
+        $connectionService = AppHelper::container()->get(ConnectionServiceInterface::class);
+        $abonentService = AppHelper::container()->get(AbonentServiceInterface::class);
+        $contractService = AppHelper::container()->get(ContractInfoServiceInterface::class);
 
-        $contract = (new ContractInfoServiceInterface($this->pdo))->getContractInfo($contractNom);
-        $connectionsList = $connectionsRepository->getByContract($contractNom);
-        $abonentsList = $abonentsRepository->getByContract($contractNom);
+        $contract = $contractService->getContractInfo($contractNom);
+        $connectionsList = $connectionService->getByContract($contractNom);
+        $abonentsList = $abonentService->getByContract($contractNom);
 
         array_walk($connectionsList, function (&$item) {
             $tuUrl = $item['naim'];

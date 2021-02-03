@@ -2,14 +2,14 @@
 declare(strict_types=1);
 
 
-namespace App\Infrastructure\Persistence\Abonent;
+namespace App\Regionally\Bares\Infrastructure\Persistence\Abonent;
 
 
 use App\Infrastructure\Persistence\GenericSqlRepository;
 
 final class SqlAbonentRepository extends GenericSqlRepository
 {
-    protected $tableName='ambab';
+    protected $tableName = 'ambab';
     protected $identity = ['kp', 'nab'];
 
 

@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace App\Infrastructure\Persistence;
+namespace App\Regionally\Bares\Infrastructure\Persistence;
 
 
 trait ArchiveTableTrait
@@ -10,7 +10,8 @@ trait ArchiveTableTrait
     private $archPeriod;
     private $originalTableName;
 
-    public function setPeriod($year, $month){
+    public function setPeriod($year, $month)
+    {
         $this->archPeriod = $year . $month;
         if (empty($this->originalTableName)) {
             $this->originalTableName = $this->tableName;

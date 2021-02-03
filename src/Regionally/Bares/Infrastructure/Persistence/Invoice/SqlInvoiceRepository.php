@@ -2,10 +2,10 @@
 declare(strict_types=1);
 
 
-namespace App\Infrastructure\Persistence\Invoice;
+namespace App\Regionally\Bares\Infrastructure\Persistence\Invoice;
 
 
-use App\Infrastructure\Persistence\GenericSqlRepository;
+use App\Regionally\Bares\Infrastructure\Persistence\GenericSqlRepository;
 use DateTime;
 
 final class SqlInvoiceRepository extends GenericSqlRepository

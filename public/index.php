@@ -15,12 +15,15 @@ use Slim\Factory\ServerRequestCreatorFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
 
+require __DIR__ . '/../src/Application/Helpers/AppHelper.php';
+
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
 
 if (false) { // Should be set to true in production
-	$containerBuilder->enableCompilation(__DIR__ . '/../storage/cache/php-di/');
+    $containerBuilder->enableCompilation(__DIR__ . '/../storage/cache/php-di/');
 }
+
 
 // Set up settings
 $settings = require __DIR__ . '/../app/settings.php';
@@ -31,7 +34,8 @@ $dependencies = require __DIR__ . '/../app/dependencies.php';
 $dependencies($containerBuilder);
 
 // Set up repositories
-$repositories = require __DIR__ . '/../app/repositories.php';
+$region = 'Bares';
+$repositories = require __DIR__ . '/../app/' . $region . '/repositories.php';
 $repositories($containerBuilder);
 
 // Build PHP-DI Container instance
