@@ -24,7 +24,7 @@ final class SqlConnectionRepository extends GenericSqlRepository
     {
         $data = $this->getAllSql()
             ->select('ambtu.*, amtsch.*, amstar.naim tarnaim')
-            ->leftJoin('amtsch on amtsch.ksch = ambtu.ts')
+            ->leftJoin('amtsch on amtsch.ksch = ambtu.ksch')
             ->leftJoin('amstar on amstar.nt = ambtu.nt1')
             ->where('ambtu.kp', $contractNom)
             ->where('ambtu.nab', $abonentNom)
