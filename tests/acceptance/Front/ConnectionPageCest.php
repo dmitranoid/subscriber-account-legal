@@ -1,7 +1,7 @@
-<?php namespace front;
+<?php
 
 
-class SendReadingsPageCest
+class ConnectionPageCest
 {
     public function _before(AcceptanceTester $I)
     {

@@ -1,18 +1,16 @@
-<?php namespace front;
+<?php
 
-
-use \AcceptanceTester;
 
 class LogoutCest
 {
     public function _before(AcceptanceTester $I)
     {
-        $I->LoginAsCustomer();
     }
 
     // tests
-    public function tryToTest(AcceptanceTester $I)
+    public function tryToTest(\Step\Acceptance\Front $I)
     {
+        $I->loginAsCustomer();
         $I->see('Выйти');
         $I->click('Выйти');
         $I->seeCurrentUrlEquals('/login');
