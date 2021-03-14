@@ -7,6 +7,7 @@ namespace App\Regionally\Bares\Application\Service\Abonent;
 
 use App\Application\DTO\Abonent\AbonentInfoDto;
 use App\Application\Service\Abonent\AbonentServiceInterface;
+use App\Regionally\Bares\Application\DtoAssembler\Abonent\AbonentInfo;
 use App\Regionally\Bares\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
 use PDO;
 
@@ -26,6 +27,7 @@ class AbonentService implements AbonentServiceInterface
 
     public function getAbonentInfo(string $contractNom, string $abonentNom): ?AbonentInfoDto
     {
-        return (new SqlAbonentRepository($this->pdo))->getByNom($contractNom, $abonentNom);
+        $data = (new SqlAbonentRepository($this->pdo))->getByNom($contractNom, $abonentNom);
+        return AbonentInfo::transform($data);
     }
 }

@@ -7,6 +7,7 @@ namespace App\Regionally\Bares\Infrastructure\Persistence\Connection;
 
 use App\Regionally\Bares\Infrastructure\Persistence\ArchiveTableTrait;
 use App\Regionally\Bares\Infrastructure\Persistence\GenericSqlRepository;
+use DateTime;
 
 final class SqlConnectionArchRepository extends GenericSqlRepository
 {
@@ -50,33 +51,15 @@ final class SqlConnectionArchRepository extends GenericSqlRepository
         return $archData;
     }
 
-    /**
-     * получить список периодов
-     * костыль !!!!
-     *
-     */
     private function getPeriods()
     {
-        return [
-            ['2019', '01'],
-            ['2019', '02'],
-            ['2019', '03'],
-            ['2019', '04'],
-            ['2019', '05'],
-            ['2019', '06'],
-            ['2019', '07'],
-            ['2019', '08'],
-            ['2019', '09'],
-            ['2019', '10'],
-            ['2019', '11'],
-            ['2019', '12'],
-            ['2020', '01'],
-            ['2020', '02'],
-            ['2020', '03'],
-            ['2020', '04'],
-            ['2020', '05'],
-            ['2020', '06'],
-            ['2020', '07'],
-        ];
+        $startYear = 2019;
+        $periods = [];
+        for ($year = $startYear; $year <= (int)(new DateTime())->format('Y'); $year++) {
+            for ($month = 1; $month <= 12; $month++) {
+                $periods[] = [(string)$year, sprintf('%02d', $month)];
+            }
+        }
+        return $periods;
     }
 }

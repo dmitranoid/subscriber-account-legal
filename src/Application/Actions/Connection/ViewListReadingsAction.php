@@ -39,15 +39,15 @@ class ViewListReadingsAction extends Action
         $abonentsList = AppHelper::container()->get(AbonentServiceInterface::class)->getByContract($contractNom);
 
         /* combine abonents and connections */
-        usort($abonentsList, function ($a, $b) {
+        usort($abonentsList, static function ($a, $b) {
             return $a['nab'] - $b['nab'];
         });
-        usort($connectionsList, function ($a, $b) {
+        usort($connectionsList, static function ($a, $b) {
             return $a['nab'] - $b['nab'];
         });
 
         reset($connectionsList);
-        array_walk($abonentsList, function (&$abonent) use (&$connectionsList) {
+        array_walk($abonentsList, static function (&$abonent) use (&$connectionsList) {
             while ($abonent['nab'] === (current($connectionsList)['nab'] ?? '')) {
                 $abonent['connections'][] = array_shift($connectionsList);
             }

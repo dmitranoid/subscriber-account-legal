@@ -11,6 +11,14 @@ class AbonentInfo
 {
     public static function transform($data): AbonentInfoDto
     {
-
+        $address = $data['tip_np'] . $data['name_np'] . ', '
+            . $data['tip_ul'] . $data['name_ul'] . ', '
+            . (!empty($data['dom']) ? 'д. ' . $data['dom'] . ' ' . $data['korpus'] : '');
+        return new AbonentInfoDto(
+            $data['kp'],
+            $data['nab'],
+            $data['naim'],
+            $address
+        );
     }
 }

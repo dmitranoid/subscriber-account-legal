@@ -14,14 +14,14 @@ use PDO;
 
 class GenericSqlRepository
 {
-    /** @var Query */
-    protected $fpdo;
 
-    protected $tableName = '';
+    protected Query $fpdo;
+
+    protected string $tableName = '';
 
     protected $identity = 'id';
 
-    protected $allowedFields = [];
+    protected array $allowedFields = [];
 
     public function __construct(PDO $pdo)
     {
@@ -42,9 +42,6 @@ class GenericSqlRepository
             ->select('*');
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string
     {
         return $this->tableName;
@@ -65,7 +62,7 @@ class GenericSqlRepository
      * @param $data
      * @throws AppDbException
      */
-    public function save($data)
+    public function save($data): void
     {
         {
             $data = ArrayHelper::filterArrayKeys($data, $this->getAllowedFields());
@@ -98,7 +95,7 @@ class GenericSqlRepository
      * @param $data
      * @throws AppDbException
      */
-    public function update($data)
+    public function update($data): void
     {
         $id = $data[$this->identity];
         unset($data[$this->identity]);

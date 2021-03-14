@@ -13,8 +13,7 @@ use PDO;
 
 final class ContractInfoService implements ContractInfoServiceInterface
 {
-    /** @var PDO */
-    protected $pdo;
+    protected PDO $pdo;
 
     public function __construct(PDO $pdo)
     {

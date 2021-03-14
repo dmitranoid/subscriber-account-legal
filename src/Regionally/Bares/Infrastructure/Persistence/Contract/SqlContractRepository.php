@@ -10,7 +10,7 @@ use App\Infrastructure\Persistence\GenericSqlRepository;
 
 class SqlContractRepository extends GenericSqlRepository implements ContractRepository
 {
-    protected $tableName = 'splat';
+    protected string $tableName = 'splat';
     protected $identity = 'kp';
 
 

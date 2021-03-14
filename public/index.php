@@ -25,6 +25,7 @@ if (false) { // Should be set to true in production
 }
 
 
+// common
 // Set up settings
 $settings = require __DIR__ . '/../app/settings.php';
 $settings($containerBuilder);
@@ -33,10 +34,14 @@ $settings($containerBuilder);
 $dependencies = require __DIR__ . '/../app/dependencies.php';
 $dependencies($containerBuilder);
 
-// Set up repositories
 $region = 'Bares';
+// Set up regional container
+$settings = require __DIR__ . '/../app/' . $region . '/settings.php';
+$settings($containerBuilder);
 $repositories = require __DIR__ . '/../app/' . $region . '/repositories.php';
 $repositories($containerBuilder);
+$dependencies = require __DIR__ . '/../app/' . $region . '/dependencies.php';
+$dependencies($containerBuilder);
 
 // Build PHP-DI Container instance
 $container = $containerBuilder->build();
@@ -55,7 +60,7 @@ $routes = require __DIR__ . '/../app/routes.php';
 $routes($app);
 
 /** @var bool $displayErrorDetails */
-$displayErrorDetails = $container->get('settings')['displayErrorDetails'];
+$displayErrorDetails = $container->get('settings')['displayErrorDetails'] ?? true;
 
 // Create Request object from globals
 $serverRequestCreator = ServerRequestCreatorFactory::create();

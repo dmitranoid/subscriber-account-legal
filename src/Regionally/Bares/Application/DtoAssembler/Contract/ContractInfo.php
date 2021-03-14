@@ -9,7 +9,7 @@ use App\Application\DTO\Contract\ContractDto;
 
 class ContractInfo
 {
-    public static function transform($data): ContractDto
+    public static function transform(array $data): ContractDto
     {
         return new ContractDto(
             $data['kp'],

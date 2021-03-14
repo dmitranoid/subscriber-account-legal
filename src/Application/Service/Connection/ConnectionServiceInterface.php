@@ -6,14 +6,19 @@ namespace App\Application\Service\Connection;
 
 
 use App\Application\DTO\Connection\ConnectionDto;
+use App\Application\DTO\Connection\ReadingHistoryDto;
 
 interface ConnectionServiceInterface
 {
     /**
-     * @param $contractNom
-     * @return ConnectionDto[] |null
+     * @return ConnectionDto[]|null
      */
-    public function getByContract($contractNom): ?array;
+    public function getByContract(string $contractNom): ?array;
 
-    public function getConnectionInfo($contractNom, $abonentNom, $tuName): ?ConnectionDto;
+    public function getConnectionInfo(string $contractNom, string $abonentNom, string $tuName): ?ConnectionDto;
+
+    /**
+     * @return ReadingHistoryDto[]|null
+     */
+    public function getReadingsHistory(string $contractNom, string $abonentNom, string $tuName): ?array;
 }

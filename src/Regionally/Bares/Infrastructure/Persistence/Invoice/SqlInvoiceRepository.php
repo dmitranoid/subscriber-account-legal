@@ -22,7 +22,7 @@ final class SqlInvoiceRepository extends GenericSqlRepository
             ->where('kp', $contractNom)
 //           ->where('vpt', ['A', 'R'])     // виды платежных требований
             ->where('protkaz', '')          // если не пустое, то отказная платежка
-            ->where('(rp like \'119%\' or rp like \'120%\')')
+            ->where('(rp like \'119%\' or rp like \'120%\' or rp like \'121%\' )')
             ->group('kp, rp, data, akt_nomer')
             ->order('data, rp')
             ->fetchAll();
@@ -35,7 +35,7 @@ final class SqlInvoiceRepository extends GenericSqlRepository
             ->select('kp, sum(`sum`) sumTotal', true)
             ->where('kp', $contractNom)
             ->where('protkaz', '')
-            ->where('(rp like \'119%\' or rp like \'120%\')')
+            ->where('(rp like \'119%\' or rp like \'120%\ or rp like \'121%\')')
             ->group('kp')
             ->order('rp')
             ->fetch();

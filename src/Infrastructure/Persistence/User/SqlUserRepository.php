@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\User;
 
 
-use App\Application\Exceptions\AppDbException;
 use App\Infrastructure\Persistence\GenericSqlRepository;
-use Envms\FluentPDO\Exception as FpdoException;
 use Exception;
 
 class SqlUserRepository extends GenericSqlRepository
 {
-    protected $tableName = 'user';
+    protected string $tableName = 'user';
 
     public function getByLoginForRegion($region, $login): ?array
     {

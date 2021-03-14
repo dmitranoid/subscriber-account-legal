@@ -10,8 +10,8 @@ use DateTime;
 
 final class SqlPaymentRepository extends GenericSqlRepository
 {
-    protected $tableName = 'amposop';
-    protected $identity = 'rp';
+    protected string $tableName = 'amposop';
+    protected string $identity = 'rp';
 
     public function getByContract($contractNom)
     {

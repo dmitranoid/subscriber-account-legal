@@ -29,7 +29,7 @@ use Psr\Log\LoggerInterface;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 
-return function (App $app) {
+return static function (App $app) {
     /** @var ContainerInterface $container */
     $container = $app->getContainer();
     $settings = $container->get('settings');
@@ -77,7 +77,7 @@ return function (App $app) {
             $group->get('/user[/{login}]', ViewUserAction::class)->setName('admin.user.show');
             $group->post('/user/{login}', EditUserAction::class)->setName('admin.user.edit');
             $group->post('/user', NewUserAction::class)->setName('admin.user.create');
-            //fixme delete -> post only !!!!
+            // fixme delete -> post only !!!!
             $group->any('/user/{login}/delete', DeleteUserAction::class)->setName('admin.user.delete');
 //        $group->post('/user/{login}', DoEditUserAction::class);
         })->add(ManagerGuardedMiddleware::class);

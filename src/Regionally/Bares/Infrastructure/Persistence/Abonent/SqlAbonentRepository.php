@@ -9,7 +9,7 @@ use App\Infrastructure\Persistence\GenericSqlRepository;
 
 final class SqlAbonentRepository extends GenericSqlRepository
 {
-    protected $tableName = 'ambab';
+    protected string $tableName = 'ambab';
     protected $identity = ['kp', 'nab'];
 
 

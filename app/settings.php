@@ -5,7 +5,7 @@ use App\Application\Service\Contract\ContractDocsService;
 use DI\ContainerBuilder;
 use Monolog\Logger;
 
-return function (ContainerBuilder $containerBuilder) {
+return static function (ContainerBuilder $containerBuilder) {
     // Global Settings Object
     $containerBuilder->addDefinitions([
         'settings' => [
@@ -19,35 +19,6 @@ return function (ContainerBuilder $containerBuilder) {
             'twig' => [
                 'path' => __DIR__ . '/../templates/',
                 'cachePath' => false,
-            ],
-            'dbf-data' => [
-            ],
-            'db' => [
-                'dbf' => [
-                     'dir' => realpath(__DIR__ . '/../data/dbf'),
-                ],
-                'operational' => [
-                    'driver' => 'sqlite',
-                    'db' => __DIR__ . '/../data/sqlite/legal-operational.sqlite3',
-                    'username' => '',
-                    'password' => '',
-                ],
-                'archive' => [
-                    'driver' => 'sqlite',
-                    'db' => __DIR__ . '/../data/sqlite/legal-arch.sqlite3',
-                    'username' => '',
-                    'password' => '',
-                ],
-                'administration' => [
-                    'driver' => 'sqlite',
-                    'db' => __DIR__ . '/../data/sqlite/legal-administration.sqlite3',
-                    'username' => '',
-                    'password' => '',
-                ],
-
-            ],
-            ContractDocsService::class => [
-                'docStorageRoot' => '\\vms8\prom_arch\AMSRV\schet\\',
             ],
         ],
     ]);
