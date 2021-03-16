@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Service\Auth;
 
 
+use App\Application\DTO\User\UserDto;
 use App\Infrastructure\Persistence\User\SqlUserRepository;
 use App\Infrastructure\Service\Session\SessionInterface;
 use PDO;
@@ -33,16 +34,17 @@ class UserAuthService
 
     public function isCustomer()
     {
+        /** @var UserDto $user */
         $user = $this->getUser();
         if (empty($user)) {
             return false;
         }
-        return ('customer' == ($user['code_group'] ?? ''));
+        return ('customer' == ($user->code_group ?? ''));
     }
 
-    public function getUser(): array
+    public function getUser(): UserDto
     {
-        return $this->session->get('user') ?? [];
+        return $this->session->get('user');
     }
 
     public function isManager()
@@ -51,7 +53,7 @@ class UserAuthService
         if (empty($user)) {
             return false;
         }
-        return ('manager' == ($user['code_group'] ?? ''));
+        return ('manager' == ($user->code_group ?? ''));
     }
 
     public function isAdmin()
@@ -60,7 +62,7 @@ class UserAuthService
         if (empty($user)) {
             return false;
         }
-        return ('admin' == ($user['code_group'] ?? ''));
+        return ('admin' == ($user->code_group ?? ''));
     }
 
     public function doLogin(string $region, string $login, string $password): bool
@@ -71,8 +73,8 @@ class UserAuthService
             $this->logger->alert('login not found', ['region' => $region, 'login' => $login]);
             return false;
         }
-        if (password_verify($password, $user['password'])) {
-            $this->logger->info('user logged in', ['region' => $user['region'], 'login' => $user['login']]);
+        if (password_verify($password, $user->password)) {
+            $this->logger->info('user logged in', ['region' => $user->region, 'login' => $user->login]);
             $this->saveToSession($user);
             return true;
         }
@@ -92,8 +94,8 @@ class UserAuthService
     public function doLogout()
     {
         $user = $this->getUser();
-        $login = $user['login'] ?? 'EMPTY_USER';
-        $region = $user['region'] ?? 'EMPTY_REGION';
+        $login = $user->login ?? 'EMPTY_USER';
+        $region = $user->region ?? 'EMPTY_REGION';
         $this->logger->info('user {login}({region}) logged out', ['region' => $region, 'login' => $login]);
         $this->saveToSession(null);
     }

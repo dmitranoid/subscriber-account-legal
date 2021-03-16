@@ -33,8 +33,8 @@ class LoginAction extends AuthAction
             new Session()
         );
         if (!$authService->doLogin($region, $login, $password)) {
-            $this->setFormOldData(['login'=>$login]);
-            $this->setFormErrors(['login'=>['неправильные имя пользователя или пароль']]);
+            $this->setFormOldData(['login' => $login, 'region' => $region]);
+            $this->setFormErrors(['login' => ['неправильные имя пользователя или пароль']]);
             return $this->withRedirect(UriHelper::urlFor('login'));
         }
 

@@ -18,6 +18,7 @@ use PDO;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use Slim\Flash\Messages;
+use function App\Application\Helpers\AppHelper;
 
 class ViewContractDocsAction extends Action
 {
@@ -30,12 +31,12 @@ class ViewContractDocsAction extends Action
     protected function action(): Response
     {
         $auth = new UserAuthService($this->logger, $this->pdo, new Session());
-        $contractNom = $auth->getUser()['code_contract'] ?? null;
+        $contractNom = ($auth->getUser())->code_contract ?? null;
         if (empty($contractNom)) {
             $this->logger->error('не найден договор');
             throw new AppException('не найден договор');
         }
-        $contractInfo = (new ContractInfoServiceInterface($this->pdo))->getContractInfo($contractNom);
+        $contractInfo = (AppHelper:: ($this->pdo))->getContractInfo($contractNom);
         // TODO брать путь к документам из настроек
         $documentsStorageRoot = 'F:/lkprom-docs/';  // под windows буква диска с большой буквы !!!
         //$documentsStorageRoot = 'D:/work/legal-docs/';  // под windows буква диска с большой буквы !!!

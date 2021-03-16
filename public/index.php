@@ -20,10 +20,9 @@ require __DIR__ . '/../src/Application/Helpers/AppHelper.php';
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
 
-if (false) { // Should be set to true in production
+if (true) { // Should be set to true in production
     $containerBuilder->enableCompilation(__DIR__ . '/../storage/cache/php-di/');
 }
-
 
 // common
 // Set up settings

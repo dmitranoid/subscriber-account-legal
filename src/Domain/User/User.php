@@ -3,86 +3,29 @@ declare(strict_types=1);
 
 namespace App\Domain\User;
 
-use JsonSerializable;
 
-class User implements JsonSerializable
+class User
 {
-    /**
-     * @var int|null
-     */
-    private $id;
 
-    /**
-     * @var string
-     */
-    private $username;
+    private int $id;
 
-    /**
-     * @var string
-     */
-    private $firstName;
+    private string $login;
 
-    /**
-     * @var string
-     */
-    private $lastName;
+    private string $password;
 
-    /**
-     * @param int|null  $id
-     * @param string    $username
-     * @param string    $firstName
-     * @param string    $lastName
-     */
-    public function __construct(?int $id, string $username, string $firstName, string $lastName)
-    {
-        $this->id = $id;
-        $this->username = $username;
-        $this->firstName = $firstName;
-        $this->lastName = $lastName;
-    }
+    private string $code_group;
 
-    /**
-     * @return int|null
-     */
+    private string $code_contract;
+
+    private string $email;
+
+    private string $phones;
+
+    private string $region;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getUsername(): string
-    {
-        return strtolower($this->username);
-    }
-
-    /**
-     * @return string
-     */
-    public function getFirstName(): string
-    {
-        return ucfirst($this->firstName);
-    }
-
-    /**
-     * @return string
-     */
-    public function getLastName(): string
-    {
-        return ucfirst($this->lastName);
-    }
-
-    /**
-     * @return array
-     */
-    public function jsonSerialize()
-    {
-        return [
-            'id' => $this->id,
-            'username' => $this->username,
-            'firstName' => $this->firstName,
-            'lastName' => $this->lastName,
-        ];
-    }
 }

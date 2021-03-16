@@ -18,7 +18,7 @@ return static function (ContainerBuilder $containerBuilder) {
             ],
             'twig' => [
                 'path' => __DIR__ . '/../templates/',
-                'cachePath' => false,
+                'cachePath' => __DIR__ . '/../storage/cache/twig/',
             ],
         ],
     ]);
