@@ -2,13 +2,13 @@
 declare(strict_types=1);
 
 
-namespace App\Regionally\Bares\Application\Service\Contract;
+namespace App\Regionally\Bares\Application\Service\Document;
 
 
 use App\Infrastructure\Service\DocumentFinder\DocumentFinder;
-use DateTime;
+use DateTimeImmutable;
 
-final class ContractDocsService
+final class DocumentService
 {
     private DocumentFinder $documentFinderService;
     private string $docStorageRoot;
@@ -19,7 +19,7 @@ final class ContractDocsService
         $this->docStorageRoot = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $docStorageRoot);
     }
 
-    public function getDocumentsByContract($contractNo, DateTime $periodStart, DateTime $periodEnd): ?array
+    public function getDocumentsByContract($contractNo, \DateTimeImmutable $periodStart, \DateTimeImmutable $periodEnd): ?array
     {
         $docFilesList = $this->documentFinderService->getDocsByContract($contractNo, $periodStart, $periodEnd);
         $docList = [];
