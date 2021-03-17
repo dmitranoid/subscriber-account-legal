@@ -10,6 +10,7 @@ use App\Application\Exceptions\AppException;
 use App\Application\Service\Auth\UserAuthService;
 use App\Application\Service\Contract\ContractDocsService;
 use App\Application\Service\Contract\ContractInfoServiceInterface;
+use App\Application\Service\Document\DocumentServiceInterface;
 use App\Application\View\ViewInterface;
 use App\Infrastructure\Service\DocumentFinder\DocumentFinder;
 use App\Infrastructure\Service\Session\Session;
@@ -18,7 +19,7 @@ use PDO;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use Slim\Flash\Messages;
-use function App\Application\Helpers\AppHelper;
+use App\Application\Helpers\AppHelper;
 
 class ViewContractDocsAction extends Action
 {
@@ -36,15 +37,9 @@ class ViewContractDocsAction extends Action
             $this->logger->error('не найден договор');
             throw new AppException('не найден договор');
         }
-        $contractInfo = (AppHelper:: ($this->pdo))->getContractInfo($contractNom);
-        // TODO брать путь к документам из настроек
-        $documentsStorageRoot = 'F:/lkprom-docs/';  // под windows буква диска с большой буквы !!!
-        //$documentsStorageRoot = 'D:/work/legal-docs/';  // под windows буква диска с большой буквы !!!
+        $contractInfo = (AppHelper::container()->get(ContractInfoServiceInterface::class))->getContractInfo($contractNom);
 
-        $docsService = new ContractDocsService(
-            new DocumentFinder($documentsStorageRoot),
-            $documentsStorageRoot
-        );
+        $docsService = AppHelper::container()->get(DocumentServiceInterface::class)->getDocumentsByContract;
 
         $docList = $docsService->getDocumentsByContract(
             $contractNom,
