@@ -2,15 +2,15 @@
 declare(strict_types=1);
 
 
-namespace App\Regionally\Bares\Infrastructure\Persistence\Connection;
+namespace App\Regionally\Bares\Infrastructure\ReadModel\Connection;
 
 
-use App\Regionally\Bares\Infrastructure\Persistence\GenericSqlRepository;
+use App\Regionally\Bares\Infrastructure\ReadModel\GenericSqlFinder;
 
-final class SqlConnectionRepository extends GenericSqlRepository
+final class ConnectionFinder extends GenericSqlFinder
 {
 
-    protected $tableName = 'ambtu';
+    protected string $tableName = 'ambtu';
 
 
     public function getByContract($contractNom)

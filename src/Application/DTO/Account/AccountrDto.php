@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Application\DTO\User;
+namespace App\Application\DTO\Account;
 
 
-class UserDto
+class AccountrDto
 {
     public string $id;
     public string $login;

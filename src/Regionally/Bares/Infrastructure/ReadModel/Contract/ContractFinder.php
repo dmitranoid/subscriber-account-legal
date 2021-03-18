@@ -2,13 +2,13 @@
 declare(strict_types=1);
 
 
-namespace App\Regionally\Bares\Infrastructure\Persistence\Contract;
+namespace App\Regionally\Bares\Infrastructure\ReadModel\Contract;
 
 
 use App\Domain\Contract\ContractRepository;
 use App\Infrastructure\Persistence\GenericSqlRepository;
 
-class SqlContractRepository extends GenericSqlRepository implements ContractRepository
+class ContractFinder extends GenericSqlRepository
 {
     protected string $tableName = 'splat';
     protected $identity = 'kp';
@@ -24,7 +24,7 @@ class SqlContractRepository extends GenericSqlRepository implements ContractRepo
             ->fetchAll();
     }
 
-    public function getByCode($code): ?array
+    public function getByCode(string $code): ?array
     {
         return $this->getById($code);
     }

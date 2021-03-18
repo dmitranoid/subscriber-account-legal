@@ -2,19 +2,19 @@
 declare(strict_types=1);
 
 
-namespace App\Regionally\Bares\Infrastructure\Persistence\Invoice;
+namespace App\Regionally\Bares\Infrastructure\ReadModel\Invoice;
 
 
-use App\Regionally\Bares\Infrastructure\Persistence\GenericSqlRepository;
+use App\Regionally\Bares\Infrastructure\ReadModel\GenericSqlFinder;
 use DateTime;
 
-final class SqlInvoiceRepository extends GenericSqlRepository
+final class InvoiceFinder extends GenericSqlFinder
 {
 
-    protected $tableName = 'amvyst';
-    protected $identity = 'kp';
+    protected string $tableName = 'amvyst';
+    protected string $identity = 'kp';
 
-    public function getByContract($contractNom)
+    public function getByContract(string $contractNom)
     {
         //TODO переделать проверку на период
         return $this->getAllSql()
@@ -40,5 +40,4 @@ final class SqlInvoiceRepository extends GenericSqlRepository
             ->order('rp')
             ->fetch();
     }
-
 }

@@ -10,8 +10,8 @@ use App\Application\DTO\Connection\ReadingHistoryDto;
 use App\Application\Service\Connection\ConnectionServiceInterface;
 use App\Regionally\Bares\Application\DtoAssembler\Connection\ConnectionInfo;
 use App\Regionally\Bares\Application\DtoAssembler\Connection\ReadingHistory;
-use App\Regionally\Bares\Infrastructure\Persistence\Connection\SqlConnectionArchRepository;
-use App\Regionally\Bares\Infrastructure\Persistence\Connection\SqlConnectionRepository;
+use App\Regionally\Bares\Infrastructure\ReadModel\Connection\ConnectionArchFinder;
+use App\Regionally\Bares\Infrastructure\ReadModel\Connection\ConnectionFinder;
 use PDO;
 
 class ConnectionService implements ConnectionServiceInterface
@@ -29,14 +29,18 @@ class ConnectionService implements ConnectionServiceInterface
      */
     public function getByContract($contractNom): ?array
     {
-        $connectionsRepository = new SqlConnectionRepository($this->pdo);
-        return $connectionsRepository->getByContract($contractNom);
+        $connectionFinder = new ConnectionFinder($this->pdo);
+        $connections = [];
+        foreach ($connectionFinder->getByContract($contractNom) ?? [] as $item) {
+            $connections[] = ConnectionInfo::transform($item);
+        }
+        return $connections;
     }
 
     public function getConnectionInfo(string $contractNom, string $abonentNom, string $tuName): ?ConnectionDto
     {
-        $connectionsRepository = new SqlConnectionRepository($this->pdo);
-        return ConnectionInfo::transform($connectionsRepository->getByNom($contractNom, $abonentNom, $tuName));
+        $connectionFinder = new ConnectionFinder($this->pdo);
+        return ConnectionInfo::transform($connectionFinder->getByNom($contractNom, $abonentNom, $tuName));
     }
 
     /**
@@ -44,9 +48,9 @@ class ConnectionService implements ConnectionServiceInterface
      */
     public function getReadingsHistory(string $contractNom, string $abonentNom, string $tuName): ?array
     {
-        $connectionArchRepository = new SqlConnectionArchRepository($this->pdo);
-//        $connectionArchRepository = new SqlConnectionArchRepository($this->histPdo);
-        $readingsHistoryRaw = $connectionArchRepository->getByNom($contractNom, $abonentNom, $tuName);
+        $connectionArchFinder = new ConnectionArchFinder($this->pdo);
+//        $connectionArchFinder = new SqlConnectionArchRepository($this->histPdo);
+        $readingsHistoryRaw = $connectionArchFinder->getByNom($contractNom, $abonentNom, $tuName);
 
         $readingsHistory = [];
         foreach ($readingsHistoryRaw as $item) {

@@ -20,7 +20,7 @@ use App\Application\Actions\Contract\ViewContractPaymentsAction;
 use App\Application\Actions\Contract\ViewDocAction;
 use App\Application\Middleware\CustomerGuardedMiddleware;
 use App\Application\Middleware\ManagerGuardedMiddleware;
-use App\Application\Service\Auth\UserAuthService;
+use App\Application\Service\Auth\AuthService;
 use App\Infrastructure\Service\Session\SessionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -38,18 +38,19 @@ return static function (App $app) {
     $app->group($routePrefix, function (Group $group) use ($container, $app, $session) {
         $group->get('/', function (Request $request, Response $response) use ($container, $app, $session) {
             // перебрасываем из корня в зависимости от группы
-            $authService = new UserAuthService(
+            $authService = new AuthService(
                 $container->get(LoggerInterface::class),
-                $container->get(PDO::class),
+                $container->get(\App\Domain\Authentication\Account\AccountRepositoryInterface::class),
                 $session
             );
-            if (!$authService->isUserAuthenticated()) {
+            if (!$authService->isAccountAuthenticated()) {
                 return $response->withHeader('Location', '/login');
             }
-            if ($authService->isCustomer()) {
+            $account = $authService->getCurrentAccount();
+            if ($account->isCustomer()) {
                 return $response->withHeader('Location', '/contract');
             }
-            if ($authService->isManager() || $authService->isAdmin()) {
+            if ($account->isManager() || $account->isAdmin()) {
                 return $response->withHeader('Location', '/admin/users');
             }
         });

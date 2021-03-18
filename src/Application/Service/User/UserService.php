@@ -10,13 +10,13 @@ use App\Application\Exceptions\AppException;
 use App\Application\Helpers\ArrayHelper;
 use App\Application\Validators\Contract\ContractExists;
 use App\Application\Validators\User\UserExists;
-use App\Infrastructure\Persistence\User\SqlUserRepository;
+use App\Infrastructure\Persistence\Account\SqlAccountRepository;
 use PDO;
 use Psr\Log\LoggerInterface;
 
 class UserService
 {
-    /** @var SqlUserRepository */
+    /** @var SqlAccountRepository */
     private $userRepository;
 
     private $allowedFields = [
@@ -35,7 +35,7 @@ class UserService
     public function __construct(PDO $pdo, LoggerInterface $logger)
     {
         $this->pdo = $pdo;
-        $this->userRepository = new SqlUserRepository($this->pdo);
+        $this->userRepository = new SqlAccountRepository($this->pdo);
         $this->logger = $logger;
     }
 

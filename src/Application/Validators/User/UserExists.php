@@ -5,21 +5,21 @@ namespace App\Application\Validators\User;
 
 
 use App\Application\Validators\ValidatorInterface;
-use App\Infrastructure\Persistence\User\SqlUserRepository;
+use App\Infrastructure\Persistence\Account\SqlAccountRepository;
 use PDO;
 
 class UserExists implements ValidatorInterface
 {
 
     /**
-     * @var SqlUserRepository
+     * @var SqlAccountRepository
      */
     private $userRepository;
     private $login;
 
     public function __construct(PDO $pdo)
     {
-        $this->userRepository = new SqlUserRepository($pdo);
+        $this->userRepository = new SqlAccountRepository($pdo);
     }
 
     public function setData($login): void

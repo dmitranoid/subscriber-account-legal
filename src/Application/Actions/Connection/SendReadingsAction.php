@@ -7,7 +7,7 @@ namespace App\Application\Actions\Connection;
 
 use App\Application\Actions\Action;
 use App\Application\Exceptions\AppException;
-use App\Application\Service\Auth\UserAuthService;
+use App\Application\Service\Auth\AuthService;
 use App\Application\Service\Contract\ContractInfoServiceInterface;
 use App\Application\Service\Readings\ReadingsService;
 use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
@@ -19,7 +19,7 @@ class SendReadingsAction extends Action
     protected function action(): Response
     {
         $session = $this->request->getAttribute('session', []);
-        $auth = new UserAuthService($this->logger, $this->pdo, $session);
+        $auth = new AuthService($this->logger, $this->pdo, $session);
         $contractNom = $auth->getUser()['code_contract'] ?? null;
         if (empty($contractNom)) {
             $this->logger->error('не найден договор');

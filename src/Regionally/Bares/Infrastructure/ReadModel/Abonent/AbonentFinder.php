@@ -2,30 +2,29 @@
 declare(strict_types=1);
 
 
-namespace App\Regionally\Bares\Infrastructure\Persistence\Abonent;
+namespace App\Regionally\Bares\Infrastructure\ReadModel\Abonent;
 
 
-use App\Infrastructure\Persistence\GenericSqlRepository;
+use App\Regionally\Bares\Infrastructure\ReadModel\GenericSqlFinder;
 
-final class SqlAbonentRepository extends GenericSqlRepository
+final class AbonentFinder extends GenericSqlFinder
 {
     protected string $tableName = 'ambab';
     protected $identity = ['kp', 'nab'];
 
 
-    public function getByContract($contractNom)
+    public function getByContract(string $contractNom)
     {
         return $this->getAllSql()
             ->where('kp', $contractNom)
             ->fetchAll();
     }
 
-    public function getByNom($contractNom, $abonentNom)
+    public function getByNom(string $contractNom, string $abonentNom)
     {
         return $this->getAllSql()
             ->where('kp', $contractNom)
             ->where('nab', $abonentNom)
             ->fetch();
-
     }
 }

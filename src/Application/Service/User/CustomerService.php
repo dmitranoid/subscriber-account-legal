@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Service\User;
 
 
-use App\Infrastructure\Persistence\User\SqlUserRepository;
+use App\Infrastructure\Persistence\Account\SqlAccountRepository;
 use PDO;
 
 class CustomerService
@@ -22,13 +22,13 @@ class CustomerService
 
     public function getCustomersList()
     {
-        $userRepository = new SqlUserRepository($this->pdo);
+        $userRepository = new SqlAccountRepository($this->pdo);
         return $userRepository->getCustomers();
     }
 
     public function getCustomerByLogin($login)
     {
-        $userRepository = new SqlUserRepository($this->pdo);
+        $userRepository = new SqlAccountRepository($this->pdo);
         return $userRepository->getCustomerByLogin($login);
     }
 

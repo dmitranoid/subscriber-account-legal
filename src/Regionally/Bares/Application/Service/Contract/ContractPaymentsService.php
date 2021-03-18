@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Regionally\Bares\Application\Service\Contract;
 
 
-use App\Infrastructure\Persistence\Invoice\SqlInvoiceRepository;
-use App\Infrastructure\Persistence\Payment\SqlPaymentRepository;
+use App\Regionally\Bares\Infrastructure\ReadModel\Invoice\InvoiceFinder;
+use App\Regionally\Bares\Infrastructure\ReadModel\Payment\PaymentFinder;
 use DateTime;
 use DateTimeImmutable;
 use PDO;
@@ -14,8 +14,7 @@ use PDO;
 final class ContractPaymentsService
 {
 
-    /** @var PDO */
-    protected $pdo;
+    protected PDO $pdo;
 
     public function __construct(PDO $pdo)
     {
@@ -24,17 +23,17 @@ final class ContractPaymentsService
 
     public function getDebt($contractNo, DateTime $periodStart, DateTime $periodEnd): array
     {
-        $paymentsSum = (new SqlPaymentRepository($this->pdo))->getSumByContract($contractNo, $periodStart, $periodEnd);
-        $invoicesSum = (new SqlInvoiceRepository($this->pdo))->getSumByContract($contractNo, $periodStart, $periodEnd);
+        $paymentsSum = (new PaymentFinder($this->pdo))->getSumByContract($contractNo, $periodStart, $periodEnd);
+        $invoicesSum = (new InvoiceFinder($this->pdo))->getSumByContract($contractNo, $periodStart, $periodEnd);
         return ['invoicesSum' => $invoicesSum, 'paymentsSum' => $paymentsSum];
     }
 
-    public function getPaymentsAndInvoicesList($contractNo)
+    public function getPaymentsAndInvoicesList($contractNo): array
     {
         $invoiceDocTypes = ['V' => 'счет', 'R' => 'счет', 'A' => 'акт', '1' => '1 аванс', '2' => '2 аванс', '3' => '3 аванс'];
         $paymentDocTypes = ['V' => 'поступление д/с', 'W' => 'поступление д/с', 'R' => 'поступление д/с', 'Z' => 'взаимозачет'];
-        $paymentsList = (new SqlPaymentRepository($this->pdo))->getByContract($contractNo);
-        $invoicesList = (new SqlInvoiceRepository($this->pdo))->getByContract($contractNo);
+        $paymentsList = (new PaymentFinder($this->pdo))->getByContract($contractNo);
+        $invoicesList = (new InvoiceFinder($this->pdo))->getByContract($contractNo);
         // date, period, doctype, docno, sumInv, sumPay
         $docList = [];
         foreach ($invoicesList as $invoice) {

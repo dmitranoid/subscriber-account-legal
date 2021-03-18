@@ -7,11 +7,9 @@ namespace App\Application\Actions\Contract;
 
 use App\Application\Actions\Action;
 use App\Application\Exceptions\AppException;
-use App\Application\Service\Auth\UserAuthService;
-use App\Domain\DomainException\DomainRecordNotFoundException;
+use App\Application\Service\Auth\AuthService;
 use App\Infrastructure\Service\Session\Session;
 use Psr\Http\Message\ResponseInterface as Response;
-use Slim\Exception\HttpBadRequestException;
 
 class ViewDocAction extends Action
 {
@@ -19,7 +17,7 @@ class ViewDocAction extends Action
     {
         // TODO тщательно очищать ввод !!!
         // TODO защиту от инъекций типа ../../../etc/passw
-        $auth = new UserAuthService($this->logger, $this->pdo, new Session());
+        $auth = new AuthService($this->logger, $this->pdo, new Session());
         $contractNom = $auth->getUser()['code_contract'] ?? null;
         if (empty($contractNom)) {
             $this->logger->error('не найден договор');

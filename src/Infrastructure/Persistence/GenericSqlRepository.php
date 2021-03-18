@@ -108,10 +108,10 @@ class GenericSqlRepository
     }
 
     /**
-     * @param int $id
+     * @param $id
      * @throws AppDbException
      */
-    public function delete(int $id)
+    public function delete($id)
     {
         try {
             $this->fpdo->delete($this->tableName, $id)->execute();

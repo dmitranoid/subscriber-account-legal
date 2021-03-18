@@ -14,7 +14,7 @@ class Front extends \AcceptanceTester
         $I->fillField('login', $username);
         $I->fillField('password', $password);
         $I->click('Войти');
-        $I->seeCurrentUrlEquals('/contract');
+        $I->amOnPage('/contract');
     }
 
 }

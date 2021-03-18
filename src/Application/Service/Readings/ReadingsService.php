@@ -6,7 +6,7 @@ namespace App\Application\Service\Readings;
 
 
 use App\Application\Exceptions\AppException;
-use App\Infrastructure\Persistence\User\InMemoryManagerRepository;
+use App\Infrastructure\Persistence\Account\InMemoryManagerRepository;
 use App\Infrastructure\Service\Email\PhpMailerEmailSender;
 use DateTime;
 use DateTimeImmutable;

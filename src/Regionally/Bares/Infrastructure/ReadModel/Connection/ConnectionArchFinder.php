@@ -2,18 +2,18 @@
 declare(strict_types=1);
 
 
-namespace App\Regionally\Bares\Infrastructure\Persistence\Connection;
+namespace App\Regionally\Bares\Infrastructure\ReadModel\Connection;
 
 
-use App\Regionally\Bares\Infrastructure\Persistence\ArchiveTableTrait;
-use App\Regionally\Bares\Infrastructure\Persistence\GenericSqlRepository;
+use App\Regionally\Bares\Infrastructure\ReadModel\ArchiveTableTrait;
+use App\Regionally\Bares\Infrastructure\ReadModel\GenericSqlFinder;
 use DateTime;
 
-final class SqlConnectionArchRepository extends GenericSqlRepository
+final class ConnectionArchFinder extends GenericSqlFinder
 {
     use ArchiveTableTrait;
 
-    protected $tableName = 'ambtu';
+    protected string $tableName = 'ambtu';
 
     public function getByContract($contractNom)
     {

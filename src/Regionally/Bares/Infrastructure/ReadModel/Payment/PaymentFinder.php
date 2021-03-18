@@ -2,16 +2,15 @@
 declare(strict_types=1);
 
 
-namespace App\Infrastructure\Persistence\Payment;
+namespace App\Regionally\Bares\Infrastructure\ReadModel\Payment;
 
-
-use App\Infrastructure\Persistence\GenericSqlRepository;
+use App\Regionally\Bares\Infrastructure\ReadModel\GenericSqlFinder;
 use DateTime;
 
-final class SqlPaymentRepository extends GenericSqlRepository
+final class PaymentFinder extends GenericSqlFinder
 {
     protected string $tableName = 'amposop';
-    protected string $identity = 'rp';
+    protected $identity = 'rp';
 
     public function getByContract($contractNom)
     {

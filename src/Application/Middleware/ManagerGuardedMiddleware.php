@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Middleware;
 
 
-use App\Application\Service\Auth\UserAuthService;
+use App\Application\Service\Auth\AuthService;
 use App\Infrastructure\Service\Session\SessionInterface;
 use PDO;
 use Psr\Http\Message\ResponseInterface;
@@ -33,9 +33,9 @@ class ManagerGuardedMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $authService = new UserAuthService($this->logger, $this->pdo, $this->session);
+        $authService = new AuthService($this->logger, $this->pdo, $this->session);
 
-        if (!$authService->isUserAuthenticated()) {
+        if (!$authService->isAccountAuthenticated()) {
             return (new Response())->withHeader('Location', '/login');
         } else {
             if (!($authService->isManager() || $authService->isAdmin())) {

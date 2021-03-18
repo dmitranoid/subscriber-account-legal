@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Application\Middleware;
 
 
-use App\Application\Service\Auth\UserAuthService;
+use App\Application\Helpers\AppHelper;
+use App\Application\Service\Auth\AuthService;
+use App\Domain\Authentication\Account\AccountRepositoryInterface;
 use App\Infrastructure\Service\Session\SessionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -32,10 +34,11 @@ class CustomerGuardedMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $authService = new UserAuthService($this->logger, $this->pdo, $this->session);
+        $authService = new AuthService($this->logger, AppHelper::container()->get(AccountRepositoryInterface::class), $this->session);
 
-        if ($authService->isUserAuthenticated()) {
-            if (!$authService->isCustomer()) {
+        if ($authService->isAccountAuthenticated()) {
+            $account = $authService->getCurrentAccount();
+            if (!$account->isCustomer()) {
                 $response = new Response();
                 $response->getBody()->write('Доступ запрещён');
                 return $response->withStatus(403);
@@ -43,7 +46,6 @@ class CustomerGuardedMiddleware implements MiddlewareInterface
         } else {
             return (new Response())->withHeader('Location', '/login');
         }
-
 
         return $handler->handle($request);
     }

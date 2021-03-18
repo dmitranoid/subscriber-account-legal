@@ -9,7 +9,7 @@ use App\Application\Actions\Action;
 use App\Application\Exceptions\AppException;
 use App\Application\Helpers\AppHelper;
 use App\Application\Service\Abonent\AbonentServiceInterface;
-use App\Application\Service\Auth\UserAuthService;
+use App\Application\Service\Auth\AuthService;
 use App\Application\Service\Connection\ConnectionServiceInterface;
 use App\Application\Service\Contract\ContractInfoServiceInterface;
 use App\Application\Service\Readings\ReadingsService;
@@ -23,7 +23,7 @@ class ViewListReadingsAction extends Action
 {
     protected function action(): Response
     {
-        $auth = new UserAuthService($this->logger, $this->pdo, new Session());
+        $auth = new AuthService($this->logger, $this->pdo, new Session());
         $contractNom = $auth->getUser()['code_contract'] ?? null;
         if (empty($contractNom)) {
             $this->logger->error(

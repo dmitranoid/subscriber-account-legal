@@ -7,19 +7,18 @@ namespace App\Application\Actions\Contract;
 
 use App\Application\Actions\Action;
 use App\Application\Exceptions\AppException;
-use App\Application\Service\Auth\UserAuthService;
+use App\Application\Helpers\AppHelper;
+use App\Application\Service\Auth\AuthService;
 use App\Application\Service\Contract\ContractDocsService;
 use App\Application\Service\Contract\ContractInfoServiceInterface;
 use App\Application\Service\Document\DocumentServiceInterface;
 use App\Application\View\ViewInterface;
-use App\Infrastructure\Service\DocumentFinder\DocumentFinder;
 use App\Infrastructure\Service\Session\Session;
 use DateTime;
 use PDO;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use Slim\Flash\Messages;
-use App\Application\Helpers\AppHelper;
 
 class ViewContractDocsAction extends Action
 {
@@ -31,7 +30,7 @@ class ViewContractDocsAction extends Action
 
     protected function action(): Response
     {
-        $auth = new UserAuthService($this->logger, $this->pdo, new Session());
+        $auth = new AuthService($this->logger, $this->pdo, new Session());
         $contractNom = ($auth->getUser())->code_contract ?? null;
         if (empty($contractNom)) {
             $this->logger->error('не найден договор');

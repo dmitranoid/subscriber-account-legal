@@ -8,7 +8,7 @@ namespace App\Regionally\Bares\Application\Service\Abonent;
 use App\Application\DTO\Abonent\AbonentInfoDto;
 use App\Application\Service\Abonent\AbonentServiceInterface;
 use App\Regionally\Bares\Application\DtoAssembler\Abonent\AbonentInfo;
-use App\Regionally\Bares\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
+use App\Regionally\Bares\Infrastructure\ReadModel\Abonent\AbonentFinder;
 use PDO;
 
 class AbonentService implements AbonentServiceInterface
@@ -22,12 +22,16 @@ class AbonentService implements AbonentServiceInterface
 
     public function getByContract(string $contractNom): ?array
     {
-        return (new SqlAbonentRepository($this->pdo))->getByContract($contractNom);
+        $abonents = [];
+        foreach ((new AbonentFinder($this->pdo))->getByContract($contractNom) ?? [] as $item) {
+            $abonents[] = AbonentInfo::transform($item);
+        }
+        return $abonents;
     }
 
     public function getAbonentInfo(string $contractNom, string $abonentNom): ?AbonentInfoDto
     {
-        $data = (new SqlAbonentRepository($this->pdo))->getByNom($contractNom, $abonentNom);
+        $data = (new AbonentFinder($this->pdo))->getByNom($contractNom, $abonentNom);
         return AbonentInfo::transform($data);
     }
 }

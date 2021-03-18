@@ -11,7 +11,7 @@ class ConnectionsPageCest
     public function tryToTest(\Step\Acceptance\Front $I)
     {
         $I->loginAsCustomer();
-        $I->amGoingTo('/connections');
+        $I->amOnPage('/connections');
         $I->see('Точки учета');
     }
 }

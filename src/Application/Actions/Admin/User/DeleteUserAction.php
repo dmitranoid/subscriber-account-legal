@@ -7,7 +7,6 @@ namespace App\Application\Actions\Admin\User;
 
 use App\Application\Exceptions\AppException;
 use App\Application\Service\User\UserService;
-use App\Infrastructure\Persistence\User\SqlUserRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class DeleteUserAction extends UserAction
