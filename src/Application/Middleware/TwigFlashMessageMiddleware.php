@@ -17,12 +17,8 @@ use TheSeer\Tokenizer\Exception;
 class TwigFlashMessageMiddleware implements MiddlewareInterface
 {
 
-    /** @var Messages  */
-    private $flash;
-    /**
-     * @var Twig
-     */
-    private $twig;
+    private Messages $flash;
+    private Twig $twig;
 
     public function __construct(Twig $twig, Messages $flash)
     {

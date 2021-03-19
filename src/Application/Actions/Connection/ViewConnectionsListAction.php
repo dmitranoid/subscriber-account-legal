@@ -6,13 +6,13 @@ namespace App\Application\Actions\Connection;
 
 
 use App\Application\Actions\Action;
+use App\Application\DTO\Abonent\AbonentInfoDto;
+use App\Application\DTO\Connection\ConnectionDto;
 use App\Application\Helpers\AppHelper;
 use App\Application\Service\Abonent\AbonentServiceInterface;
 use App\Application\Service\Auth\AuthService;
 use App\Application\Service\Connection\ConnectionServiceInterface;
 use App\Application\Service\Contract\ContractInfoServiceInterface;
-use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
-use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class ViewConnectionsListAction extends Action
@@ -20,7 +20,7 @@ class ViewConnectionsListAction extends Action
     protected function action(): Response
     {
         $auth = AppHelper::container()->get(AuthService::class);
-        $contractNom = $auth->getCurrentAccount()->getContractNo();
+        $contractNo = $auth->getCurrentAccount()->getContractNo();
 
         /** @var ConnectionServiceInterface $connectionService */
         $connectionService = AppHelper::container()->get(ConnectionServiceInterface::class);
@@ -29,31 +29,27 @@ class ViewConnectionsListAction extends Action
         /** @var ContractInfoServiceInterface $contractService */
         $contractService = AppHelper::container()->get(ContractInfoServiceInterface::class);
 
-        $contract = $contractService->getContractInfo($contractNom);
-        $connectionsList = $connectionService->getByContract($contractNom);
-        $abonentsList = $abonentService->getByContract($contractNom);
+        $contractInfo = $contractService->getContractInfo($contractNo);
+        $connectionsList = $connectionService->getByContract($contractNo);
+        $abonentsList = $abonentService->getByContract($contractNo);
 
-//        array_walk($connectionsList, function (&$item) {
-//            $tuUrl = $item['naim'];
-//            $tuUrl = str_replace(['.', '/', '\\'], ['dot', 'slashr', 'slashl'], $tuUrl);
-//            $item['naim_url'] = $tuUrl;
-//        });
-
-        /* combine abonents and connections */
-        usort($abonentsList, function ($a, $b) {
-            return $a->nom - $b->nom;
+        // сортируем абонентов и ТУ по абонетскому номеру
+        usort($abonentsList, function (AbonentInfoDto $a, AbonentInfoDto $b) {
+            return $a->abonentNo - $b->abonentNo;
         });
-        usort($connectionsList, function ($a, $b) {
+        usort($connectionsList, function (ConnectionDto $a, ConnectionDto $b) {
             return $a->abonentNo - $b->abonentNo;
         });
 
-        reset($connectionsList);
-        array_walk($abonentsList, function (&$abonent) use (&$connectionsList) {
-            while ($abonent->nom === (current($connectionsList)->abonentNo ?? '')) {
-                $abonent['connections'][] = array_shift($connectionsList);
-            }
-        });
-        return $this->view->render($this->response, 'front/connection/connections.twig', ['contract' => $contract, 'abonentsList' => $abonentsList]);
+        return $this->view->render(
+            $this->response,
+            'front/connection/connections.twig',
+            [
+                'contractInfo' => $contractInfo,
+                'abonentsList' => $abonentsList,
+                'connectionsList' => $connectionsList,
+            ]
+        );
     }
 
 }

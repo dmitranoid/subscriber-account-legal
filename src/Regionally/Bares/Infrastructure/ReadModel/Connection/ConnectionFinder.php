@@ -16,7 +16,10 @@ final class ConnectionFinder extends GenericSqlFinder
     public function getByContract($contractNom)
     {
         return $this->getAllSql()
-            ->where('kp', $contractNom)
+            ->select('ambtu.*, amtsch.*, amstar.naim tarnaim')
+            ->leftJoin('amtsch on amtsch.ksch = ambtu.ksch')
+            ->leftJoin('amstar on amstar.nt = ambtu.nt1')
+            ->where('ambtu.kp', $contractNom)
             ->fetchAll();
     }
 

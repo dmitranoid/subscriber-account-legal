@@ -8,8 +8,8 @@ use DateTime;
 
 final class ContractDto
 {
-    public string $nom;
-    public string $nomAdd;
+    public string $contractNo;
+    public string $contractNoAdd;
     public DateTime $date;
     public string $name;
     public string $unp;
@@ -20,10 +20,10 @@ final class ContractDto
     public string $payBank;
     public string $managedByUser;
 
-    public function __construct($nom, $nomAdd, $date, $name, $unp, $addressLegal, $fio, $phone, $bank, $payBank, $managedByUser)
+    public function __construct($contractNo, $contractNoAdd, $date, $name, $unp, $addressLegal, $fio, $phone, $bank, $payBank, $managedByUser)
     {
-        $this->nom = $nom;
-        $this->nomAdd = $nomAdd;
+        $this->contractNo = $contractNo;
+        $this->contractNoAdd = $contractNoAdd;
         $this->date = $date;
         $this->name = $name;
         $this->unp = $unp;

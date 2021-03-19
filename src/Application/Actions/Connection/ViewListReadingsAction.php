@@ -6,6 +6,8 @@ namespace App\Application\Actions\Connection;
 
 
 use App\Application\Actions\Action;
+use App\Application\DTO\Abonent\AbonentInfoDto;
+use App\Application\DTO\Connection\ConnectionDto;
 use App\Application\Exceptions\AppException;
 use App\Application\Helpers\AppHelper;
 use App\Application\Service\Abonent\AbonentServiceInterface;
@@ -23,39 +25,34 @@ class ViewListReadingsAction extends Action
 {
     protected function action(): Response
     {
-        $auth = new AuthService($this->logger, $this->pdo, new Session());
-        $contractNom = $auth->getUser()['code_contract'] ?? null;
-        if (empty($contractNom)) {
+        $auth = AppHelper::container()->get(AuthService::class);
+        $contractNo = $auth->getCurrentAccount()->getContractNo();
+
+        if (empty($contractNo)) {
             $this->logger->error(
-                'не найден договор {contractNom}, пользователь {login}',
+                'не найден договор {contractNo}, пользователь {login}',
                 [
-                    'contractNom' => $contractNom,
+                    'contractNo' => $contractNo,
                     'login' => $auth->getUser()['login']]);
             throw new AppException('не найден договор');
         }
 
-        $contract = AppHelper::container()->get(ContractInfoServiceInterface::class)->getContractInfo($contractNom);
-        $connectionsList = AppHelper::container()->get(ConnectionServiceInterface::class)->getByContract($contractNom);
-        $abonentsList = AppHelper::container()->get(AbonentServiceInterface::class)->getByContract($contractNom);
+        $contract = AppHelper::container()->get(ContractInfoServiceInterface::class)->getContractInfo($contractNo);
+        $connectionsList = AppHelper::container()->get(ConnectionServiceInterface::class)->getByContract($contractNo);
+        $abonentsList = AppHelper::container()->get(AbonentServiceInterface::class)->getByContract($contractNo);
 
-        /* combine abonents and connections */
-        usort($abonentsList, static function ($a, $b) {
-            return $a['nab'] - $b['nab'];
+        // сортируем абонентов и ТУ по абонетскому номеру
+        usort($abonentsList, function (AbonentInfoDto $a, AbonentInfoDto $b) {
+            return $a->abonentNo - $b->abonentNo;
         });
-        usort($connectionsList, static function ($a, $b) {
-            return $a['nab'] - $b['nab'];
+        usort($connectionsList, function (ConnectionDto $a, ConnectionDto $b) {
+            return $a->abonentNo - $b->abonentNo;
         });
 
-        reset($connectionsList);
-        array_walk($abonentsList, static function (&$abonent) use (&$connectionsList) {
-            while ($abonent['nab'] === (current($connectionsList)['nab'] ?? '')) {
-                $abonent['connections'][] = array_shift($connectionsList);
-            }
-        });
         // проверить, есть ли сохраненные показания
-        $readingsService = new ReadingsService($this->pdo, $auth->getUser(), $this->logger);
+        $readingsService = new ReadingsService($this->pdo, $auth->getCurrentAccount(), $this->logger);
         $savedReadings = $readingsService->loadPeriodReadings(new DateTime('now'));
-        if($savedReadings) {
+        if ($savedReadings) {
             $isSavedReadings = false;
         } else {
             $savedReadings = $readingsService->loadTmpReadings();
@@ -68,6 +65,7 @@ class ViewListReadingsAction extends Action
             [
                 'contract' => $contract,
                 'abonentsList' => $abonentsList,
+                'connectionsList' => $connectionsList,
                 'readings' => $savedReadings ?? [],
                 'isSavedReadings' => $isSavedReadings,
             ]

@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace App\Application\Service\Readings;
 
 
+use App\Application\DTO\Abonent\AbonentInfoDto;
+use App\Application\DTO\Connection\ConnectionDto;
 use App\Application\Exceptions\AppException;
+use App\Application\View\TwigTextHelper;
+use App\Domain\Authentication\Account\Account;
 use App\Infrastructure\Persistence\Account\InMemoryManagerRepository;
 use App\Infrastructure\Service\Email\PhpMailerEmailSender;
 use DateTime;
@@ -18,18 +22,18 @@ use RuntimeException;
 
 class ReadingsService
 {
-    /** @var PDO */
-    protected $pdo;
-    private $customer;
+    protected PDO $pdo;
+
+    private Account $customer;
     /** @var int день месяца когда начинается передача показаний */
-    private $readingsPeriodFirstDay = 25;
+    private int $readingsPeriodFirstDay = 25;
     /** @var int день месяца когда заканчивается передача показаний */
-    private $readingsPeriodLastDay = 5;
-    /** @var LoggerInterface */
-    private $logger;
+    private int $readingsPeriodLastDay = 5;
+
+    private LoggerInterface $logger;
 
 
-    public function __construct(PDO $pdo, $customer, LoggerInterface $logger)
+    public function __construct(PDO $pdo, Account $customer, LoggerInterface $logger)
     {
         $this->pdo = $pdo;
         $this->customer = $customer;
@@ -69,7 +73,7 @@ class ReadingsService
 
     public function removeTmpReadings()
     {
-        $filename = sprintf("%s.json", $this->customer['code_contract']);
+        $filename = sprintf("%s.json", $this->customer->getContractNo());
         $dir = $_SERVER['DOCUMENT_ROOT'] . "/../storage/readings-tmp/";
         if (file_exists($dir . $filename)) {
             unlink($dir . $filename);
@@ -81,7 +85,7 @@ class ReadingsService
         // load settings
         /** @var DateTimeImmutable $readingsPeriod */
         $readingsPeriod = $this->getPeriodForReadings(DateTimeImmutable::createFromMutable($onDate));
-        $filename = sprintf('%s-%s.json', $this->customer['code_contract'], $readingsPeriod->format('Ym'));
+        $filename = sprintf('%s-%s.json', $this->customer->getContractNo(), $readingsPeriod->format('Ym'));
         $dir = $_SERVER['DOCUMENT_ROOT'] . sprintf('/../storage/readings/%s/', $readingsPeriod->format('Ym'));
 
         // load
@@ -156,11 +160,13 @@ class ReadingsService
     public function saveTmpReadings(array $readingsData): void
     {
         // load settings
-        $filename = sprintf('%s.json', $this->customer['code_contract']);
+        $filename = sprintf('%s.json', $this->customer->getContractNo());
         $dir = $_SERVER['DOCUMENT_ROOT'] . '/../storage/readings-tmp/';
         // save
+        // todo проверить, возможно заменить //ignore на //translit
+        $str = json_encode($readingsData);
         try {
-            file_put_contents($dir . $filename, json_encode($readingsData));
+            file_put_contents($dir . $filename, $str);
         } catch (Exception $e) {
             throw new AppException('не удалось сохранить данные, обратитесь к администратору');
         }
@@ -173,7 +179,7 @@ class ReadingsService
     public function loadTmpReadings(): ?array
     {
         // load settings
-        $filename = sprintf('%s.json', $this->customer['code_contract']);
+        $filename = sprintf('%s.json', $this->customer->getContractNo());
         // todo взять путь из настроек
         $dir = $_SERVER['DOCUMENT_ROOT'] . '/../storage/readings-tmp/';
         // load
@@ -200,7 +206,7 @@ class ReadingsService
         // load settings
         /** @var DateTimeImmutable */
         $readingsPeriod = $this->getPeriodForReadings(new DateTimeImmutable('now'));
-        $filename = sprintf('%s-%s.json', $this->customer['code_contract'], $readingsPeriod->format('Ym'));
+        $filename = sprintf('%s-%s.json', $this->customer->getContractNo(), $readingsPeriod->format('Ym'));
         $dir = $_SERVER['DOCUMENT_ROOT'] . sprintf('/../storage/readings/%s/', $readingsPeriod->format('Ym'));
         // save
         if (!is_dir($dir) && !mkdir($dir) && !is_dir($dir)) {
@@ -216,7 +222,7 @@ class ReadingsService
         /** @var DateTimeImmutable */
         $readingsPeriod = $this->getPeriodForReadings(new DateTimeImmutable('now'));
 
-        $filename = sprintf('%s-%s.txt', $this->customer['code_contract'], $readingsPeriod->format('Ym'));
+        $filename = sprintf('%s-%s.txt', $this->customer->getContractNo(), $readingsPeriod->format('Ym'));
         $dir = $_SERVER['DOCUMENT_ROOT'] . sprintf('/../storage/readings-csv/%s/', $readingsPeriod->format('Ym'));
         if (!is_dir($dir) && !mkdir($dir) && !is_dir($dir)) {
 //                $this->logger->error('Directory {dir} was not created', ['dir' => $dir]);
@@ -234,7 +240,7 @@ class ReadingsService
         // load settings
         $readingsPeriod = $this->getPeriodForReadings(new DateTimeImmutable('now'));
         // customer
-        $recipientEmail = $this->customer['email'] ?? '';
+        $recipientEmail = $this->customer->getEmail();
         if (empty($recipientEmail)) {
             throw new \InvalidArgumentException('Не указан email для отправки');
         }
@@ -255,24 +261,23 @@ class ReadingsService
         $readingsTxt[] = '';
 
         /* combine abonents and connections */
-        usort($abonentsList, function ($a, $b) {
-            return $a['nab'] - $b['nab'];
+        usort($abonentsList, function (AbonentInfoDto $a, AbonentInfoDto $b) {
+            return $a->abonentNo - $b->abonentNo;
         });
-        usort($connectionsList, function ($a, $b) {
-            return $a['nab'] - $b['nab'];
+        usort($connectionsList, function (ConnectionDto $a, ConnectionDto $b) {
+            return $a->abonentNo - $b->abonentNo;
         });
 
-        reset($connectionsList);
-        array_walk($abonentsList, function (&$abonent) use (&$connectionsList) {
-            while ($abonent['nab'] === (current($connectionsList)['nab'] ?? '')) {
-                $abonent['connections'][] = array_shift($connectionsList);
-            }
-        });
+        /** @var AbonentInfoDto $abonent */
         foreach ($abonentsList as $abonent) {
-            $readingsTxt[] = sprintf('абонент %s - %s', $abonent['nab'], $abonent['naim']);
-            foreach ($abonent['connections'] as $connection) {
+            $readingsTxt[] = sprintf('абонент %s - %s', $abonent->abonentNo, $abonent->name);
+            /** @var ConnectionDto $connection */
+            foreach ($connectionsList as $connection) {
+                if ($connection->abonentNo != $abonent->abonentNo) {
+                    continue;
+                }
                 // приводим счетчик к тому же виду что и при заполнении (readings.twig)
-                $counterNo = str_replace('.', '_', 'cnt-' . $abonent['kp'] . '-' . $abonent['nab'] . '-' . $connection['nst']);
+                $counterNo = TwigTextHelper::counterCode($connection->contractNo, $connection->abonentNo, $connection->counter->serialNo);
                 $reading = array_filter($readings, function ($cntNo) use ($counterNo) {
                     return ($cntNo === $counterNo);
                 }, ARRAY_FILTER_USE_KEY);

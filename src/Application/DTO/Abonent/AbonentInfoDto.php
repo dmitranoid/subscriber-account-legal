@@ -7,15 +7,15 @@ namespace App\Application\DTO\Abonent;
 
 class AbonentInfoDto
 {
-    public string $contractNom;
-    public string $nom;
+    public string $contractNo;
+    public string $abonentNo;
     public string $name;
     public string $address;
 
-    public function __construct(string $contractNom, string $nom, string $name, string $address)
+    public function __construct(string $contractNo, string $abonentNo, string $name, string $address)
     {
-        $this->contractNom = $contractNom;
-        $this->nom = $nom;
+        $this->contractNo = $contractNo;
+        $this->abonentNo = $abonentNo;
         $this->name = $name;
         $this->address = $address;
     }

@@ -11,13 +11,12 @@ use Slim\Views\Twig;
 
 class TwigView implements ViewInterface
 {
-    /** @var Twig */
-    private $twig ;
+    private Twig $twig;
+
     public function __construct(Twig $twig)
     {
         $this->twig = $twig;
     }
-
 
     public function render(ResponseInterface $response, $template, $data): Response
     {

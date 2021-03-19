@@ -22,7 +22,10 @@ class ConnectionInfo
                 $data['tsch'],
                 $data['nst'],
                 $data['ktt'],
-                empty($data['datu']) ? null : new \DateTime($data['datu']),
+                empty($data['datu']) ? null : new \DateTimeImmutable($data['datu']),
+                empty($data['godpov']) ? null : \DateTimeImmutable::createFromFormat('Y-m-d', implode('-', [$data['godpov'], intval($data['kvpov'] ?? 1) * 3, '01'])),
+                floatval($data['ppok']),
+                floatval($data['mrasp']),
             )
         );
     }

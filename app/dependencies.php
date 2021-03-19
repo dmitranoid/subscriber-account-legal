@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Application\View\TwigView;
 use App\Application\View\ViewInterface;
 use App\Infrastructure\Service\Session\SessionInterface;
 use DI\ContainerBuilder;
@@ -12,6 +13,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Slim\Views\Twig;
 use Twig\Extension\DebugExtension;
+use Twig\TwigFunction;
 
 return static function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -42,10 +44,17 @@ return static function (ContainerBuilder $containerBuilder) {
                     'cache' => $twigSettings['cachePath']
                 ]);
             $twig->addExtension(new DebugExtension());
+            $twig->getEnvironment()->addFunction(
+                new TwigFunction('connectionLink', [App\Application\View\TwigTextHelper::class, 'connectionLink'])
+            );
+            $twig->getEnvironment()->addFunction(
+                new TwigFunction('counter_code', [App\Application\View\TwigTextHelper::class, 'counterCode'])
+            );
+
             return $twig;
         },
         ViewInterface::class => function (ContainerInterface $c) {
-            return new \App\Application\View\TwigView($c->get(Twig::class));
+            return new TwigView($c->get(Twig::class));
         },
         PDO::class => function (ContainerInterface $c) {
             $dbSettings = $c->get('settings')['db'];

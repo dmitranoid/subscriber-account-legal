@@ -8,6 +8,7 @@ namespace App\Application\Actions\Connection;
 use App\Application\Actions\Action;
 use App\Application\Helpers\AppHelper;
 use App\Application\Service\Abonent\AbonentServiceInterface;
+use App\Application\Service\Auth\AuthService;
 use App\Application\Service\Connection\ConnectionServiceInterface;
 use App\Application\Service\Contract\ContractInfoServiceInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -28,16 +29,17 @@ class ViewConnectionAction extends Action
 
     protected function action(): Response
     {
-        $contractNom = $_SESSION['user']['code_contract'] ?? null;
+        $auth = AppHelper::container()->get(AuthService::class);
+        $contractNo = $auth->getCurrentAccount()->getContractNo();
 
         list($abonentNom, $tuName) = $this->extractAbTu($this->request->getAttribute('abtu', ''));
 
         $connectionService = AppHelper::container()->get(ConnectionServiceInterface::class);
 
-        $contract = AppHelper::container()->get(ContractInfoServiceInterface::class)->getContractInfo($contractNom);
-        $abonent = AppHelper::container()->get(AbonentServiceInterface::class)->getAbonentInfo($contractNom, $abonentNom);
-        $connection = $connectionService->getConnectionInfo($contractNom, $abonentNom, $tuName);
-        $readingsHistory = $connectionService->getReadingsHistory($contractNom, $abonentNom, $tuName);
+        $contract = AppHelper::container()->get(ContractInfoServiceInterface::class)->getContractInfo($contractNo);
+        $abonent = AppHelper::container()->get(AbonentServiceInterface::class)->getAbonentInfo($contractNo, $abonentNom);
+        $connection = $connectionService->getConnectionInfo($contractNo, $abonentNom, $tuName);
+        $readingsHistory = $connectionService->getReadingsHistory($contractNo, $abonentNom, $tuName);
 
         return $this->view->render(
             $this->response,
