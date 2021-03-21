@@ -52,10 +52,8 @@ class GenericSqlRepository
         $data = $this->getAllSql()
             ->where($this->identity, $id)
             ->fetch();
-        if (!$data) {
-            return null;
-        }
-        return $data;
+
+        return (false === $data) ? null : $data;
     }
 
     /**

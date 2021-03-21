@@ -9,12 +9,13 @@ use App\Domain\Authentication\Account\Account;
 use App\Domain\Authentication\Account\AccountRepositoryInterface;
 use App\Infrastructure\Persistence\GenericSqlRepository;
 use Exception;
+use Webmozart\Assert\Assert;
 
 class SqlAccountRepository extends GenericSqlRepository implements AccountRepositoryInterface
 {
     protected string $tableName = 'user';
 
-    public function findByLoginForRegion(string $region, string $login): Account
+    public function findByLoginForRegion(string $region, string $login): ?Account
     {
         try {
             $data = $this->fpdo
@@ -26,14 +27,14 @@ class SqlAccountRepository extends GenericSqlRepository implements AccountReposi
             new Exception('db error', 0, $e);
         }
         //return $this->mapper->map($data);
-        return $this->map($data);
+        return (false === $data) ? null : $this->map($data);
     }
 
-    public function findById(int $id): Account
+    public function findById(int $id): ?Account
     {
         $data = $this->getById($id);
         //return $this->mapper->map($data);
-        return $this->map($data);
+        return (false === $data) ? null : $this->map($data);
     }
 
     public function findAll(): array
@@ -69,11 +70,12 @@ class SqlAccountRepository extends GenericSqlRepository implements AccountReposi
             ->where('login', $login)
             ->fetch();
         //return $this->accountMapper->map($data);
-        return $this->map($data);
+        return (false === $data) ? null : $this->map($data);
     }
 
     private function map($data): Account
     {
+        Assert::isArray($data);
         return new Account(
             (int)$data['id'],
             $data['login'],

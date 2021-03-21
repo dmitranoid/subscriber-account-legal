@@ -6,7 +6,6 @@ namespace App\Application\Service\Auth;
 
 
 use App\Domain\Authentication\Account\Account;
-use App\Domain\Authentication\Account\AccountNotFoundException;
 use App\Domain\Authentication\Account\AccountRepositoryInterface;
 use App\Infrastructure\Service\Session\SessionInterface;
 use Psr\Log\LoggerInterface;
@@ -43,9 +42,8 @@ class AuthService
 
     public function doLogin(string $region, string $login, string $password): bool
     {
-        try {
-            $account = $this->accountRepository->findByLoginForRegion($region, $login);
-        } catch (AccountNotFoundException $e) {
+        $account = $this->accountRepository->findByLoginForRegion($region, $login);
+        if (null === $account) {
             $this->logger->alert('login not found', ['region' => $region, 'login' => $login]);
             return false;
         }

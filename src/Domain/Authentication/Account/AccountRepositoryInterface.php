@@ -11,7 +11,7 @@ interface AccountRepositoryInterface
      */
     public function findAll(): array;
 
-    public function findById(int $id): Account;
+    public function findById(int $id): ?Account;
 
-    public function findByLoginForRegion(string $region, string $login): Account;
+    public function findByLoginForRegion(string $region, string $login): ?Account;
 }

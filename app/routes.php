@@ -15,8 +15,8 @@ use App\Application\Actions\Connection\ViewConnectionAction;
 use App\Application\Actions\Connection\ViewConnectionsListAction;
 use App\Application\Actions\Connection\ViewListReadingsAction;
 use App\Application\Actions\Contract\ViewContractDocsAction;
+use App\Application\Actions\Contract\ViewContractFinancesAction;
 use App\Application\Actions\Contract\ViewContractInfoAction;
-use App\Application\Actions\Contract\ViewContractPaymentsAction;
 use App\Application\Actions\Contract\ViewDocAction;
 use App\Application\Middleware\CustomerGuardedMiddleware;
 use App\Application\Middleware\ManagerGuardedMiddleware;
@@ -66,7 +66,7 @@ return static function (App $app) {
             $group->post('sendreadings', SendReadingsAction::class);
             $group->post('savereadings', SaveReadingsAction::class);
 
-            $group->get('payments', ViewContractPaymentsAction::class)->setName('front.payments');
+            $group->get('finances', ViewContractFinancesAction::class)->setName('front.payments');
             $group->get('docs', ViewContractDocsAction::class)->setName('front.docs');
             $group->get('viewdoc', ViewDocAction::class)->setName('viewdoc');
             //       $group->get('chat', ViewChatAction::class);

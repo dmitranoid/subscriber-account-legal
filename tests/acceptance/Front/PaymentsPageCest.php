@@ -11,7 +11,7 @@ class PaymentsPageCest
     public function tryToTestPaymentsPage(\Step\Acceptance\Front $I)
     {
         $I->loginAsCustomer();
-        $I->amOnPage('/payments');
-        $I->see('Платежи');
+        $I->amOnPage('/finances');
+        $I->see('Финансы');
     }
 }

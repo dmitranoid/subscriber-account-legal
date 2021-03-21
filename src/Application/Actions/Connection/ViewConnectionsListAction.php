@@ -35,21 +35,20 @@ class ViewConnectionsListAction extends Action
 
         // сортируем абонентов и ТУ по абонетскому номеру
         usort($abonentsList, function (AbonentInfoDto $a, AbonentInfoDto $b) {
-            return $a->abonentNo - $b->abonentNo;
+            return $a->abonentNo <=> $b->abonentNo;
         });
         usort($connectionsList, function (ConnectionDto $a, ConnectionDto $b) {
-            return $a->abonentNo - $b->abonentNo;
+            return $a->abonentNo <=> $b->abonentNo;
         });
 
         return $this->view->render(
             $this->response,
             'front/connection/connections.twig',
             [
-                'contractInfo' => $contractInfo,
+                'contract' => $contractInfo,
                 'abonentsList' => $abonentsList,
                 'connectionsList' => $connectionsList,
             ]
         );
     }
-
 }

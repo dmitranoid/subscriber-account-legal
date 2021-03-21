@@ -5,10 +5,9 @@
 {% set connectionTypes= {'1':'показания', '2':'расчет по индексам', '3':'мощность', '4':'сумматор'} %}
 
 {% block content %}
-
-
-    <h4 class="underline"><b>Договор <u>№{{ contract.contractNo }}</u></b></h4>
-    <h5>{{ contract.name }}</h5>
+    <div class="contract">
+        <h5>Договор №{{ contract.contractNo }}, {{ contract.name }}</h5>
+    </div>
     <div class="table-responsive">
         <table class="table table-hover table-bordered">
             <tbody>
@@ -17,7 +16,7 @@
                 <td>{{ abonent.name }}</td>
             </tr>
             <tr>
-                <th>Наименование ТУ</th>
+                <th>Наименование точки учета</th>
                 <td>{{ connection.name }}</td>
             </tr>
             <tr>
@@ -49,7 +48,7 @@
                 <td>{{ connection.counter.installDate ? connection.counter.installDate|date('d.m.Y') : '-' }}</td>
             </tr>
             <tr>
-                <th>Коэфф. трансформации</th>
+                <th>Коэффициент трансформации</th>
                 <td>{{ connection.counter.coeffTr }}</td>
             </tr>
             </tbody>

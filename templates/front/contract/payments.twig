@@ -3,24 +3,20 @@
 {% block title %}Счета и оплаты{% endblock %}
 
 {% block content %}
-    {% if contract.npp1 %}
-        {% set orgName = contract.npp1 ~ " " ~ contract.npp2 %}
-    {% else %}
-        {% set orgName = contract.np1 %}
-    {% endif %}
-
     <div class="contract">
-        <h5>Договор  №{{ contract.kp }}, {{ orgName }}</h5>
+        <h5>Договор №{{ contract.contractNo }}, {{ contract.name }}</h5>
     </div>
-<div class="alert alert-warning" role="alert">
-{#    <p>Задолженность на {{ 'now'|date('d.m.Y') }} : <span class="text-bold" style="margin-left: 3rem;">{{ debtInfo.invoicesSum.sumTotal - debtInfo.paymentsSum.sumTotal }} руб.</span></p>#}
-    <p>Состояние расчетов на {{ debtInfo.date|date('d.m.Y') }}:<span class="text-bold" style="margin-left: 1rem;">{% if debtInfo >0 %}задолженность {% else %}переплата{% endif %}{{ debtInfo.sum }} руб.</span></p>
-</div>
+    <div class="alert alert-warning" role="alert">
+        {#    <p>Задолженность на {{ 'now'|date('d.m.Y') }} : <span class="text-bold" style="margin-left: 3rem;">{{ debtInfo.invoicesSum.sumTotal - debtInfo.paymentsSum.sumTotal }} руб.</span></p>#}
+        <p>Состояние расчетов на {{ debtInfo.date|date('d.m.Y') }}:<span class="text-bold"
+                                                                         style="margin-left: 1rem;">{% if debtInfo >0 %}задолженность {% else %}переплата{% endif %}{{ debtInfo.sum }} руб.</span>
+        </p>
+    </div>
     <table class="table contract-paydocs">
-    <thead>
-    <tr>
-        <th>дата</th>
-        <th>расчетный период</th>
+        <thead>
+        <tr>
+            <th>дата</th>
+            <th>расчетный период</th>
         <th>документ</th>
         <th>выставлено, руб.</th>
         <th>оплачено, руб.</th>
@@ -28,13 +24,13 @@
     </thead>
     <tbody>
     {% for doc in docList %}
-    <tr class="">
-        <td>{{ doc.date|date('d.m.Y') }}</td>
-        <td>{{ doc.period_m }}.{{ doc.period_y }}</td>
-        <td>{{ doc.doctype }} {{ doc.docno }}</td>
-        <td>{% if doc.sumInv %}{{ doc.sumInv|number_format(2, '.', ' ') }}{% endif %}</td>
-        <td>{% if doc.sumPay %}{{ doc.sumPay|number_format(2, '.', ' ') }}{% endif %}</td>
-    </tr>
+        <tr class="">
+            <td>{{ doc.date|date('d.m.Y') }}</td>
+            <td>{{ doc.period|date('m') }}.{{ doc.period|date('Y') }}</td>
+            <td>{{ doc.doctype }} {{ doc.docno }}</td>
+            <td>{% if doc.sumDt %}{{ doc.sumDt|number_format(2, '.', ' ') }}{% endif %}</td>
+            <td>{% if doc.sumKt %}{{ doc.sumKt|number_format(2, '.', ' ') }}{% endif %}</td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>

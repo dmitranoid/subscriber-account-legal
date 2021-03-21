@@ -13,8 +13,6 @@ use App\Application\Service\Contract\ContractDocsService;
 use App\Application\Service\Contract\ContractInfoServiceInterface;
 use App\Application\Service\Document\DocumentServiceInterface;
 use App\Application\View\ViewInterface;
-use App\Infrastructure\Service\Session\Session;
-use DateTime;
 use PDO;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
@@ -30,20 +28,20 @@ class ViewContractDocsAction extends Action
 
     protected function action(): Response
     {
-        $auth = new AuthService($this->logger, $this->pdo, new Session());
-        $contractNom = ($auth->getUser())->code_contract ?? null;
-        if (empty($contractNom)) {
+        $auth = AppHelper::container()->get(AuthService::class);
+        $contractNo = $auth->getCurrentAccount()->getContractNo();
+
+        if (empty($contractNo)) {
             $this->logger->error('не найден договор');
             throw new AppException('не найден договор');
         }
-        $contractInfo = (AppHelper::container()->get(ContractInfoServiceInterface::class))->getContractInfo($contractNom);
-
-        $docsService = AppHelper::container()->get(DocumentServiceInterface::class)->getDocumentsByContract;
+        $contractInfo = AppHelper::container()->get(ContractInfoServiceInterface::class)->getContractInfo($contractNo);
+        $docsService = AppHelper::container()->get(DocumentServiceInterface::class);
 
         $docList = $docsService->getDocumentsByContract(
-            $contractNom,
-            DateTime::createFromFormat('Ymd', '20190101'),
-            new DateTime('now')
+            $contractNo,
+            \DateTimeImmutable::createFromFormat('Y-m-d', '2019-01-01'),
+            new \DateTimeImmutable('now')
         );
 
         return $this->view->render(
