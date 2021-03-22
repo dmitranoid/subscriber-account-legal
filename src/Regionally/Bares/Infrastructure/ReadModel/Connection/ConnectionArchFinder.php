@@ -24,6 +24,7 @@ final class ConnectionArchFinder extends GenericSqlFinder
                 $archData,
                 $this->getAllSql()
                     ->where('kp', $contractNom)
+                    ->where('((tpok<>ppok and sr=1) or sr in (2,3,4))')
                     ->fetchAll()
             );
         }
@@ -38,7 +39,8 @@ final class ConnectionArchFinder extends GenericSqlFinder
             $sql = $this->getAllSql()
                 ->where('kp', $contractNom)
                 ->where('nab', $abonentNom)
-                ->where('naim', $counterNom);
+                ->where('naim', $counterNom)
+                ->where('((tpok<>ppok and sr=1) or sr in (2,3,4))');
 
             $currData = $sql->fetchAll();
             if ($currData) {

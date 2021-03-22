@@ -54,7 +54,7 @@ class ConnectionService implements ConnectionServiceInterface
 
         $readingsHistory = [];
         foreach ($readingsHistoryRaw as $item) {
-            // FIXME узнать у Слюзюк, почкму пустые rppok
+            // rppok до 03-2021 пустой если не платили в этом месяце, после 03-2021 хранит последний месяц оплаты
             if (empty($item['rppok'])) {
                 continue;
             }

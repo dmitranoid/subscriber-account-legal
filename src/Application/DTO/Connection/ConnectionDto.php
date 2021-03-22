@@ -11,9 +11,9 @@ class ConnectionDto
     public string $name;
     public string $calcMode; // Способ расчетов
     public string $tariffName;
-    public CounterDto $counter;
+    public ?CounterDto $counter;
 
-    public function __construct(string $contractNo, string $abonentNo, string $name, string $calcMode, string $tariffName, CounterDto $counter)
+    public function __construct(string $contractNo, string $abonentNo, string $name, string $calcMode, string $tariffName, ?CounterDto $counter)
     {
         $this->contractNo = $contractNo;
         $this->abonentNo = $abonentNo;
