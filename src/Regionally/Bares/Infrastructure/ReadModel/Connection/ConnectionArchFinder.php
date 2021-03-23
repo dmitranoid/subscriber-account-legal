@@ -40,7 +40,7 @@ final class ConnectionArchFinder extends GenericSqlFinder
                 ->where('kp', $contractNom)
                 ->where('nab', $abonentNom)
                 ->where('naim', $counterNom)
-                ->where('((tpok<>ppok and sr=1) or sr in (2,3,4))');
+                ->where('((tpok<>ppok and sr=1) or sr in (2,3,4))');    // не берем показания без изменений
 
             $currData = $sql->fetchAll();
             if ($currData) {

@@ -103,7 +103,7 @@ class ReadingsService
             }
         } catch (JsonException $e) {
             //  JSON_THROW_ON_ERROR @since 7.3
-            $this->logger->error($e->getMessage);
+            $this->logger->error($e->getMessage());
             return null;
         }
         return $readingsData;
