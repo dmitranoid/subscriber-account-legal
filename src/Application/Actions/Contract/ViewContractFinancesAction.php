@@ -32,21 +32,15 @@ class ViewContractFinancesAction extends Action
         $financeService = AppHelper::container()->get(FinanceServiceInterface::class);
 
         $date = new DateTime('now');
-        $debt = $financeService->getDebt(
+        $debtInfo = $financeService->getDebt(
             $contractNo,
-            \DateTimeImmutable::createFromFormat('Y-m-d', '2020-01-01'),
             \DateTimeImmutable::createFromMutable($date)
         );
-        //todo переделать в отдельный  сервис
-        $debtInfo = [
-            'date' => new DateTime('first day of this month'),
-            'sum' => (float)$debt['invoicesSum'] - (float)$debt['paymentsSum'], // todo было $contractInfo['dolg01'],
-        ];
         // $financeService->getDebt($contractNo, \DateTime::createFromFormat('Ymd', '20190101'), \DateTime::createFromFormat('Ymd', '20191231'));
         $docList = $financeService->getPaymentsAndInvoicesList($contractNo);
         return $this->view->render(
             $this->response,
-            'front/contract/payments.twig',
+            'front/contract/finance.twig',
             [
                 'contract' => $contractInfo,
                 'debtInfo' => $debtInfo,

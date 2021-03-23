@@ -7,7 +7,7 @@ namespace App\Regionally\Bares\Application\Service\Abonent;
 
 use App\Application\DTO\Abonent\AbonentInfoDto;
 use App\Application\Service\Abonent\AbonentServiceInterface;
-use App\Regionally\Bares\Application\DtoAssembler\Abonent\AbonentInfo;
+use App\Regionally\Bares\Application\DtoTransformer\Abonent\AbonentInfo;
 use App\Regionally\Bares\Infrastructure\ReadModel\Abonent\AbonentFinder;
 use PDO;
 

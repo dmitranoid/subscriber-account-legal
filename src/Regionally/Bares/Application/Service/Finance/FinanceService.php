@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace App\Regionally\Bares\Application\Service\Finance;
 
 
+use App\Application\DTO\Finance\DebtDto;
 use App\Application\DTO\Finance\FinanceRecordDto;
 use App\Application\Service\Finance\FinanceServiceInterface;
-use App\Regionally\Bares\Application\DtoAssembler\Finance\FinanceRecInvoice;
-use App\Regionally\Bares\Application\DtoAssembler\Finance\FinanceRecPayment;
+use App\Regionally\Bares\Application\DtoTransformer\Finance\Debt;
+use App\Regionally\Bares\Application\DtoTransformer\Finance\FinanceRecInvoice;
+use App\Regionally\Bares\Application\DtoTransformer\Finance\FinanceRecPayment;
+use App\Regionally\Bares\Infrastructure\ReadModel\Contract\ContractFinder;
 use App\Regionally\Bares\Infrastructure\ReadModel\Invoice\InvoiceFinder;
 use App\Regionally\Bares\Infrastructure\ReadModel\Payment\PaymentFinder;
 use DateTimeImmutable;
@@ -23,11 +26,10 @@ final class FinanceService implements FinanceServiceInterface
         $this->pdo = $pdo;
     }
 
-    public function getDebt($contractNo, DateTimeImmutable $periodStart, DateTimeImmutable $periodEnd): array
+    public function getDebt(string $contractNo, DateTimeImmutable $date): DebtDto
     {
-        $paymentsSum = (new PaymentFinder($this->pdo))->getSumByContract($contractNo, $periodStart, $periodEnd);
-        $invoicesSum = (new InvoiceFinder($this->pdo))->getSumByContract($contractNo, $periodStart, $periodEnd);
-        return ['invoicesSum' => $invoicesSum['sumTotal'], 'paymentsSum' => $paymentsSum['sumTotal']];
+        $contract = (new ContractFinder($this->pdo))->getByCode($contractNo);
+        return Debt::transform($contract);
     }
 
     /**

@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace App\Regionally\Bares\Application\DtoAssembler\Contract;
+namespace App\Regionally\Bares\Application\DtoTransformer\Contract;
 
 
 use App\Application\DTO\Contract\ContractDto;

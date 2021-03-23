@@ -2,13 +2,13 @@
 declare(strict_types=1);
 
 
-namespace App\Regionally\Bares\Application\DtoAssembler\Finance;
+namespace App\Regionally\Bares\Application\DtoTransformer\Finance;
 
 
 use App\Application\DTO\Finance\FinanceRecordDto;
 use DateTimeImmutable;
 
-class FinanceRecPayment
+class FinanceRecInvoice
 {
     public static function transform($data): FinanceRecordDto
     {
@@ -18,8 +18,8 @@ class FinanceRecPayment
             $data['rp'],
             $data['doctype'],
             '',
-            0,
-            (float)$data['sum'],
+            (float)$data['sumTotal'],
+            0
         );
     }
 }

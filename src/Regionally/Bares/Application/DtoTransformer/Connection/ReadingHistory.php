@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace App\Regionally\Bares\Application\DtoAssembler\Connection;
+namespace App\Regionally\Bares\Application\DtoTransformer\Connection;
 
 
 use App\Application\DTO\Connection\ReadingHistoryDto;

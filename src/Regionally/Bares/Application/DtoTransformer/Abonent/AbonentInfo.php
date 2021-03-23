@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace App\Regionally\Bares\Application\DtoAssembler\Abonent;
+namespace App\Regionally\Bares\Application\DtoTransformer\Abonent;
 
 
 use App\Application\DTO\Abonent\AbonentInfoDto;
