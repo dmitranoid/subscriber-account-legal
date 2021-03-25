@@ -27,15 +27,16 @@ return static function (ContainerBuilder $containerBuilder) {
             AbonentServiceInterface::class => DI\autowire(AbonentService::class),
             FinanceServiceInterface::class => DI\autowire(FinanceService::class),
             AuthService::class => DI\autowire(AuthService::class),
-            DocumentServiceInterface::class => function () {
+            DocumentServiceInterface::class => DI\factory(function (array $settings) {
                 // TODO брать путь к документам из настроек
                 //$documentsStorageRoot = 'F:/lkprom-docs/';  // под windows буква диска с большой буквы !!!
-                $documentsStorageRoot = 'D:/work/legal-docs/';  // под windows буква диска с большой буквы !!!
+//                $documentsStorageRoot = 'D:/work/legal-docs/';  // под windows буква диска с большой буквы !!!
+                $documentsStorageRoot = $settings['documentsStorageRoot'];
                 return new DocumentService(
                     new DocumentFinder($documentsStorageRoot),
                     $documentsStorageRoot
                 );
-            },
+            })->parameter('settings', DI\get('settings')),
         ]
     );
 };

@@ -9,7 +9,7 @@ return static function (ContainerBuilder $containerBuilder) {
     // Global Settings Object
     $containerBuilder->addDefinitions([
         'settings' => DI\add([
-            'documentStorageRoot' => 'D:/work/legal-docs/',
+            'documentsStorageRoot' => 'D:/work/legal-docs/',
             'db' => [
                 'operational' => [
                     'driver' => 'sqlite',

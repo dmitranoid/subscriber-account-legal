@@ -24,7 +24,6 @@ if (true) { // Should be set to true in production
     $containerBuilder->enableCompilation(__DIR__ . '/../storage/cache/php-di/');
 }
 
-// common
 // Set up settings
 $settings = require __DIR__ . '/../app/settings.php';
 $settings($containerBuilder);
@@ -33,8 +32,8 @@ $settings($containerBuilder);
 $dependencies = require __DIR__ . '/../app/dependencies.php';
 $dependencies($containerBuilder);
 
-$region = 'Bares';
 // Set up regional container
+$region = 'Bares';
 $settings = require __DIR__ . '/../app/' . $region . '/settings.php';
 $settings($containerBuilder);
 $repositories = require __DIR__ . '/../app/' . $region . '/repositories.php';
