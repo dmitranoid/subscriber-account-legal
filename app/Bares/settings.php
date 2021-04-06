@@ -6,10 +6,17 @@ use DI\ContainerBuilder;
 
 
 return static function (ContainerBuilder $containerBuilder) {
-    // Global Settings Object
+    // Local Settings
+    $storageRoot = __DIR__ . '/../../storage/';
     $containerBuilder->addDefinitions([
-        'settings' => DI\add([
-            'documentsStorageRoot' => 'D:/work/legal-docs/',
+        'localSettings' => DI\add([
+            'dirs' => [
+//            'documentsStorageRoot' => 'F:/lkprom-docs/', // под windows буква диска с большой буквы !!!
+                'documentsStorageRoot' => 'D:/work/legal-docs/', // под windows буква диска с большой буквы !!!
+                'readingsStorageRoot' => $storageRoot . 'bar/readings/',
+                'readingsCsvRoot' => $storageRoot . 'bar/readings-csv/',
+                'readingsTempDir' => $storageRoot . 'bar/readings-tmp/',
+            ],
             'db' => [
                 'operational' => [
                     'driver' => 'sqlite',
@@ -20,12 +27,6 @@ return static function (ContainerBuilder $containerBuilder) {
                 'archive' => [
                     'driver' => 'sqlite',
                     'db' => realpath(__DIR__ . '/../../data/sqlite/legal-arch.sqlite3'),
-                    'username' => '',
-                    'password' => '',
-                ],
-                'administration' => [
-                    'driver' => 'sqlite',
-                    'db' => realpath(__DIR__ . '/../../data/sqlite/legal-administration.sqlite3'),
                     'username' => '',
                     'password' => '',
                 ],

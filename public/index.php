@@ -36,8 +36,6 @@ $dependencies($containerBuilder);
 $region = 'Bares';
 $settings = require __DIR__ . '/../app/' . $region . '/settings.php';
 $settings($containerBuilder);
-$repositories = require __DIR__ . '/../app/' . $region . '/repositories.php';
-$repositories($containerBuilder);
 $dependencies = require __DIR__ . '/../app/' . $region . '/dependencies.php';
 $dependencies($containerBuilder);
 
