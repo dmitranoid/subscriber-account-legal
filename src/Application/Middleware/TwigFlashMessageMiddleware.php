@@ -12,7 +12,6 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Flash\Messages;
 use Slim\Views\Twig;
-use TheSeer\Tokenizer\Exception;
 
 class TwigFlashMessageMiddleware implements MiddlewareInterface
 {
@@ -32,8 +31,7 @@ class TwigFlashMessageMiddleware implements MiddlewareInterface
         $this->twig->getEnvironment()->addGlobal('flash', new TwigFash($this->flash->getMessages()));
         $this->flash->clearMessages();
 
-        $response = $handler->handle($request);
-        return $response;
+        return $handler->handle($request);
     }
 
 }

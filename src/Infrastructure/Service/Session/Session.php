@@ -83,7 +83,7 @@ class Session implements SessionInterface
      */
     private function isExpired()
     {
-        $activity = isset($_SESSION['_last_activity']) ? $_SESSION['_last_activity'] : false;
+        $activity = $_SESSION['_last_activity'] ?? false;
         if ($activity && ((time() - $activity) > $this->timeToLive)) {
             return true;
         }

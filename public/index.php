@@ -8,7 +8,9 @@ ini_set("date.timezone","Europe/Minsk");
 
 use App\Application\Handlers\HttpErrorHandler;
 use App\Application\Handlers\ShutdownHandler;
+use App\Application\Helpers\AppHelper;
 use App\Application\ResponseEmitter\ResponseEmitter;
+use App\Infrastructure\Service\Session\Session;
 use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
 use Slim\Factory\ServerRequestCreatorFactory;
@@ -20,27 +22,28 @@ require __DIR__ . '/../src/Application/Helpers/AppHelper.php';
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
 
-if (true) { // Should be set to true in production
+if (true) { // true in production
     $containerBuilder->enableCompilation(__DIR__ . '/../storage/cache/php-di/');
 }
 
-// Set up settings
 $settings = require __DIR__ . '/../app/settings.php';
 $settings($containerBuilder);
 
-// Set up dependencies
 $dependencies = require __DIR__ . '/../app/dependencies.php';
 $dependencies($containerBuilder);
 
-// Set up regional container
-$region = 'Bares';
-$settings = require __DIR__ . '/../app/' . $region . '/settings.php';
-$settings($containerBuilder);
-$dependencies = require __DIR__ . '/../app/' . $region . '/dependencies.php';
-$dependencies($containerBuilder);
-
-// Build PHP-DI Container instance
 $container = $containerBuilder->build();
+
+
+$region = AppHelper::detectRegion($container->get(Session::class));
+// настройки для региона(филиала)
+// ! применятся только если пользователь уже авторизирован
+if (!empty($region) && file_exists(__DIR__ . '/../app/' . $region)) {
+    $settings = require __DIR__ . '/../app/' . $region . '/settings.php';
+    $settings($containerBuilder);
+    $dependencies = require __DIR__ . '/../app/' . $region . '/dependencies.php';
+    $dependencies($containerBuilder);
+}
 
 // Instantiate the app
 AppFactory::setContainer($container);
@@ -72,13 +75,12 @@ register_shutdown_function($shutdownHandler);
 
 // Add Routing Middleware
 $app->addRoutingMiddleware();
-
-// init uriHelper
-App\Application\Helpers\UriHelper::setRouteParser($app->getRouteCollector()->getRouteParser());
-
 // Add Error Middleware
 $errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, false, false);
 $errorMiddleware->setDefaultErrorHandler($errorHandler);
+
+// init uriHelper
+App\Application\Helpers\UriHelper::setRouteParser($app->getRouteCollector()->getRouteParser());
 
 // Run App & Emit Response
 $response = $app->handle($request);

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Application\DTO\Account;
 
 
-class AccountrDto
+class AccountDto
 {
     public string $id;
     public string $login;
@@ -16,18 +16,6 @@ class AccountrDto
     public string $email;
     public string $region;
 
-    /**
-     * UserDto constructor.
-     * @param string $id
-     * @param string $login
-     * @param string $passwordHash
-     * @param string $code_group
-     * @param string $code_contract
-     * @param string $statuses
-     * @param string $phones
-     * @param string $email
-     * @param string $region
-     */
     public function __construct(string $id, string $login, string $passwordHash, string $code_group, string $code_contract, string $statuses, string $phones, string $email, string $region)
     {
         $this->id = $id;
@@ -40,6 +28,4 @@ class AccountrDto
         $this->email = $email;
         $this->region = $region;
     }
-
-
 }

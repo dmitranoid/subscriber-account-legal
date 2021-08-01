@@ -5,19 +5,20 @@ declare(strict_types=1);
 namespace App\Application\Service\User;
 
 
+use App\Application\DTO\Account\AccountDto;
 use App\Application\Exceptions\AppDbException;
 use App\Application\Exceptions\AppException;
 use App\Application\Helpers\ArrayHelper;
 use App\Application\Validators\Contract\ContractExists;
 use App\Application\Validators\User\UserExists;
+use App\Domain\Authentication\Account\AccountRepositoryInterface;
 use App\Infrastructure\Persistence\Account\SqlAccountRepository;
 use PDO;
 use Psr\Log\LoggerInterface;
 
 class UserService
 {
-    /** @var SqlAccountRepository */
-    private $userRepository;
+    private AccountRepositoryInterface $accountRepository;
 
     private $allowedFields = [
         'login',
@@ -27,15 +28,15 @@ class UserService
         'email',
         'phones'
     ];
-    /** @var PDO */
-    private $pdo;
-    /** @var LoggerInterface */
-    private $logger;
+
+    private PDO $pdo;
+
+    private LoggerInterface $logger;
 
     public function __construct(PDO $pdo, LoggerInterface $logger)
     {
         $this->pdo = $pdo;
-        $this->userRepository = new SqlAccountRepository($this->pdo);
+        $this->accountRepository = new SqlAccountRepository($this->pdo);
         $this->logger = $logger;
     }
 
@@ -43,17 +44,19 @@ class UserService
      * @param string $login
      * @return array
      * @throws AppException
+     * @throws \Exception
      */
-    public function getByLogin(string $login):array
+    public function getByLoginAndRegion(string $login, string $region): AccountDto
     {
-        $user = $this->userRepository->getByLogin($login);
-        if (false === $user || empty($user)) {
-            throw new AppException(sprintf('пользователь %s не существует', $login));
+        $account = $this->accountRepository->findByLoginForRegion($login, $region);
+        if (is_null($account)) {
+            throw new AppException(sprintf('пользователь %s не существует в регионе %s', $login, $region));
         }
-        return $user;
+        return $account;
     }
 
     public function getUsersList():array
+
     {
         return [];
     }
@@ -85,7 +88,7 @@ class UserService
         }
 
         try {
-            $this->userRepository->save($data);
+            $this->accountRepository->save($data);
         } catch (AppDbException $e) {
             throw new AppException('ошибка сохранения данных', 0, $e);
         }
@@ -95,7 +98,7 @@ class UserService
     {
         $data = ArrayHelper::filterArrayKeys($data, $this->allowedFields);
         // проверяем существует ли договор
-        //todo инжектить котракт репозиторий или вынести проверку в валидатор
+        //todo инжектить контракт репозиторий или вынести проверку в валидатор
         $userExistsValidator = new UserExists($this->pdo);
         $userExistsValidator->setData($data['login']);
         if (!$userExistsValidator->validate()) {
@@ -106,7 +109,7 @@ class UserService
             $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
         }
         try {
-            $this->userRepository->save($data);
+            $this->accountRepository->save($data);
         } catch (AppDbException $e) {
             throw new AppException('ошибка сохранения данных', 0, $e);
         }
@@ -120,11 +123,11 @@ class UserService
     public function update(array $data): void
     {
         if (!isset($data['id'])) {
-            $user = $this->getByLogin($data['login']);
+            $user = $this->getByLoginAndRegion($data['login'], $data['region']);
             $data['id'] = $user['id'];
         }
         try {
-            $this->userRepository->update($data);
+            $this->accountRepository->update($data);
         } catch (AppDbException $e) {
             throw new AppException();
         }
@@ -137,16 +140,16 @@ class UserService
     public function delete(int $id)
     {
         try {
-            $this->userRepository->delete($id);
+            $this->accountRepository->delete($id);
         } catch (AppDbException $e) {
             throw new AppException();
         }
     }
 
-    public function deleteByLogin($login)
+    public function deleteByLoginAndRegion($login, $region)
     {
-        //TODO проверить права пользователя, нельзя удалить с правами выше чем у себя
-        $user = $this->userRepository->getByLogin($login);
+        //TODO проверить права пользователя
+        $user = $this->accountRepository->findByLoginForRegion($login, $region);
         $this->delete((int)$user['id']);
     }
 }

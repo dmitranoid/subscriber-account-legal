@@ -20,13 +20,10 @@ final class ConnectionArchFinder extends GenericSqlFinder
         $archData = [];
         foreach ($this->getPeriods() as $archPeriod) {
             $this->setPeriod($archPeriod[0], $archPeriod[1]);
-            array_push(
-                $archData,
-                $this->getAllSql()
-                    ->where('kp', $contractNom)
-                    ->where('((tpok<>ppok and sr=1) or sr in (2,3,4))')
-                    ->fetchAll()
-            );
+            $archData[] = $this->getAllSql()
+                ->where('kp', $contractNom)
+                ->where('((tpok<>ppok and sr=1) or sr in (2,3,4))')
+                ->fetchAll();
         }
         return $archData;
     }

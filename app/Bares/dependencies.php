@@ -6,31 +6,36 @@ use App\Application\Service\Connection\ConnectionServiceInterface;
 use App\Application\Service\Contract\ContractInfoServiceInterface;
 use App\Application\Service\Document\DocumentServiceInterface;
 use App\Application\Service\Finance\FinanceServiceInterface;
-use App\Domain\Authentication\Account\AccountRepositoryInterface;
-use App\Infrastructure\Persistence\Account\SqlAccountRepository;
 use App\Infrastructure\Service\DocumentFinder\DocumentFinder;
 use App\Regionally\Bares\Application\Service\Abonent\AbonentService;
 use App\Regionally\Bares\Application\Service\Connection\ConnectionService;
 use App\Regionally\Bares\Application\Service\Contract\ContractInfoService;
+use App\Regionally\Bares\Application\Service\Document\CachedDocumentService;
 use App\Regionally\Bares\Application\Service\Document\DocumentService;
 use App\Regionally\Bares\Application\Service\Finance\FinanceService;
+use App\Regionally\Bares\Application\ServiceProviders\PdoPromProvider;
 use DI\ContainerBuilder;
 
 return static function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
-// repositories
-            AccountRepositoryInterface::class => DI\autowire(SqlAccountRepository::class),
+            'PdoBarProm' => DI\factory([PdoPromProvider::class, 'register']),
 // services
-            ContractInfoServiceInterface::class => DI\autowire(ContractInfoService::class),
-            ConnectionServiceInterface::class => DI\autowire(ConnectionService::class),
-            AbonentServiceInterface::class => DI\autowire(AbonentService::class),
-            FinanceServiceInterface::class => DI\autowire(FinanceService::class),
+            ContractInfoServiceInterface::class => DI\autowire(ContractInfoService::class)
+                ->constructorParameter(PDO::class, DI\get('PdoBarProm')),
+            ConnectionServiceInterface::class => DI\autowire(ConnectionService::class)
+                ->constructorParameter(PDO::class, DI\get('PdoBarProm')),
+            AbonentServiceInterface::class => DI\autowire(AbonentService::class)
+                ->constructorParameter(PDO::class, DI\get('PdoBarProm')),
+            FinanceServiceInterface::class => DI\autowire(FinanceService::class)
+                ->constructorParameter(PDO::class, DI\get('PdoBarProm')),
             DocumentServiceInterface::class => DI\factory(function (array $settings) {
                 $documentsStorageRoot = $settings['documentsStorageRoot'];
-                return new DocumentService(
-                    new DocumentFinder($documentsStorageRoot),
-                    $documentsStorageRoot
-                );
+                return new CachedDocumentService(
+                    new Psr\SimpleCache\,
+                    new DocumentService(
+                        new DocumentFinder($documentsStorageRoot),
+                        $documentsStorageRoot
+                    );
             })->parameter('settings', DI\get('localSettings')),
         ]
     );

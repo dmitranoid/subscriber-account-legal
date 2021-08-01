@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Service\User;
 
 
+use App\Application\DTO\Account\AccountDto;
 use App\Infrastructure\Persistence\Account\SqlAccountRepository;
 use PDO;
 
@@ -20,7 +21,10 @@ class CustomerService
         $this->pdo = $pdo;
     }
 
-    public function getCustomersList()
+    /**
+     * @return AccountDto[]|null
+     */
+    public function getCustomersList(): array
     {
         $userRepository = new SqlAccountRepository($this->pdo);
         return $userRepository->getCustomers();

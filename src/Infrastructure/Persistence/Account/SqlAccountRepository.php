@@ -24,7 +24,7 @@ class SqlAccountRepository extends GenericSqlRepository implements AccountReposi
                 ->where('region', $region)
                 ->fetch();
         } catch (Exception $e) {
-            new Exception('db error', 0, $e);
+            throw new Exception('db error', 0, $e);
         }
         //return $this->mapper->map($data);
         return (false === $data) ? null : $this->map($data);
@@ -37,6 +37,9 @@ class SqlAccountRepository extends GenericSqlRepository implements AccountReposi
         return (false === $data) ? null : $this->map($data);
     }
 
+    /**
+     * @return Account[]|null
+     */
     public function findAll(): array
     {
         $dataItems = $this->getAll();
@@ -48,7 +51,10 @@ class SqlAccountRepository extends GenericSqlRepository implements AccountReposi
         return $accounts;
     }
 
-
+    /**
+     * @return Account[]
+     * @throws \Envms\FluentPDO\Exception
+     */
     public function getCustomers(): ?array
     {
         return $this->getAllSql()

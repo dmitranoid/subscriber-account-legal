@@ -9,9 +9,6 @@ use App\Application\Helpers\AppHelper;
 use App\Application\Helpers\UriHelper;
 use App\Application\Service\Auth\AuthService;
 use App\Domain\Authentication\Account\AccountRepositoryInterface;
-use App\Domain\Contract\ContractNotFoundException;
-use App\Infrastructure\Persistence\Contract\FoxproContractRepository;
-use App\Infrastructure\Persistence\Contract\SqlContractRepository;
 use App\Infrastructure\Service\Session\Session;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Psr7\Cookies;
@@ -24,7 +21,7 @@ class LoginAction extends AuthAction
         $region = $form['region'] ?? 'bar';
         $login = $form['login'] ?? '';
         $password = $form['password'] ?? '';
-        if ((empty($login) || empty($password))) {
+        if ((empty($login) || empty($password) || empty($region))) {
             return $this->withRedirect(UriHelper::urlFor('login'));
         }
 
@@ -45,7 +42,7 @@ class LoginAction extends AuthAction
         if ($account->isCustomer()) {
             $redirectUrl = UriHelper::urlFor('front.contract');
         }
-        if ($account->isManager()) {
+        if ($account->isManager() || $account->isAdmin()) {
             $redirectUrl = UriHelper::urlFor('admin.users');
         }
 

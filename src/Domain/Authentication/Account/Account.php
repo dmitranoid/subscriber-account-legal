@@ -19,11 +19,11 @@ class Account
 
     private string $email;
 
-    private string $phones;
+    private ?string $phones;
 
     private string $region;
 
-    public function __construct(?int $id, string $login, string $password, string $group, string $contractNo, string $email, string $phones, string $region)
+    public function __construct(?int $id, string $login, string $password, string $group, string $contractNo, string $email, ?string $phones, string $region)
     {
         $this->id = $id;
         $this->login = $login;
@@ -113,17 +113,17 @@ class Account
 
     public function isAdmin(): bool
     {
-        return ('admin' == ($this->group));
+        return ('admin' === ($this->group));
     }
 
     public function isManager(): bool
     {
-        return ('manager' == ($this->group));
+        return ('manager' === ($this->group));
     }
 
     public function isCustomer(): bool
     {
-        return ('customer' == ($this->group));
+        return ('customer' === ($this->group));
     }
 
 }
