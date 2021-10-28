@@ -19,6 +19,7 @@ use JsonException;
 use PDO;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
+use Webmozart\Assert\Assert;
 
 class ReadingsService
 {
@@ -33,11 +34,15 @@ class ReadingsService
     private LoggerInterface $logger;
 
 
-    public function __construct(PDO $pdo, Account $customer, LoggerInterface $logger)
+    public function __construct(PDO $pdo, LoggerInterface $logger)
     {
         $this->pdo = $pdo;
-        $this->customer = $customer;
         $this->logger = $logger;
+    }
+
+    public function setCustomer(Account $customer): void
+    {
+        $this->customer = $customer;
     }
 
     /**
@@ -73,6 +78,7 @@ class ReadingsService
 
     public function removeTmpReadings()
     {
+        Assert::notEmpty($this->customer);
         $filename = sprintf("%s.json", $this->customer->getContractNo());
         $dir = $_SERVER['DOCUMENT_ROOT'] . "/../storage/readings-tmp/";
         if (file_exists($dir . $filename)) {
@@ -159,6 +165,7 @@ class ReadingsService
      */
     public function saveTmpReadings(array $readingsData): void
     {
+        Assert::notEmpty($this->customer);
         // load settings
         $filename = sprintf('%s.json', $this->customer->getContractNo());
         $dir = $_SERVER['DOCUMENT_ROOT'] . '/../storage/readings-tmp/';
@@ -178,6 +185,7 @@ class ReadingsService
      */
     public function loadTmpReadings(): ?array
     {
+        Assert::notEmpty($this->customer);
         // load settings
         $filename = sprintf('%s.json', $this->customer->getContractNo());
         // todo взять путь из настроек
@@ -203,6 +211,7 @@ class ReadingsService
 
     private function saveToFileJson(array $contract, array $abonentsList, array $connectionsList, array $readings)
     {
+        Assert::notEmpty($this->customer);
         // load settings
         /** @var DateTimeImmutable */
         $readingsPeriod = $this->getPeriodForReadings(new DateTimeImmutable('now'));
@@ -218,6 +227,7 @@ class ReadingsService
 
     private function saveToFileCsv(array $contract, array $abonentsList, array $connectionsList, array $readings)
     {
+        Assert::notEmpty($this->customer);
         // load settings
         /** @var DateTimeImmutable */
         $readingsPeriod = $this->getPeriodForReadings(new DateTimeImmutable('now'));
@@ -237,6 +247,7 @@ class ReadingsService
 
     private function emailToCustomer(array $contract, array $abonentsList, array $connectionsList, array $readings)
     {
+        Assert::notEmpty($this->customer);
         // load settings
         $readingsPeriod = $this->getPeriodForReadings(new DateTimeImmutable('now'));
         // customer

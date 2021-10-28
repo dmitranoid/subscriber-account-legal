@@ -10,7 +10,6 @@ use App\Application\Exceptions\AppException;
 use App\Application\Helpers\AppHelper;
 use App\Application\Service\Auth\AuthService;
 use App\Application\Service\Readings\ReadingsService;
-use App\Infrastructure\Service\Session\Session;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class SaveReadingsAction extends Action
@@ -25,7 +24,7 @@ class SaveReadingsAction extends Action
             throw new AppException('не найден договор');
         }
         $readings = $this->request->getParsedBody();
-
+// TODO заменить на DI
         $readingsService = new ReadingsService($this->pdo, $auth->getCurrentAccount(), $this->logger);
         try {
             $readingsService->saveTmpReadings($readings);

@@ -21,6 +21,7 @@ use App\Application\Actions\Contract\ViewDocAction;
 use App\Application\Middleware\CustomerGuardedMiddleware;
 use App\Application\Middleware\ManagerGuardedMiddleware;
 use App\Application\Service\Auth\AuthService;
+use App\Domain\Authentication\Account\AccountRepositoryInterface;
 use App\Infrastructure\Service\Session\SessionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -37,10 +38,10 @@ return static function (App $app) {
     $session = $container->get(SessionInterface::class);
     $app->group($routePrefix, function (Group $group) use ($container, $app, $session) {
         $group->get('/', function (Request $request, Response $response) use ($container, $app, $session) {
-            // перебрасываем из корня в зависимости от группы
+            // перебрасываем из корня в зависимости от группы а админку или кабинет
             $authService = new AuthService(
                 $container->get(LoggerInterface::class),
-                $container->get(\App\Domain\Authentication\Account\AccountRepositoryInterface::class),
+                $container->get(AccountRepositoryInterface::class),
                 $session
             );
             if (!$authService->isAccountAuthenticated()) {
@@ -69,7 +70,6 @@ return static function (App $app) {
             $group->get('finances', ViewContractFinancesAction::class)->setName('front.payments');
             $group->get('docs', ViewContractDocsAction::class)->setName('front.docs');
             $group->get('viewdoc', ViewDocAction::class)->setName('viewdoc');
-            //       $group->get('chat', ViewChatAction::class);
         })->add(CustomerGuardedMiddleware::class);
 
 // admin panel
@@ -78,16 +78,9 @@ return static function (App $app) {
             $group->get('/user[/{login}]', ViewUserAction::class)->setName('admin.user.show');
             $group->post('/user/{login}', EditUserAction::class)->setName('admin.user.edit');
             $group->post('/user', NewUserAction::class)->setName('admin.user.create');
-            // fixme delete -> post only !!!!
+            // todo delete -> post only !!!!
             $group->any('/user/{login}/delete', DeleteUserAction::class)->setName('admin.user.delete');
-//        $group->post('/user/{login}', DoEditUserAction::class);
         })->add(ManagerGuardedMiddleware::class);
 
-        /*
-            $app->group('/users', function (Group $group) use ($container) {
-                $group->get('', ListUsersAction::class);
-                $group->get('/{id}', ViewUserAction::class);
-            });
-        */
     });
 };

@@ -5,14 +5,12 @@ namespace App\Application\Actions;
 
 use App\Application\View\ViewInterface;
 use App\Domain\DomainException\DomainRecordNotFoundException;
-use PDO;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Flash\Messages;
-use Slim\Views\Twig;
 
 abstract class Action
 {
@@ -28,14 +26,11 @@ abstract class Action
 
     protected Messages $flash;
 
-    protected PDO $pdo;
-
-    public function __construct(LoggerInterface $logger,  ViewInterface $view, PDO $pdo, Messages $flash)
+    public function __construct(LoggerInterface $logger, ViewInterface $view, Messages $flash)
     {
         $this->logger = $logger;
         $this->view = $view;
         $this->flash = $flash;
-        $this->pdo = $pdo;
     }
 
     public function __invoke(Request $request, Response $response, array $args): Response

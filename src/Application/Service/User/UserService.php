@@ -13,12 +13,16 @@ use App\Application\Validators\Contract\ContractExists;
 use App\Application\Validators\User\UserExists;
 use App\Domain\Authentication\Account\AccountRepositoryInterface;
 use App\Infrastructure\Persistence\Account\SqlAccountRepository;
+use App\Infrastructure\ReadModel\PagerSettings;
+use App\Infrastructure\ReadModel\User\UserFinder;
 use PDO;
 use Psr\Log\LoggerInterface;
 
-class UserService
+class UserService implements UserServiceInterface
 {
     private AccountRepositoryInterface $accountRepository;
+
+    private UserFinder $userFinder;
 
     private $allowedFields = [
         'login',
@@ -37,39 +41,59 @@ class UserService
     {
         $this->pdo = $pdo;
         $this->accountRepository = new SqlAccountRepository($this->pdo);
+        $this->userFinder = new UserFinder($this->pdo);
         $this->logger = $logger;
     }
 
-    /**
-     * @param string $login
-     * @return array
-     * @throws AppException
-     * @throws \Exception
-     */
+    private function accountDtoMapper(array $account): AccountDto
+    {
+        return new AccountDto(
+            $account['id'],
+            $account['login'],
+            $account['password'],
+            $account['code_group'],
+            $account['code_contract'],
+            $account['statuses'] ?? '',
+            $account['phones'],
+            $account['email'],
+            $account['region']
+        );
+    }
+
     public function getByLoginAndRegion(string $login, string $region): AccountDto
     {
-        $account = $this->accountRepository->findByLoginForRegion($login, $region);
+        $account = $this->userFinder->findByLoginForRegion($login, $region);
+
         if (is_null($account)) {
             throw new AppException(sprintf('пользователь %s не существует в регионе %s', $login, $region));
         }
-        return $account;
+        return $this->accountDtoMapper($account);
     }
 
-    public function getUsersList():array
+    public function getAllUsersList(PagerSettings $pager): array
+    {
+        return array_map([$this, 'accountDtoMapper'], $this->accountRepository->getAll());
+    }
 
+    public function getCustomersList(PagerSettings $pager): array
+    {
+        return array_map([$this, 'accountDtoMapper'], $this->userFinder->getCustomers([], $pager));
+    }
+
+    public function getManagersList(PagerSettings $pager): array
+    {
+        return array_map([$this, 'accountDtoMapper'], $this->userFinder->getManagers([], $pager));
+    }
+
+    public function getAdminsList(PagerSettings $pager): array
     {
         return [];
     }
 
-    /**
-     * @param array $data
-     * @throws AppException
-     */
-    public function addCustomer(array $data):void
+    public function addCustomer(array $data): void
     {
         $data = ArrayHelper::filterArrayKeys($data, $this->allowedFields);
         // проверяем существует ли договор
-        //todo инжектить котракт репозиторий или вынести проверку в валидатор
         $contractExistsValidator = new ContractExists($this->pdo);
         $contractExistsValidator->setData($data['code_contract']);
         if (!$contractExistsValidator->validate()) {
@@ -115,11 +139,6 @@ class UserService
         }
     }
 
-
-    /**
-     * @param array $data
-     * @throws AppException
-     */
     public function update(array $data): void
     {
         if (!isset($data['id'])) {
@@ -133,10 +152,6 @@ class UserService
         }
     }
 
-    /**
-     * @param int $id
-     * @throws AppException
-     */
     public function delete(int $id)
     {
         try {
