@@ -17,8 +17,8 @@ use App\Regionally\Bares\Application\ServiceProviders\PdoPromProvider;
 use DI\ContainerBuilder;
 
 return static function (ContainerBuilder $containerBuilder) {
-    $containerBuilder->addDefinitions([
-            'PdoBarProm' => DI\factory([PdoPromProvider::class, 'register']),
+    $containerBuilder->addDefinitions(array(
+            'PdoBarProm' => DI\factory(array(PdoPromProvider::class, 'register')),
 // services
             ContractInfoServiceInterface::class => DI\autowire(ContractInfoService::class)
                 ->constructorParameter(PDO::class, DI\get('PdoBarProm')),
@@ -30,13 +30,15 @@ return static function (ContainerBuilder $containerBuilder) {
                 ->constructorParameter(PDO::class, DI\get('PdoBarProm')),
             DocumentServiceInterface::class => DI\factory(function (array $settings) {
                 $documentsStorageRoot = $settings['documentsStorageRoot'];
+                $docsListCache = $settings['docsListCache'];
                 return new CachedDocumentService(
-                    new Psr\SimpleCache\,
+                    new \App\Infrastructure\Service\Cache\FileCache($docsListCache),
                     new DocumentService(
                         new DocumentFinder($documentsStorageRoot),
                         $documentsStorageRoot
-                    );
+                    )
+                );
             })->parameter('settings', DI\get('localSettings')),
-        ]
+        )
     );
 };

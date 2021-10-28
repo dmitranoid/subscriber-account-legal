@@ -16,6 +16,7 @@ return static function (ContainerBuilder $containerBuilder) {
                 'readingsStorageRoot' => $storageRoot . 'bar/readings/',
                 'readingsCsvRoot' => $storageRoot . 'bar/readings-csv/',
                 'readingsTempDir' => $storageRoot . 'bar/readings-tmp/',
+                'docsListCache' => $storageRoot . 'cache/doclist',
             ],
             'db' => [
                 'operational' => [
