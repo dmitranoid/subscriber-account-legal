@@ -50,12 +50,14 @@
     "vlucas/valitron": "^1.4"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-master",
     "codeception/codeception": "^4.1",
+    "codeception/module-asserts": "^1.0.0",
     "codeception/module-phpbrowser": "^1.0.0",
-    "codeception/module-asserts": "^1.0.0"
+    "phpstan/phpstan": "^0.12.99",
+    "roave/security-advisories": "dev-master"
   },
   "scripts": {
-    "start": "php -S localhost:80 -t public"
+    "start": "php -S localhost:80 -t public",
+    "phpstan": "/vendor/bin/phpstan.bat app src --layer 8 "
   }
 }
