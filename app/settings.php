@@ -1,16 +1,18 @@
 <?php
 declare(strict_types=1);
 
-use App\Application\Service\Contract\ContractDocsService;
 use DI\ContainerBuilder;
 use Monolog\Logger;
 
-return function (ContainerBuilder $containerBuilder) {
-    // Global Settings Object
+return static function (ContainerBuilder $containerBuilder) {
+    // Global Settings
     $containerBuilder->addDefinitions([
+        'dirs' => [
+            'storageRoot' => __DIR__ . '../storage/',
+        ],
         'settings' => [
 //            'urlPrefix' =>route 'lkprom/',
-            'displayErrorDetails' => true, // Should be set to false in production
+            'displayErrorDetails' => true,
             'logger' => [
                 'name' => 'lkprom',
                 'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../storage/logs/app.log',
@@ -18,36 +20,15 @@ return function (ContainerBuilder $containerBuilder) {
             ],
             'twig' => [
                 'path' => __DIR__ . '/../templates/',
-                'cachePath' => false,
-            ],
-            'dbf-data' => [
+                'cachePath' => __DIR__ . '/../storage/cache/twig/',
             ],
             'db' => [
-                'dbf' => [
-                     'dir' => realpath(__DIR__ . '/../data/dbf'),
-                ],
-                'operational' => [
-                    'driver' => 'sqlite',
-                    'db' => __DIR__ . '/../data/sqlite/legal-operational.sqlite3',
-                    'username' => '',
-                    'password' => '',
-                ],
-                'archive' => [
-                    'driver' => 'sqlite',
-                    'db' => __DIR__ . '/../data/sqlite/legal-arch.sqlite3',
-                    'username' => '',
-                    'password' => '',
-                ],
                 'administration' => [
                     'driver' => 'sqlite',
-                    'db' => __DIR__ . '/../data/sqlite/legal-administration.sqlite3',
+                    'db' => realpath(__DIR__ . '/../../data/sqlite/legal-administration.sqlite3'),
                     'username' => '',
                     'password' => '',
                 ],
-
-            ],
-            ContractDocsService::class => [
-                'docStorageRoot' => '\\vms8\prom_arch\AMSRV\schet\\',
             ],
         ],
     ]);

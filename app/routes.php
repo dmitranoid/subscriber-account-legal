@@ -15,12 +15,13 @@ use App\Application\Actions\Connection\ViewConnectionAction;
 use App\Application\Actions\Connection\ViewConnectionsListAction;
 use App\Application\Actions\Connection\ViewListReadingsAction;
 use App\Application\Actions\Contract\ViewContractDocsAction;
+use App\Application\Actions\Contract\ViewContractFinancesAction;
 use App\Application\Actions\Contract\ViewContractInfoAction;
-use App\Application\Actions\Contract\ViewContractPaymentsAction;
 use App\Application\Actions\Contract\ViewDocAction;
 use App\Application\Middleware\CustomerGuardedMiddleware;
 use App\Application\Middleware\ManagerGuardedMiddleware;
-use App\Application\Service\Auth\UserAuthService;
+use App\Application\Service\Auth\AuthService;
+use App\Domain\Authentication\Account\AccountRepositoryInterface;
 use App\Infrastructure\Service\Session\SessionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -29,7 +30,7 @@ use Psr\Log\LoggerInterface;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 
-return function (App $app) {
+return static function (App $app) {
     /** @var ContainerInterface $container */
     $container = $app->getContainer();
     $settings = $container->get('settings');
@@ -37,19 +38,20 @@ return function (App $app) {
     $session = $container->get(SessionInterface::class);
     $app->group($routePrefix, function (Group $group) use ($container, $app, $session) {
         $group->get('/', function (Request $request, Response $response) use ($container, $app, $session) {
-            // перебрасываем из корня в зависимости от группы
-            $authService = new UserAuthService(
+            // перебрасываем из корня в зависимости от группы а админку или кабинет
+            $authService = new AuthService(
                 $container->get(LoggerInterface::class),
-                $container->get(PDO::class),
+                $container->get(AccountRepositoryInterface::class),
                 $session
             );
-            if (!$authService->isUserAuthenticated()) {
+            if (!$authService->isAccountAuthenticated()) {
                 return $response->withHeader('Location', '/login');
             }
-            if ($authService->isCustomer()) {
+            $account = $authService->getCurrentAccount();
+            if ($account->isCustomer()) {
                 return $response->withHeader('Location', '/contract');
             }
-            if ($authService->isManager() || $authService->isAdmin()) {
+            if ($account->isManager() || $account->isAdmin()) {
                 return $response->withHeader('Location', '/admin/users');
             }
         });
@@ -65,10 +67,9 @@ return function (App $app) {
             $group->post('sendreadings', SendReadingsAction::class);
             $group->post('savereadings', SaveReadingsAction::class);
 
-            $group->get('payments', ViewContractPaymentsAction::class)->setName('front.payments');
+            $group->get('finances', ViewContractFinancesAction::class)->setName('front.payments');
             $group->get('docs', ViewContractDocsAction::class)->setName('front.docs');
             $group->get('viewdoc', ViewDocAction::class)->setName('viewdoc');
-            //       $group->get('chat', ViewChatAction::class);
         })->add(CustomerGuardedMiddleware::class);
 
 // admin panel
@@ -77,16 +78,9 @@ return function (App $app) {
             $group->get('/user[/{login}]', ViewUserAction::class)->setName('admin.user.show');
             $group->post('/user/{login}', EditUserAction::class)->setName('admin.user.edit');
             $group->post('/user', NewUserAction::class)->setName('admin.user.create');
-            //fixme delete -> post only !!!!
+            // todo delete -> post only !!!!
             $group->any('/user/{login}/delete', DeleteUserAction::class)->setName('admin.user.delete');
-//        $group->post('/user/{login}', DoEditUserAction::class);
         })->add(ManagerGuardedMiddleware::class);
 
-        /*
-            $app->group('/users', function (Group $group) use ($container) {
-                $group->get('', ListUsersAction::class);
-                $group->get('/{id}', ViewUserAction::class);
-            });
-        */
     });
 };

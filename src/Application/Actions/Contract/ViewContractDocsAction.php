@@ -7,48 +7,32 @@ namespace App\Application\Actions\Contract;
 
 use App\Application\Actions\Action;
 use App\Application\Exceptions\AppException;
-use App\Application\Service\Auth\UserAuthService;
+use App\Application\Helpers\AppHelper;
+use App\Application\Service\Auth\AuthService;
 use App\Application\Service\Contract\ContractDocsService;
 use App\Application\Service\Contract\ContractInfoServiceInterface;
-use App\Application\View\ViewInterface;
-use App\Infrastructure\Service\DocumentFinder\DocumentFinder;
-use App\Infrastructure\Service\Session\Session;
-use DateTime;
-use PDO;
+use App\Application\Service\Document\DocumentServiceInterface;
 use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Log\LoggerInterface;
-use Slim\Flash\Messages;
 
 class ViewContractDocsAction extends Action
 {
-    public function __construct(LoggerInterface $logger, ViewInterface $view, PDO $pdo, Messages $flash)
-    {
-        parent::__construct($logger, $view, $pdo, $flash);
-    }
-
 
     protected function action(): Response
     {
-        $auth = new UserAuthService($this->logger, $this->pdo, new Session());
-        $contractNom = $auth->getUser()['code_contract'] ?? null;
-        if (empty($contractNom)) {
+        $auth = AppHelper::container()->get(AuthService::class);
+        $contractNo = $auth->getCurrentAccount()->getContractNo();
+
+        if (empty($contractNo)) {
             $this->logger->error('не найден договор');
             throw new AppException('не найден договор');
         }
-        $contractInfo = (new ContractInfoServiceInterface($this->pdo))->getContractInfo($contractNom);
-        // TODO брать путь к документам из настроек
-        $documentsStorageRoot = 'F:/lkprom-docs/';  // под windows буква диска с большой буквы !!!
-        //$documentsStorageRoot = 'D:/work/legal-docs/';  // под windows буква диска с большой буквы !!!
-
-        $docsService = new ContractDocsService(
-            new DocumentFinder($documentsStorageRoot),
-            $documentsStorageRoot
-        );
+        $contractInfo = AppHelper::container()->get(ContractInfoServiceInterface::class)->getContractInfo($contractNo);
+        $docsService = AppHelper::container()->get(DocumentServiceInterface::class);
 
         $docList = $docsService->getDocumentsByContract(
-            $contractNom,
-            DateTime::createFromFormat('Ymd', '20190101'),
-            new DateTime('now')
+            $contractNo,
+            \DateTimeImmutable::createFromFormat('Y-m-d', '2019-01-01'),
+            new \DateTimeImmutable('now')
         );
 
         return $this->view->render(

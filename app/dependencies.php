@@ -1,70 +1,36 @@
 <?php
 declare(strict_types=1);
 
+use App\Application\Service\Auth\AuthService;
+use App\Application\Service\Readings\ReadingsService;
+use App\Application\Service\User\UserService;
+use App\Application\Service\User\UserServiceInterface;
+use App\Application\ServiceProviders\MonologServiceProvider;
+use App\Application\ServiceProviders\PdoAdministrativeServiceProvider;
+use App\Application\ServiceProviders\TwigServiceProvider;
+use App\Application\View\TwigView;
 use App\Application\View\ViewInterface;
+use App\Domain\Authentication\Account\AccountRepositoryInterface;
+use App\Infrastructure\Persistence\Account\SqlAccountRepository;
 use App\Infrastructure\Service\Session\SessionInterface;
 use DI\ContainerBuilder;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
-use Monolog\Processor\PsrLogMessageProcessor;
-use Monolog\Processor\UidProcessor;
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Slim\Views\Twig;
-use Twig\Extension\DebugExtension;
 
 return static function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
-        LoggerInterface::class => function (ContainerInterface $c) {
-            $settings = $c->get('settings');
-
-            $loggerSettings = $settings['logger'];
-            $logger = new Logger($loggerSettings['name']);
-
-            $logger->pushProcessor(new UidProcessor());
-            $logger->pushProcessor(new PsrLogMessageProcessor());
-
-            $handler = new StreamHandler($loggerSettings['path'], $loggerSettings['level']);
-            $logger->pushHandler($handler);
-
-            return $logger;
-        },
-        SessionInterface::class => function (ContainerInterface $c) {
-            return new App\Infrastructure\Service\Session\Session();
-        },
-        Twig::class => function (ContainerInterface $c) {
-            $settings = $c->get('settings');
-            $twigSettings = $settings['twig'];
-            $twig = Twig::create(
-                $twigSettings['path'],
-                [
-                    'debug' => true,
-                    'cache' => $twigSettings['cachePath']
-                ]);
-            $twig->addExtension(new DebugExtension());
-            return $twig;
-        },
-        ViewInterface::class => function (ContainerInterface $c) {
-            return new \App\Application\View\TwigView($c->get(Twig::class));
-        },
-        PDO::class => function (ContainerInterface $c) {
-            $dbSettings = $c->get('settings')['db'];
-            $dbOperational = $dbSettings['operational'];
-            $dbArchive = $dbSettings['archive'];
-            $dbAdministration = $dbSettings['administration'];
-            $dsn = $dbAdministration['driver'] . ":" . $dbAdministration['db'];
-            try {
-                $pdo = new PDO($dsn);
-                $pdo->exec('ATTACH  \'' . $dbOperational['db'] . '\' as operational');
-                $pdo->exec('ATTACH  \'' . $dbArchive['db'] . '\' as archive');
-            } catch (Exception $e) {
-                die('database open error');
-            }
-            // подключим архивы
-            return $pdo;
-        },
-        Slim\Flash\Messages::class => function (ContainerInterface $c) {
-            return new Slim\Flash\Messages();
-        },
+        LoggerInterface::class => DI\factory([MonologServiceProvider::class, 'register']),
+        SessionInterface::class => DI\create(App\Infrastructure\Service\Session\Session::class),
+        Twig::class => DI\factory([TwigServiceProvider::class, 'register']),
+        ViewInterface::class => DI\create(TwigView::class),
+        'PdoAdministrative' => DI\factory([PdoAdministrativeServiceProvider::class, 'register']),
+        Slim\Flash\Messages::class => DI\create(Slim\Flash\Messages::class),
+        // app services
+        AuthService::class => DI\create(AuthService::class),
+        ReadingsService::class => DI\autowire(ReadingsService::class),
+        UserServiceInterface::class => DI\autowire(UserService::class),
+        // repositories
+        AccountRepositoryInterface::class => DI\autowire(SqlAccountRepository::class)
+            ->constructorParameter(PDO::class, DI\get('PdoAdministrative')),
     ]);
 };

@@ -5,68 +5,61 @@
 {% set connectionTypes= {'1':'показания', '2':'расчет по индексам', '3':'мощность', '4':'сумматор'} %}
 
 {% block content %}
-
-
-<h4 class="underline"><b>Договор <u>№{{ contract.nom }}</u></b></h4>
-<h5>{{ contract.name }}</h5>
-<div class="table-responsive">
-    <table class="table table-hover table-bordered">
-        <tbody>
+    <div class="contract">
+        <h5>Договор №{{ contract.contractNo }}, {{ contract.name }}</h5>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+            <tbody>
             <tr>
                 <th>Абонент</th>
-                <td>{{ abonent.naim }}</td>
+                <td>{{ abonent.abonentNo }}. {{ abonent.name }}</td>
             </tr>
             <tr>
-                <th>Наименование ТУ</th>
+                <th>Наименование точки учета</th>
                 <td>{{ connection.name }}</td>
             </tr>
             <tr>
                 <th>Способ расчетов</th>
-                <td>{{ connectionTypes[connection.sr] }}</td>
+                <td>{{ connectionTypes[connection.calcMode] }}</td>
             </tr>
             <tr>
                 <th>Тариф</th>
-                <td>{{ connection.tarnaim }}</td>
+                <td>{{ connection.tariffName }}</td>
             </tr>
-        </tbody>
-    </table>
-</div>
+            </tbody>
+        </table>
+    </div>
 
-
-
-<h4 class="underline"><b>Прибор учета</b></h4>
-<div class="table-responsive">
-    <table class="table table-hover table-bordered">
-        <tbody>
+    <h4 class="underline"><b>Прибор учета</b></h4>
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+            <tbody>
             <tr>
                 <th>Тип прибора</th>
-                <td>{{ connection.counterModel }}</td>
+                <td>{{ connection.counter.model }}</td>
             </tr>
             <tr>
                 <th>Заводской номер</th>
-                <td>{{ connection.counterNo }}</td>
+                <td>{{ connection.counter.serialNo }}</td>
             </tr>
             <tr>
                 <th>Дата установки</th>
-                <td>{{ connection.counterInstallDate ? connection.counterInstallDate|date('d.m.Y') : '-' }}</td>
+                <td>{{ connection.counter.installDate ? connection.counter.installDate|date('d.m.Y') : '-' }}</td>
             </tr>
             <tr>
-                <th>Коэфф. трансформации</th>
-                <td>{{ connection.counterTrKoeff }}</td>
+                <th>Коэффициент трансформации</th>
+                <td>{{ connection.counter.coeffTr }}</td>
             </tr>
-        </tbody>
-    </table>
-</div>
+            </tbody>
+        </table>
+    </div>
 
 
-
-
-
-
-<h4 class="underline"><b>История показаний</b></h4>
-<div class="table-responsive ">
-    <table class="table table-hover  table-sm">
-        <thead class="text-center thead-light">
+    <h4 class="underline"><b>История показаний</b></h4>
+    <div class="table-responsive ">
+        <table class="table table-hover  table-sm">
+            <thead class="text-center thead-light">
             <tr>
                 <th>Период</th>
                 <th>Показание</th>
@@ -76,9 +69,9 @@
         <tbody class="text-center">
         {% for rd in readingsHistory %}
             <tr>
-                <td>{{ rd.rp_part_m }}.20{{ rd.rp_part_y }}</td>
-                <td>{{ rd.tpok }}</td>
-                <td>{{ rd.consumption }}</td>
+                <td>{{ rd.period|date('m.Y') }}</td>
+                <td>{{ rd.value|format('0.0') }}</td>
+                <td>{{ rd.consumption|format('0.0') }}</td>
             </tr>
         {% endfor %}
         </tbody>

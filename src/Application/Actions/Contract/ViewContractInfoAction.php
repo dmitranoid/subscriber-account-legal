@@ -6,20 +6,24 @@ namespace App\Application\Actions\Contract;
 
 
 use App\Application\Actions\Action;
+use App\Application\Helpers\AppHelper;
 use App\Application\Middleware\SessionMiddleware;
+use App\Application\Service\Auth\AuthService;
 use App\Application\Service\Contract\ContractInfoServiceInterface;
+use App\Domain\Authentication\Account\AccountRepositoryInterface;
+use App\Infrastructure\Service\Session\Session;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class ViewContractInfoAction extends Action
 {
     protected function action(): Response
     {
-        $session = $this->request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
-        $contractNo = $session['user']['code_contract'] ?? 0;
+        $session = new Session();
+        $accountRepository = AppHelper::container()->get(AccountRepositoryInterface::class);
+        $authService = new AuthService($this->logger, $accountRepository, $session);
         /** @var ContractInfoServiceInterface $service */
-        $service = (RegionallyServiceFactory::get('Contract\\ContractInfo'));
-        $contractInfo = $service->getContractInfo($contractNo);
-        $contractInfo = (new ContractInfoServiceInterface($this->pdo))->getContractInfo($contractNo);
+        $service = AppHelper::container()->get(ContractInfoServiceInterface::class);
+        $contractInfo = $service->getContractInfo($authService->getCurrentAccount()->getContractNo());
         return $this->view->render($this->response, 'front/contract/info.twig', ['contract' => $contractInfo]);
     }
 }

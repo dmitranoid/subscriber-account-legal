@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Application\Actions\Admin\User;
 
-use App\Application\Service\User\UserService;
+use App\Application\Helpers\AppHelper;
+use App\Application\Service\Auth\AuthService;
+use App\Application\Service\User\UserServiceInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class ViewUserAction extends UserAction
@@ -11,9 +13,12 @@ class ViewUserAction extends UserAction
 
     protected function action(): Response
     {
+        $auth = AppHelper::container()->get(AuthService::class);
+        $account = $auth->getCurrentAccount();
         /** @var string|null $userLogin */
-        $userLogin = (string) isset($this->args['login']) ? $this->resolveArg('login') : null;
-        $userService = new UserService($this->pdo, $this->logger);
+        $userLogin = (string)isset($this->args['login']) ? $this->resolveArg('login') : null;
+        /** @var UserServiceInterface $usersService */
+        $usersService = AppHelper::container()->get(UserServiceInterface::class);
 
         if (empty($userLogin)) {
 //            $user = $userService->getEmptyUser();
@@ -25,7 +30,7 @@ class ViewUserAction extends UserAction
             ];
             $title = 'Новый пользователь';
         } else {
-            $user = $userService->getByLogin($userLogin);
+            $user = $usersService->getByLoginAndRegion($userLogin, $account->getRegion());
             $title = 'Редактирование пользователя';
 
         }

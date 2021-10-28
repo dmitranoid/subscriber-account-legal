@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Middleware;
 
-
-use App\Application\Service\Auth\UserAuthService;
-use App\Infrastructure\Service\Session\SessionInterface;
-use PDO;
+use App\Application\Service\Auth\AuthService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -18,31 +15,28 @@ use Slim\Psr7\Response;
 class ManagerGuardedMiddleware implements MiddlewareInterface
 {
 
-    private $pdo;
 
-    private $logger;
+    private LoggerInterface $logger;
 
-    private SessionInterface $session;
+    private AuthService $authService;
 
-    public function __construct(LoggerInterface $logger, PDO $pdo, SessionInterface $session)
+    public function __construct(LoggerInterface $logger, AuthService $authService)
     {
-        $this->pdo = $pdo;
         $this->logger = $logger;
-        $this->session = $session;
+        $this->authService = $authService;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $authService = new UserAuthService($this->logger, $this->pdo, $this->session);
-
-        if (!$authService->isUserAuthenticated()) {
+        $account = $this->authService->getCurrentAccount();
+        if (!$this->authService->isAccountAuthenticated()) {
             return (new Response())->withHeader('Location', '/login');
-        } else {
-            if (!($authService->isManager() || $authService->isAdmin())) {
-                $resp = new Response();
-                $resp->getBody()->write('Доступ запрещён');
-                return $resp->withStatus(403);
-            }
+        }
+
+        if (!($account->isManager() || $account->isAdmin())) {
+            $resp = new Response();
+            $resp->getBody()->write('Доступ запрещён');
+            return $resp->withStatus(403);
         }
 
         return $handler->handle($request);

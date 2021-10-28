@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace App\Application\Actions\Admin\User;
 
-use App\Application\Service\Auth\UserAuthService;
-use App\Infrastructure\Persistence\User\SqlUserRepository;
-use App\Infrastructure\Service\Session\Session;
+use App\Application\Helpers\AppHelper;
+use App\Application\Service\Auth\AuthService;
+use App\Application\Service\User\UserServiceInterface;
+use App\Infrastructure\ReadModel\PagerSettings;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class ViewUsersListAction extends UserAction
@@ -13,20 +14,29 @@ class ViewUsersListAction extends UserAction
 
     protected function action(): Response
     {
-        $auth = new UserAuthService($this->logger, $this->pdo, new Session());
-        $userRepository = new SqlUserRepository($this->pdo);
-        if ($auth->isManager()) {
-            $customersList = $userRepository->getCustomers();
+        /** @var AuthService $auth */
+        $auth = AppHelper::container()->get(AuthService::class);
+        $account = $auth->getCurrentAccount();
+
+        parse_str($this->request->getUri()->getQuery(), $params);
+        $pager = new PagerSettings($params['page'] ?? 1, 50);
+
+        /** @var UserServiceInterface $usersService */
+        $usersService = AppHelper::container()->get(UserServiceInterface::class);
+
+        if ($account->isManager()) {
+            $usersList = $usersService->getCustomersList($pager);
         }
-        if ($auth->isAdmin()) {
-            $customersList = $userRepository->getUsers();
+        if ($account->isAdmin()) {
+            $usersList = $usersService->getManagersList($pager);
         }
+
         return $this->view->render(
             $this->response,
             'admin/user/index.twig',
             [
                 'title' => 'Список пользователей',
-                'customersList' => $customersList ?? [],
+                'customersList' => $usersList ?? [],
             ]
         );
     }

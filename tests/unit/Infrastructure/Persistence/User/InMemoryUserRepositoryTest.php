@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Tests\Infrastructure\Persistence\User;
 
 use App\Domain\User\User;
-use App\Infrastructure\Persistence\User\InMemoryManagerRepository;
+use App\Infrastructure\Persistence\Account\InMemoryManagerRepository;
 use Tests\TestCase;
 
 class InMemoryUserRepositoryTest extends TestCase

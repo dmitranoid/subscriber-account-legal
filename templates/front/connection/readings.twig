@@ -4,14 +4,8 @@
 
 {% block content %}
 
-    {% if contract.npp1 %}
-        {% set orgName = contract.npp1 ~ " " ~ contract.npp2 %}
-    {% else %}
-        {% set orgName = contract.np1 %}
-    {% endif %}
-
     <div class="contract">
-        <h5>Договор №{{ contract.kp }}, {{ orgName }}</h5>
+        <h5>Договор №{{ contract.contractNo }}, {{ contract.name }}</h5>
         <br>
         <h5>Ввод показаний за период: {{ "now-5 days"|date('m.Y') }}</h5>
     </div>
@@ -39,21 +33,25 @@
         <tbody>
         {% for ab in abonentsList %}
             <tr class="abonent">
-                <td colspan="5">абонент: {{ ab.nab }} {{ ab.naim }} {{ ab.address }}</td>
+                <td colspan="5">абонент: {{ ab.abonentNo }} {{ ab.name }} {{ ab.address }}</td>
             </tr>
-            {% for conn in ab.connections %}
-                {% set cntname = 'cnt-' ~ ab.kp ~ '-' ~ ab.nab ~ '-' ~ conn.nst | replace({'.':'_'}) %}
-                <tr class="connection">
-                    <td>{{ conn.nst }}</td>
-                    <td>{{ conn.naim }}</td>
-                    <td>{{ conn.ppok }}</td>
-                    <td>{{ conn.mrasp }}</td>
-                    <td><input type="text" class="input-inline readings-value" {{ disabledReadings }} name="{{ cntname }}"
-                               value="{{ attribute(readings, cntname) }}" data-prevr="{{ conn.ppok }}"
-                               data-pras="{{ conn.mrasp }}">
-                        <i class="fas fa-exclamation-triangle" style="visibility: hidden;"></i>
-                    </td>
-                </tr>
+            {% for conn in connectionsList %}
+                {% if ab.abonentNo == conn.abonentNo %}
+                    {% set cntname = counter_code(ab.contractNo, ab.abonentNo, conn.counter.serialNo) %}
+                    <tr class="connection">
+                        <td>{{ conn.counter.serialNo }}</td>
+                        <td>{{ conn.name }}</td>
+                        <td>{{ conn.counter.lastValue }}</td>
+                        <td>{{ conn.counter.lastExpense }}</td>
+                        <td><input type="text" class="input-inline readings-value" {{ disabledReadings }}
+                                   name="{{ cntname }}"
+                                   value="{{ attribute(readings, cntname) }}"
+                                   data-lastval="{{ conn.counter.lastValue }}"
+                                   data-lastexp="{{ conn.counter.lastExpense }}">
+                            <i class="fas fa-exclamation-triangle" style="visibility: hidden;"></i>
+                        </td>
+                    </tr>
+                {% endif %}
             {% endfor %}
         {% endfor %}
         </tbody>
@@ -84,9 +82,9 @@
 
         function readingInputOnExit(event) {
             let el = event.target;
-            prevr = el.dataset.prevr;
-            pras = el.dataset.pras;
-            curr = el.value;
+            lastval = el.dataset.lastval;
+            lastexp = el.dataset.lastexp;
+            currval = el.value;
             // console.log(prevr, pras, curr);
             icon = el.parentElement.querySelector('i');
             icon.style.visibility = 'visible';
@@ -96,20 +94,20 @@
                 icon.style.color = 'orange';
                 icon.classList.add("fa-exclamation-triangle");
                 icon.classList.remove("fa-check");
-                icon.title="обязательно для заполнения"
+                icon.title = "обязательно для заполнения"
                 return;
             }
             // отмечаем если показания отличаются больше чем в 2 раза в любую сторону
-            if ((curr - prevr > pras * 2)||(curr - prevr < pras / 2)) {
+            if ((currval - lastval > lastexp * 2) || (currval - lastval < lastexp / 2)) {
                 icon.style.color = 'orange';
                 icon.classList.add("fa-exclamation-triangle");
                 icon.classList.remove("fa-check");
-                icon.title="показания потребления предыдущего месяца отличаются более чем в 2 раза"
+                icon.title = "показания потребления предыдущего месяца отличаются более чем в 2 раза"
             } else {
                 icon.style.color = 'green';
                 icon.classList.remove("fa-exclamation-triangle");
                 icon.classList.add("fa-check");
-                icon.title="показания в пределах прошлого месяца"
+                icon.title = "показания в пределах прошлого месяца"
             }
         }
     </script>

@@ -6,21 +6,15 @@ namespace App\Application\View;
 
 class TwigFash
 {
-    /**
-     * @var array
-     */
-    private $messages;
 
-    /**
-     * TwigFash constructor.
-     * @param array $messages
-     */
+    private array $messages;
+
     public function __construct(array $messages)
     {
         $this->messages = $messages;
     }
 
-    public function old(string $field, string $default = ''):string
+    public function old(string $field, string $default = ''): string
     {
         return $this->messages[$field . '.old'][0] ?? $default;
     }

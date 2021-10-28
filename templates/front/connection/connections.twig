@@ -5,19 +5,14 @@
 {% set connectionTypes= {'1':'показания', '2':'расчет по индексам', '3':'мощность', '4':'сумматор'} %}
 
 {% block content %}
-    {% if contract.npp1 %}
-        {% set orgName = contract.npp1 ~ " " ~ contract.npp2 %}
-    {% else %}
-        {% set orgName = contract.np1 %}
-    {% endif %}
 
+    <div class="contract">
+        <h5>Договор №{{ contract.contractNo }}, {{ contract.name }}</h5>
+    </div>
 
-<h4 class="underline"><b>Договор <u>№{{ contract.kp }}</u></b></h4>
-<h5>{{ orgName }}</h5>
-
-<div class="table-responsive mt-3">
-    <table class="table table-hover table-bordered table-sm">
-        <thead class="text-center thead-light">
+    <div class="table-responsive mt-3">
+        <table class="table table-hover table-bordered table-sm">
+            <thead class="text-center thead-light">
             <tr>
                 <th>№</th>
                 <th>Наименование</th>
@@ -29,99 +24,46 @@
                 <th>Показания</th>
                 <th><i class="fas fa-info"></i></th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
 
             {% for ab in abonentsList %}
-            {% set address = ab.tip_np ~ ab.name_np ~ ', ' ~ ab.tip_ul ~ ab.name_ul ~ ', ' ~ (ab.dom ? 'д. ') ~ ab.dom ~ ' ' ~ ab.korpus %}
-            <tr class="mdb-color lighten-5">
-                <th class="text-center"><b>{{ ab.nab }}</b></th>
-                <td><b>{{ ab.naim }}</b></td>
-                <td colspan="7"> 
-                    <div class="d-flex">
-                        <b>{{ address }}</b>
-    
-                        <a class="hover-link ml-auto mr-2" href="https://maps.google.com/?q={{ address }}" target="_blank" title="Посмотреть на карте">
-                            На карте<i class="fas fa-map-marked-alt ml-2"></i>
-                        </a>
-                    </div>
-                </td>
-            </tr>
+                <tr class="mdb-color lighten-5">
+                    <th class="text-center"><b>{{ ab.abonentNo }}</b></th>
+                    <td><b>{{ ab.name }}</b></td>
+                    <td colspan="7">
+                        <div class="d-flex">
+                            <b>{{ ab.address }}</b>
+                            <a class="hover-link ml-auto mr-2" href="https://maps.google.com/?q={{ ab.address }}"
+                               target="_blank" title="Посмотреть на карте">
+                                На карте<i class="fas fa-map-marked-alt ml-2"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
 
-            {% for conn in ab.connections %}
-            <tr>
-                <td></td>
-                <td>{{ conn.naim }}</td>
-                <td>{{ conn.nst }}</td>
-                <td>{{ conn.datu ? conn.datu|date("d.m.Y") : '' }}</td>
-                <td>{{ connectionTypes[conn.sr] }}</td>
-                <td>{{ conn.ktt==1 ? '' :  conn.ktt }}</td>
-                <td>{{ conn.kvpov }} {{ conn.kvpov ? 'кв.' : '' }} {{ conn.godpov }}</td>
-                <td>{{ conn.ppok ? conn.ppok : '' }}</td>
-                <td>
-                    <a class="hover-link" href="/connection/{{ ab.nab }}-{{ conn.naim_url }}" title="Подробнее о точке учета">
-                        Подробнее<i class="fas fa-angle-double-right ml-2"></i>
-                    </a>
-                </td>
-            </tr>
+                {% for conn in connectionsList %}
+                    {% if (conn.abonentNo == ab.abonentNo) %}
+                        <tr>
+                            <td></td>
+                            <td>{{ conn.name }}</td>
+                            <td>{{ conn.counter.serialNo }}</td>
+                            <td>{{ conn.counter.installDate ? conn.counter.installDate|date("d.m.Y") : '-' }}</td>
+                            <td>{{ connectionTypes[conn.calcMode] }}</td>
+                            <td>{{ conn.counter.coeffTr == 1 ? '-' :  conn.counter.coeffTr }}</td>
+                            <td>{{ conn.counter.checkoutDate ? conn.counter.checkoutDate|date("m.Y") : '-' }}</td>
+                            <td>{{ conn.counter.lastValue|default('-') }}</td>
+                            <td>
+                                <a class="hover-link" href="/connection/{{ connectionLink(ab.abonentNo, conn.name) }}"
+                                   title="Подробнее о точке учета">
+                                    Подробнее<i class="fas fa-angle-double-right ml-2"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
             {% endfor %}
-
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-<!-- 
-
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-
-
-
-<div class="contract">
-    <h5>Договор  №{{ contract.kp }}, {{ orgName }}</h5>
-</div>
-
-    <table class="table table-responsive abonents">
-    <thead>
-    <tr>
-        <th scope="col">№</th>
-        <th scope="col">наименование</th>
-        <th scope="col">заводской №</th>
-        <th scope="col">дата установки</th>
-        <th scope="col">способ расчета</th>
-        <th scope="col">коэфф.трансф.</th>
-        <th scope="col">дата поверки</th>
-        <th scope="col">показания</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for ab in abonentsList %}
-        {% set address = ab.tip_np ~ ab.name_np ~ ', ' ~ ab.tip_ul ~ ab.name_ul ~ ', ' ~ (ab.dom ? 'д. ') ~ ab.dom ~ ' ' ~ ab.korpus %}
-    <tr class="abonent">
-        <th scope="row">{{ ab.nab }}</th>
-        <td>{{ ab.naim }}</td>
-        <td colspan=6> <a href="https://maps.google.com/?q={{ address }}" target="_blank" title="Посмотреть на карте"><i class="icon icon-location"></i></a>&nbsp
-            {{ address }}
-        </td>
-    </tr>
-    {% for conn in ab.connections %}
-    <tr class="connection clickable-row" data-href="/connection/{{ ab.nab }}-{{ conn.naim_url }}">
-        <td><a title="подробнее о точке учета">{#<i class="icon icon-location"></i>#}</a></td>
-        <td>{{ conn.naim }}</td>
-        <td>{{ conn.nst }}</td>
-        <td>{{ conn.datu ? conn.datu|date("d.m.Y") : '' }}</td>
-        <td>{{ connectionTypes[conn.sr] }}</td>
-        <td>{{ conn.ktt==1 ? '' :  conn.ktt }}</td>
-        <td>{{ conn.kvpov }} {{ conn.kvpov ? 'кв.' : '' }} {{ conn.godpov }}</td>
-        <td>{{ conn.ppok ? conn.ppok : '' }}</td>
-    </tr>
-    {% endfor %}
-    {% endfor %}
-    </tbody>
-</table>
--->
-{% endblock %} 
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

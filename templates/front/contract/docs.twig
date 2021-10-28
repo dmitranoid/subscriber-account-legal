@@ -3,23 +3,23 @@
 {% block title %}Документы{% endblock %}
 
 {% block content %}
-{% if contract.npp1 %}
-    {% set orgName = contract.npp1 ~ " " ~ contract.npp2 %}
-{% else %}
-    {% set orgName = contract.np1 %}
-{% endif %}
-<div class="contract">
-    <h5>Договор  №{{ contract.kp }}, {{ orgName }}</h5>
-</div>
+    {% if contract.npp1 %}
+        {% set orgName = contract.npp1 ~ " " ~ contract.npp2 %}
+    {% else %}
+        {% set orgName = contract.np1 %}
+    {% endif %}
+    <div class="contract">
+        <h5>Договор №{{ contract.contractNo }}, {{ contract.name }}</h5>
+    </div>
     <table class="table docs">
-    <thead>
-    <tr>
-        <th>дата</th>
-        <th>расчетный период</th>
-        <th>документ</th>
-        <th></th>
-    </tr>
-    </thead>
+        <thead>
+        <tr>
+            <th>дата</th>
+            <th>расчетный период</th>
+            <th>документ</th>
+            <th></th>
+        </tr>
+        </thead>
     <tbody>
     {% for doc in docsList %}
     <tr>

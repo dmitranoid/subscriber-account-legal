@@ -13,7 +13,7 @@ final class RegionallyServiceFactory
     public function __construct(string $region)
     {
         $this->region = $region;
-        $this->classnameTemplate = 'Regionally\\%s\\Application\\Service\\%s';
+        $this->classnameTemplate = 'App\Regionally\%s\Application\Service\%s';
     }
 
     public function get(string $name)

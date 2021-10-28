@@ -39,7 +39,7 @@
             <select class="form-control mb-4" placeholder="Регион" type="text" id="region" name="region" required>
                 <option disabled value="" {% if '' == flash.old('region', '') %} selected {% endif %}>Выберите обслуживающую организацию</option>
                 {% for code, region in regions %}
-                <option value="{{ code }}" {% if code == flash.old('region', '') %} selected {% endif %}>{{ region }}</option>
+                    <option value="{{ code }}" {% if code == flash.old('region', '') %} selected {% endif %} >{{ region }}</option>
                 {% endfor %}
             </select>
             <!-- Name -->

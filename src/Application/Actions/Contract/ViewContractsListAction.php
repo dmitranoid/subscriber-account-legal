@@ -6,10 +6,7 @@ namespace App\Application\Actions\Contract;
 
 
 use App\Application\Actions\Action;
-use App\Domain\DomainException\DomainRecordNotFoundException;
-use App\Infrastructure\Persistence\Contract\SqlContractRepository;
 use Psr\Http\Message\ResponseInterface as Response;
-use Slim\Exception\HttpBadRequestException;
 
 class ViewContractsListAction extends Action
 {
