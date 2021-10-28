@@ -12,19 +12,10 @@ use App\Application\Service\Auth\AuthService;
 use App\Application\Service\Contract\ContractDocsService;
 use App\Application\Service\Contract\ContractInfoServiceInterface;
 use App\Application\Service\Document\DocumentServiceInterface;
-use App\Application\View\ViewInterface;
-use PDO;
 use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Log\LoggerInterface;
-use Slim\Flash\Messages;
 
 class ViewContractDocsAction extends Action
 {
-    public function __construct(LoggerInterface $logger, ViewInterface $view, PDO $pdo, Messages $flash)
-    {
-        parent::__construct($logger, $view, $pdo, $flash);
-    }
-
 
     protected function action(): Response
     {

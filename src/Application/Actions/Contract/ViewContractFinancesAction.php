@@ -9,7 +9,6 @@ use App\Application\Exceptions\AppException;
 use App\Application\Helpers\AppHelper;
 use App\Application\Service\Auth\AuthService;
 use App\Application\Service\Contract\ContractInfoServiceInterface;
-use App\Application\Service\Contract\ContractPaymentsService;
 use App\Application\Service\Finance\FinanceServiceInterface;
 use DateTime;
 use Psr\Http\Message\ResponseInterface as Response;

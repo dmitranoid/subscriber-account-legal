@@ -17,7 +17,6 @@ use App\Application\Service\Contract\ContractInfoServiceInterface;
 use App\Application\Service\Readings\ReadingsService;
 use App\Infrastructure\Persistence\Abonent\SqlAbonentRepository;
 use App\Infrastructure\Persistence\Connection\SqlConnectionRepository;
-use App\Infrastructure\Service\Session\Session;
 use DateTime;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -50,7 +49,9 @@ class ViewListReadingsAction extends Action
         });
 
         // проверить, есть ли сохраненные показания
-        $readingsService = new ReadingsService($this->pdo, $auth->getCurrentAccount(), $this->logger);
+        $readingsService = AppHelper::container()->get(ReadingsService::class);
+        $readingsService->setCustomer($auth->getCurrentAccount());
+
         $savedReadings = $readingsService->loadPeriodReadings(new DateTime('now'));
         if ($savedReadings) {
             $isSavedReadings = false;

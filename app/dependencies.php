@@ -2,6 +2,9 @@
 declare(strict_types=1);
 
 use App\Application\Service\Auth\AuthService;
+use App\Application\Service\Readings\ReadingsService;
+use App\Application\Service\User\UserService;
+use App\Application\Service\User\UserServiceInterface;
 use App\Application\ServiceProviders\MonologServiceProvider;
 use App\Application\ServiceProviders\PdoAdministrativeServiceProvider;
 use App\Application\ServiceProviders\TwigServiceProvider;
@@ -22,7 +25,10 @@ return static function (ContainerBuilder $containerBuilder) {
         ViewInterface::class => DI\create(TwigView::class),
         'PdoAdministrative' => DI\factory([PdoAdministrativeServiceProvider::class, 'register']),
         Slim\Flash\Messages::class => DI\create(Slim\Flash\Messages::class),
+        // app services
         AuthService::class => DI\create(AuthService::class),
+        ReadingsService::class => DI\autowire(ReadingsService::class),
+        UserServiceInterface::class => DI\autowire(UserService::class),
         // repositories
         AccountRepositoryInterface::class => DI\autowire(SqlAccountRepository::class)
             ->constructorParameter(PDO::class, DI\get('PdoAdministrative')),

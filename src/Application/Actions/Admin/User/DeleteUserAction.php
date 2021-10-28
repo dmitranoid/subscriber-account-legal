@@ -16,7 +16,7 @@ class DeleteUserAction extends UserAction
         $login = $this->resolveArg('login');
         $userService = new UserService($this->pdo, $this->logger);
         try {
-            $userService->deleteByLogin($login);
+            $userService->deleteByLoginAndRegion($login,);
             $this->flash->addMessage('info', 'пользователь удалён');
         } catch (AppException $e) {
             $this->flash->addMessage('error', 'ошибка удаления пользователя');
